@@ -15,6 +15,7 @@ fn main() {
         .add_systems(FixedUpdate, (
             set_player_direction,
             set_enemy_directions,
+            prevent_enemy_enemy_collision.after(set_enemy_directions),
             prevent_wall_collision
                 .after(set_player_direction)
                 .after(set_enemy_directions),
@@ -196,6 +197,20 @@ fn set_enemy_direction(target_distance: f32, enemy_velocity: f32) -> f32 {
     if target_distance > enemy_velocity {1.} else if target_distance < -enemy_velocity {-1.} else {0.}
 }
 
+fn prevent_enemy_enemy_collision(
+    mut enemies_query_a: Query<(Entity, &Transform, &mut Movement), With<Enemy>>,
+    enemies_query_b: Query<(Entity, &Transform), With<Enemy>>,
+) {
+    for (entity_a, transform_a, mut movement_a) in enemies_query_a.iter_mut() {
+        for (entity_b, transform_b) in enemies_query_b.iter() {
+            if entity_a == entity_b {continue}
+            let collision = __check_for_collision(transform_a, transform_b);
+            if let Some(collision) = collision {
+                movement_a = __apply_collision_pushback(collision, movement_a);
+            }
+        }
+    }
+}
 fn prevent_wall_collision(
     mut moving_objects_query: Query<(&Transform, &mut Movement), With<Movement>>,
     wall_query: Query<&Transform, With<Wall>>,
