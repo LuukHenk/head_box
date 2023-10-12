@@ -1,0 +1,23 @@
+[package]
+name = "head_box"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bevy = { version = "0.11.0", features = ["dynamic_linking"] } # NOTE! REMOVE THE dynamic_linking BEFORE RELEASING THE GAME
+
+### {{{ BEVY CONFIGURATION
+
+[workspace]
+resolver = "2" # Important! wgpu/Bevy needs this!
+
+# Enable a small amount of optimization in debug mode
+[profile.dev]
+opt-level = 1
+
+# Enable high optimizations for dependencies (incl. Bevy), but not for our code:
+[profile.dev.package."*"]
+opt-level = 3
+
+
+### }}} END BEVY CONFIGURATION
