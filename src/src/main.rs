@@ -6,6 +6,7 @@ use bevy::{
 
 const Z_VALUE: f32 = 1.;
 const COLLISION_PUSHBACK: f32 = 0.07;
+const INITIAL_PLAYER_HEALTH: f32 = 300.;
 
 fn main() {
     App::new()
@@ -38,6 +39,9 @@ struct Wall;
 struct Collider;
 
 #[derive(Component, Debug)]
+struct Health(f32);
+
+#[derive(Component, Debug)]
 struct Movement {
     direction_x: f32,
     direction_y: f32,
@@ -47,6 +51,7 @@ struct Movement {
 #[derive(Bundle)]
 struct PlayerBundle {
     player: Player,
+    health: Health,
     sprite_bundle: SpriteBundle,
     movement: Movement,
     collider: Collider,
@@ -70,6 +75,8 @@ struct WallBundle {
 impl PlayerBundle {
     fn new() -> PlayerBundle {
         PlayerBundle {
+            player: Player,
+            collider: Collider,
             sprite_bundle: SpriteBundle {
                 transform: Transform {
                     translation: Vec3::new(0., 0., Z_VALUE),
@@ -84,8 +91,7 @@ impl PlayerBundle {
                 direction_y: 0.,
                 velocity: 7.,
             },
-            player: Player,
-            collider: Collider,
+            health: Health(INITIAL_PLAYER_HEALTH),
         }
     }
 }
@@ -200,14 +206,16 @@ fn set_enemy_direction(target_distance: f32, enemy_velocity: f32) -> f32 {
 
 
 fn handle_player_enemy_collision(
-    mut player_query: Query<(&Transform, &mut Movement), With<Player>>,
+    mut player_query: Query<(&Transform, &mut Movement, &mut Health), With<Player>>,
     enemies_query: Query<&Transform, With<Enemy>>,
 ) {
-    let (player_transform, mut player_movement) = player_query.single_mut();
+    let (player_transform, mut player_movement, mut player_health) = player_query.single_mut();
     for enemy_transform in enemies_query.iter() {
         let collision = __check_for_collision(player_transform, enemy_transform);
         if let Some(collision) = collision {
             player_movement = __apply_collision_pushback(collision, player_movement);
+            player_health.0 -= 1.;
+            println!("Auch! HP: {:#?}/{:#?}", player_health.0, INITIAL_PLAYER_HEALTH)
         }
     }
 }
