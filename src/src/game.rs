@@ -15,6 +15,7 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Game), game_setup)
             .add_systems(FixedUpdate, (
+                handle_game_over.run_if(in_state(GameState::Game)),
                 set_player_direction.run_if(in_state(GameState::Game)),
                 set_enemy_directions.run_if(in_state(GameState::Game)),
                 handle_player_enemy_collision
@@ -163,6 +164,16 @@ fn game_setup(
     commands.spawn(WallBundle::new(620., 0., 40., 2000.,Color::BLACK));
     commands.spawn(WallBundle::new(0., 325., 200., 10., Color::DARK_GRAY));
     commands.spawn(WallBundle::new(0., -325., 200., 10., Color::DARK_GRAY));
+}
+
+fn handle_game_over(
+    query: Query<&Health, With<Player>>,
+    mut game_state: ResMut<NextState<GameState>>,
+) {
+    let health = query.single();
+    if health.0 <= 0. {
+        game_state.set(GameState::MainMenu);
+    }
 }
 
 fn move_objects(mut query: Query<(&mut Transform, &Movement), With<Movement>>) {
