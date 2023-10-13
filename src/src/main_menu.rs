@@ -4,7 +4,11 @@ use bevy::{
     prelude::*,
     app::AppExit,
 };
-use super::GameState;
+use super::{
+    GameState,
+    despawn_screen
+};
+
 
 const TEXT_COLOR: Color = Color::rgb(0.9, 0.9, 0.9);
 const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
@@ -136,8 +140,3 @@ fn button_system(
     }
 }
 
-fn despawn_screen<T: Component>(to_despawn: Query<Entity, With<T>>, mut commands: Commands) {
-    for entity in &to_despawn {
-        commands.entity(entity).despawn_recursive();
-    }
-}

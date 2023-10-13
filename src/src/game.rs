@@ -3,7 +3,10 @@ use bevy::{
     prelude::*,
     sprite::collide_aabb::{collide, Collision},
 };
-use super::GameState;
+use super::{
+    GameState,
+    despawn_screen
+};
 
 const Z_VALUE: f32 = 1.;
 const COLLISION_PUSHBACK: f32 = 0.07;
@@ -14,6 +17,7 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Game), game_setup)
+            .add_systems(OnExit(GameState::Game), despawn_screen::<OnGameScreen>)
             .add_systems(FixedUpdate, (
                 handle_game_over.run_if(in_state(GameState::Game)),
                 set_player_direction.run_if(in_state(GameState::Game)),
@@ -39,6 +43,8 @@ impl Plugin for GamePlugin {
     }
 }
 
+#[derive(Component)]
+struct OnGameScreen;
 #[derive(Component)]
 struct Player;
 
@@ -153,17 +159,17 @@ impl WallBundle {
 fn game_setup(
     mut commands: Commands,
 ) {
-    commands.spawn(PlayerBundle::new());
-    commands.spawn(EnemyBundle::new(-50., 320.));
-    commands.spawn(EnemyBundle::new(50., 320.));
-    commands.spawn(EnemyBundle::new(-50., -320.));
-    commands.spawn(EnemyBundle::new(50., -320.));
-    commands.spawn(WallBundle::new(0., 340., 2000., 40., Color::BLACK));
-    commands.spawn(WallBundle::new(0., -340., 2000., 40.,Color::BLACK));
-    commands.spawn(WallBundle::new(-620., 0., 40., 2000.,Color::BLACK));
-    commands.spawn(WallBundle::new(620., 0., 40., 2000.,Color::BLACK));
-    commands.spawn(WallBundle::new(0., 325., 200., 10., Color::DARK_GRAY));
-    commands.spawn(WallBundle::new(0., -325., 200., 10., Color::DARK_GRAY));
+    commands.spawn((PlayerBundle::new(), OnGameScreen));
+    commands.spawn((EnemyBundle::new(-50., 320.), OnGameScreen));
+    commands.spawn((EnemyBundle::new(50., 320.), OnGameScreen));
+    commands.spawn((EnemyBundle::new(-50., -320.), OnGameScreen));
+    commands.spawn((EnemyBundle::new(50., -320.), OnGameScreen));
+    commands.spawn((WallBundle::new(0., 340., 2000., 40., Color::BLACK), OnGameScreen));
+    commands.spawn((WallBundle::new(0., -340., 2000., 40.,Color::BLACK), OnGameScreen));
+    commands.spawn((WallBundle::new(-620., 0., 40., 2000.,Color::BLACK), OnGameScreen));
+    commands.spawn((WallBundle::new(620., 0., 40., 2000.,Color::BLACK), OnGameScreen));
+    commands.spawn((WallBundle::new(0., 325., 200., 10., Color::DARK_GRAY), OnGameScreen));
+    commands.spawn((WallBundle::new(0., -325., 200., 10., Color::DARK_GRAY), OnGameScreen));
 }
 
 fn handle_game_over(
