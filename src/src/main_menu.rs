@@ -1,15 +1,18 @@
 use bevy::{
     prelude::*,
 };
+use super::GameState;
 
 const TEXT_COLOR: Color = Color::rgb(0.9, 0.9, 0.9);
 const DEFAULT_MENU_BUTTON_COLOR: Color = Color::rgb(0.15, 0.15, 0.15);
 
-fn main() {
-    App::new()
-        .add_plugins(DefaultPlugins)
-        .add_systems(Startup, main_menu_setup)
-        .run();
+pub struct MainMenuPlugin;
+
+impl Plugin for MainMenuPlugin {
+    fn build(&self, app: &mut App) {
+
+        app.add_systems(OnEnter(GameState::MainMenu), main_menu_setup);
+    }
 }
 
 #[derive(Component)]
@@ -79,8 +82,6 @@ fn create_main_menu_layout() -> NodeBundle {
 }
 
 fn main_menu_setup(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
-
     commands.spawn(create_main_menu_layout()).with_children(|parent| {
         spawn_main_menu_button(parent, "Start", MenuButtonAction::Play);
         spawn_main_menu_button(parent, "Quit", MenuButtonAction::Quit);

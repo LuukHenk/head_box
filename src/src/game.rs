@@ -15,14 +15,25 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Game), game_setup)
             .add_systems(FixedUpdate, (
-                set_player_direction,
-                set_enemy_directions,
-                handle_player_enemy_collision.after(set_player_direction),
-                prevent_enemy_enemy_collision.after(set_enemy_directions),
+                set_player_direction.run_if(in_state(GameState::Game)),
+                set_enemy_directions.run_if(in_state(GameState::Game)),
+                handle_player_enemy_collision
+                    .after(set_player_direction)
+                    .run_if(in_state(GameState::Game))
+                ,
+                prevent_enemy_enemy_collision
+                    .after(set_enemy_directions)
+                    .run_if(in_state(GameState::Game))
+                ,
                 prevent_wall_collision
                     .after(set_player_direction)
-                    .after(set_enemy_directions),
-                move_objects.after(prevent_wall_collision),
+                    .after(set_enemy_directions)
+                    .run_if(in_state(GameState::Game))
+                ,
+                move_objects
+                    .after(prevent_wall_collision)
+                    .run_if(in_state(GameState::Game))
+                ,
             ));
     }
 }

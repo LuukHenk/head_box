@@ -1,11 +1,11 @@
 mod game;
-
+mod main_menu;
 use bevy::prelude::*;
 
 #[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States)]
 enum GameState {
     #[default]
-    Menu,
+    MainMenu,
     Game,
 }
 
@@ -15,7 +15,7 @@ fn main() {
         .insert_resource(FixedTime::new_from_secs(1.0 / 60.0))
         .add_state::<GameState>()
         .add_systems(Startup, setup)
-        .add_plugins(game::GamePlugin)
+        .add_plugins((game::GamePlugin, main_menu::MainMenuPlugin))
         .run();
 }
 
