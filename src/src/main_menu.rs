@@ -18,6 +18,7 @@ impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_systems(OnEnter(GameState::MainMenu), main_menu_setup)
+            .add_systems(OnExit(GameState::MainMenu), despawn_screen::<OnMainMenuScreen>)
             .add_systems(
                 Update,
                 (menu_action, button_system).run_if(in_state(GameState::MainMenu)),
@@ -95,7 +96,7 @@ fn create_main_menu_layout() -> NodeBundle {
 }
 
 fn main_menu_setup(mut commands: Commands) {
-    commands.spawn(create_main_menu_layout()).with_children(|parent| {
+    commands.spawn((create_main_menu_layout(), OnMainMenuScreen)).with_children(|parent| {
         spawn_main_menu_button(parent, "Start", MenuButtonAction::Play);
         spawn_main_menu_button(parent, "Quit", MenuButtonAction::Quit);
     });
@@ -132,5 +133,11 @@ fn button_system(
             (Interaction::Hovered, None) => HOVERED_BUTTON.into(),
             (Interaction::None, None) => NORMAL_BUTTON.into(),
         }
+    }
+}
+
+fn despawn_screen<T: Component>(to_despawn: Query<Entity, With<T>>, mut commands: Commands) {
+    for entity in &to_despawn {
+        commands.entity(entity).despawn_recursive();
     }
 }
