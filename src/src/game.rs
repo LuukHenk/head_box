@@ -22,9 +22,10 @@ impl Plugin for GamePlugin {
             .add_systems(OnExit(GameState::Game), despawn_screen::<OnGameScreen>)
             .add_systems(FixedUpdate, (
                 handle_game_over,
-                handle_enemy_spawning.before(set_enemy_directions),
+                set_current_level.after(handle_game_over),
+                spawn_enemies,
                 set_player_direction,
-                set_enemy_directions,
+                set_enemy_directions.after(spawn_enemies),
                 handle_player_enemy_collision.after(set_player_direction),
                 prevent_enemy_enemy_collision.after(set_enemy_directions),
                 prevent_wall_collision
@@ -155,6 +156,7 @@ struct Level {
     id: u32,
     total_enemies: u32,
     spawned_enemies: u32,
+    killed_enemies: u32,
     enemies_spawn_delay: u32,
     elapsed_time: Stopwatch,
 }
@@ -164,6 +166,7 @@ impl Level {
             id,
             total_enemies,
             spawned_enemies: 0,
+            killed_enemies: 0,
             enemies_spawn_delay,
             elapsed_time: Stopwatch::new(),
         }
@@ -187,12 +190,6 @@ fn spawn_outer_walls(commands: &mut Commands) {
     commands.spawn((WallBundle::new(620., 0., 40., 2000.,Color::BLACK), OnGameScreen));
 }
 
-fn spawn_enemies(commands: &mut Commands) {
-    commands.spawn((EnemyBundle::new(-50., OUTER_Y_COORDINATES), OnGameScreen));
-    commands.spawn((EnemyBundle::new(50., OUTER_Y_COORDINATES), OnGameScreen));
-    commands.spawn((EnemyBundle::new(-50., -OUTER_Y_COORDINATES), OnGameScreen));
-    commands.spawn((EnemyBundle::new(50., -OUTER_Y_COORDINATES), OnGameScreen));
-}
 
 fn game_setup(
     mut commands: Commands,
@@ -208,9 +205,38 @@ fn game_setup(
 }
 
 
-fn handle_enemy_spawning(level_query: Query<&Level, With<ActiveLevel>>) {
-    for level in level_query.iter() {
-        println!("{:#?}", level.id);
+fn set_current_level(
+    mut commands: Commands,
+    active_level_query: Query<(Entity, &Level), With<ActiveLevel>>,
+    level_query: Query<(Entity, &Level)>,
+    mut game_state: ResMut<NextState<GameState>>
+) {
+    let (active_level_entity, active_level) = active_level_query.single();
+    if active_level.killed_enemies < active_level.total_enemies { return }
+
+    commands.entity(active_level_entity).remove::<ActiveLevel>();
+
+    let next_level_id = active_level.id + 1;
+    for (level_entity, level) in level_query.iter() {
+        if level.id != next_level_id { continue }
+        commands.entity(level_entity).insert(ActiveLevel);
+        return
+    }
+    game_state.set(GameState::MainMenu); // If all levels are done, go back to the main menu
+}
+
+
+// fn spawn_enemies(commands: &mut Commands) {
+//     commands.spawn((EnemyBundle::new(-50., OUTER_Y_COORDINATES), OnGameScreen));
+//     commands.spawn((EnemyBundle::new(50., OUTER_Y_COORDINATES), OnGameScreen));
+//     commands.spawn((EnemyBundle::new(-50., -OUTER_Y_COORDINATES), OnGameScreen));
+//     commands.spawn((EnemyBundle::new(50., -OUTER_Y_COORDINATES), OnGameScreen));
+// }
+
+fn spawn_enemies(mut level_query: Query<&mut Level, With<ActiveLevel>>) {
+    for mut level in level_query.iter_mut() {
+        level.killed_enemies += 1;
+        println!("{:#?}, {:#?}", level.id, level.killed_enemies);
     }
     // let time_instant = time.elap();
     // println!("{:#?}", level_query);
