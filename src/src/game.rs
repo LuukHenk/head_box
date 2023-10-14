@@ -9,7 +9,7 @@ use super::{
 };
 
 const Z_VALUE: f32 = 1.;
-const COLLISION_PUSHBACK: f32 = 0.07;
+const COLLISION_PUSHBACK: f32 = 0.2;
 const INITIAL_PLAYER_HEALTH: f32 = 300.;
 
 
@@ -146,20 +146,33 @@ impl WallBundle {
     }
 }
 
-fn game_setup(
-    mut commands: Commands,
-) {
-    commands.spawn((PlayerBundle::new(), OnGameScreen));
+fn spawn_outer_walls(commands: &mut Commands) {
+    // Top
+    commands.spawn((WallBundle::new(0., 380., 2000., 80., Color::NONE), OnGameScreen));
+    commands.spawn((WallBundle::new(-400., 340., 600., 40., Color::BLACK), OnGameScreen));
+    commands.spawn((WallBundle::new(400., 340., 600., 40., Color::BLACK), OnGameScreen));
+    // Bottom
+    commands.spawn((WallBundle::new(0., -380., 2000., 80., Color::NONE), OnGameScreen));
+    commands.spawn((WallBundle::new(-400., -340., 600., 40., Color::BLACK), OnGameScreen));
+    commands.spawn((WallBundle::new(400., -340., 600., 40., Color::BLACK), OnGameScreen));
+    // Sides
+    commands.spawn((WallBundle::new(-620., 0., 40., 2000.,Color::BLACK), OnGameScreen));
+    commands.spawn((WallBundle::new(620., 0., 40., 2000.,Color::BLACK), OnGameScreen));
+}
+
+fn spawn_enemies(commands: &mut Commands) {
     commands.spawn((EnemyBundle::new(-50., 320.), OnGameScreen));
     commands.spawn((EnemyBundle::new(50., 320.), OnGameScreen));
     commands.spawn((EnemyBundle::new(-50., -320.), OnGameScreen));
     commands.spawn((EnemyBundle::new(50., -320.), OnGameScreen));
-    commands.spawn((WallBundle::new(0., 340., 2000., 40., Color::BLACK), OnGameScreen));
-    commands.spawn((WallBundle::new(0., -340., 2000., 40.,Color::BLACK), OnGameScreen));
-    commands.spawn((WallBundle::new(-620., 0., 40., 2000.,Color::BLACK), OnGameScreen));
-    commands.spawn((WallBundle::new(620., 0., 40., 2000.,Color::BLACK), OnGameScreen));
-    commands.spawn((WallBundle::new(0., 325., 200., 10., Color::DARK_GRAY), OnGameScreen));
-    commands.spawn((WallBundle::new(0., -325., 200., 10., Color::DARK_GRAY), OnGameScreen));
+}
+
+fn game_setup(
+    mut commands: Commands,
+) {
+    commands.spawn((PlayerBundle::new(), OnGameScreen));
+    spawn_outer_walls(&mut commands);
+    spawn_enemies(&mut commands);
 }
 
 fn handle_game_over(

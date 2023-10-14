@@ -5,8 +5,9 @@ use bevy::prelude::*;
 #[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States)]
 enum GameState {
     #[default]
-    MainMenu,
     Game,
+    MainMenu,
+
 }
 
 fn main() {
