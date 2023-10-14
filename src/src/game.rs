@@ -157,11 +157,11 @@ struct Level {
     total_enemies: u32,
     spawned_enemies: u32,
     killed_enemies: u32,
-    enemies_spawn_delay: u32,
+    enemies_spawn_delay: f32,
     elapsed_time: Stopwatch,
 }
 impl Level {
-    fn new(id: u32, total_enemies: u32, enemies_spawn_delay: u32) -> Level {
+    fn new(id: u32, total_enemies: u32, enemies_spawn_delay: f32) -> Level {
         Level {
             id,
             total_enemies,
@@ -198,8 +198,8 @@ fn game_setup(
     spawn_outer_walls(&mut commands);
 
 
-    let first_level_entity = commands.spawn((Level::new(1, 4, 1), OnGameScreen)).id();
-    commands.spawn((Level::new(2, 6, 1), OnGameScreen));
+    let first_level_entity = commands.spawn((Level::new(1, 4, 5.), OnGameScreen)).id();
+    // commands.spawn((Level::new(2, 6, 5.), OnGameScreen));
     commands.entity(first_level_entity).insert(ActiveLevel);
 
 }
@@ -233,17 +233,24 @@ fn set_current_level(
 //     commands.spawn((EnemyBundle::new(50., -OUTER_Y_COORDINATES), OnGameScreen));
 // }
 
-fn spawn_enemies(mut level_query: Query<&mut Level, With<ActiveLevel>>) {
-    for mut level in level_query.iter_mut() {
-        level.killed_enemies += 1;
-        println!("{:#?}, {:#?}", level.id, level.killed_enemies);
+fn spawn_enemies(
+    time: Res<Time>,
+    mut commands: Commands,
+    mut level_query: Query<&mut Level, With<ActiveLevel>>
+) {
+    let mut level = level_query.single_mut();
+    if level.total_enemies > level.spawned_enemies {
+        let expected_spawned_enemies = (level.elapsed_time.elapsed_secs() / level.enemies_spawn_delay + 1.).floor();
+        if level.spawned_enemies < expected_spawned_enemies as u32 {
+            spawn_enemy(commands);
+            level.spawned_enemies += 1;
+        }
     }
-    // let time_instant = time.elap();
-    // println!("{:#?}", level_query);
-    // Check if there needs to spawn at least a single enemy in the current level
-    // if not, go to next level
-    // if so, check if the enemy spawn timer is ready to spawn a new enemy
-    // if so, spawn a new enemy
+    level.elapsed_time.tick(time.delta());
+}
+
+fn spawn_enemy(mut commands: Commands) {
+    commands.spawn((EnemyBundle::new(-50., OUTER_Y_COORDINATES), OnGameScreen));
 }
 
 fn handle_game_over(
