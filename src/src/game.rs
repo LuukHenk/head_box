@@ -1,7 +1,8 @@
-
+use std::time::Duration;
 use bevy::{
     prelude::*,
     sprite::collide_aabb::{collide, Collision},
+    time::Stopwatch,
 };
 use super::{
     GameState,
@@ -35,7 +36,6 @@ impl Plugin for GamePlugin {
     }
 }
 
-#[derive()]
 
 #[derive(Component)]
 struct OnGameScreen;
@@ -150,6 +150,28 @@ impl WallBundle {
     }
 }
 
+#[derive(Component)]
+struct Level {
+    id: u32,
+    total_enemies: u32,
+    spawned_enemies: u32,
+    enemies_spawn_delay: u32,
+    elapsed_time: Stopwatch,
+}
+impl Level {
+    fn new(id: u32, total_enemies: u32, enemies_spawn_delay: u32) -> Level {
+        Level {
+            id,
+            total_enemies,
+            spawned_enemies: 0,
+            enemies_spawn_delay,
+            elapsed_time: Stopwatch::new(),
+        }
+    }
+}
+
+#[derive(Component)]
+struct ActiveLevel;
 
 fn spawn_outer_walls(commands: &mut Commands) {
     // Top
@@ -177,11 +199,21 @@ fn game_setup(
 ) {
     commands.spawn((PlayerBundle::new(), OnGameScreen));
     spawn_outer_walls(&mut commands);
-    spawn_enemies(&mut commands);
+
+
+    let first_level_entity = commands.spawn((Level::new(1, 4, 1), OnGameScreen)).id();
+    commands.spawn((Level::new(2, 6, 1), OnGameScreen));
+    commands.entity(first_level_entity).insert(ActiveLevel);
+
 }
 
-fn handle_enemy_spawning(time: Res<Time>,) {
-    println!("{:#?}", time.last_update().unwrap());
+
+fn handle_enemy_spawning(level_query: Query<&Level, With<ActiveLevel>>) {
+    for level in level_query.iter() {
+        println!("{:#?}", level.id);
+    }
+    // let time_instant = time.elap();
+    // println!("{:#?}", level_query);
     // Check if there needs to spawn at least a single enemy in the current level
     // if not, go to next level
     // if so, check if the enemy spawn timer is ready to spawn a new enemy
