@@ -2,9 +2,6 @@
 
 # User stories
 
-### Create a level
-- Timed enemy spawning
-
 ### Add a weapon
 - Add player aiming direction
 - Add bullets
