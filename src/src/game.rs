@@ -1,4 +1,4 @@
-use std::time::Duration;
+
 use bevy::{
     prelude::*,
     sprite::collide_aabb::{collide, Collision},
@@ -225,17 +225,9 @@ fn set_current_level(
     game_state.set(GameState::MainMenu); // If all levels are done, go back to the main menu
 }
 
-
-// fn spawn_enemies(commands: &mut Commands) {
-//     commands.spawn((EnemyBundle::new(-50., OUTER_Y_COORDINATES), OnGameScreen));
-//     commands.spawn((EnemyBundle::new(50., OUTER_Y_COORDINATES), OnGameScreen));
-//     commands.spawn((EnemyBundle::new(-50., -OUTER_Y_COORDINATES), OnGameScreen));
-//     commands.spawn((EnemyBundle::new(50., -OUTER_Y_COORDINATES), OnGameScreen));
-// }
-
 fn spawn_enemies(
     time: Res<Time>,
-    mut commands: Commands,
+    commands: Commands,
     mut level_query: Query<&mut Level, With<ActiveLevel>>
 ) {
     let mut level = level_query.single_mut();
@@ -250,7 +242,9 @@ fn spawn_enemies(
 }
 
 fn spawn_enemy(mut commands: Commands) {
-    commands.spawn((EnemyBundle::new(-50., OUTER_Y_COORDINATES), OnGameScreen));
+    let y = if rand::random::<bool>() {1.}  else {-1.};
+    let x = if rand::random::<bool>() {1.}  else {-1.};
+    commands.spawn((EnemyBundle::new(50. * x, OUTER_Y_COORDINATES * y), OnGameScreen));
 }
 
 fn handle_game_over(
