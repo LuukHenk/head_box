@@ -11,7 +11,8 @@ use super::{
 const Z_VALUE: f32 = 1.;
 const COLLISION_PUSHBACK: f32 = 0.2;
 const INITIAL_PLAYER_HEALTH: f32 = 300.;
-
+const HIDDEN_WALL_COLOR: Color = Color::BLUE;
+const OUTER_Y_COORDINATES: f32 = 400.;
 
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
@@ -20,6 +21,7 @@ impl Plugin for GamePlugin {
             .add_systems(OnExit(GameState::Game), despawn_screen::<OnGameScreen>)
             .add_systems(FixedUpdate, (
                 handle_game_over,
+                handle_enemy_spawning.before(set_enemy_directions),
                 set_player_direction,
                 set_enemy_directions,
                 handle_player_enemy_collision.after(set_player_direction),
@@ -32,6 +34,8 @@ impl Plugin for GamePlugin {
             ).run_if(in_state(GameState::Game)));
     }
 }
+
+#[derive()]
 
 #[derive(Component)]
 struct OnGameScreen;
@@ -146,13 +150,14 @@ impl WallBundle {
     }
 }
 
+
 fn spawn_outer_walls(commands: &mut Commands) {
     // Top
-    commands.spawn((WallBundle::new(0., 380., 2000., 80., Color::NONE), OnGameScreen));
+    commands.spawn((WallBundle::new(0., OUTER_Y_COORDINATES, 2000., 80., HIDDEN_WALL_COLOR), OnGameScreen));
     commands.spawn((WallBundle::new(-400., 340., 600., 40., Color::BLACK), OnGameScreen));
     commands.spawn((WallBundle::new(400., 340., 600., 40., Color::BLACK), OnGameScreen));
     // Bottom
-    commands.spawn((WallBundle::new(0., -380., 2000., 80., Color::NONE), OnGameScreen));
+    commands.spawn((WallBundle::new(0., -OUTER_Y_COORDINATES, 2000., 80., HIDDEN_WALL_COLOR), OnGameScreen));
     commands.spawn((WallBundle::new(-400., -340., 600., 40., Color::BLACK), OnGameScreen));
     commands.spawn((WallBundle::new(400., -340., 600., 40., Color::BLACK), OnGameScreen));
     // Sides
@@ -161,10 +166,10 @@ fn spawn_outer_walls(commands: &mut Commands) {
 }
 
 fn spawn_enemies(commands: &mut Commands) {
-    commands.spawn((EnemyBundle::new(-50., 320.), OnGameScreen));
-    commands.spawn((EnemyBundle::new(50., 320.), OnGameScreen));
-    commands.spawn((EnemyBundle::new(-50., -320.), OnGameScreen));
-    commands.spawn((EnemyBundle::new(50., -320.), OnGameScreen));
+    commands.spawn((EnemyBundle::new(-50., OUTER_Y_COORDINATES), OnGameScreen));
+    commands.spawn((EnemyBundle::new(50., OUTER_Y_COORDINATES), OnGameScreen));
+    commands.spawn((EnemyBundle::new(-50., -OUTER_Y_COORDINATES), OnGameScreen));
+    commands.spawn((EnemyBundle::new(50., -OUTER_Y_COORDINATES), OnGameScreen));
 }
 
 fn game_setup(
@@ -173,6 +178,14 @@ fn game_setup(
     commands.spawn((PlayerBundle::new(), OnGameScreen));
     spawn_outer_walls(&mut commands);
     spawn_enemies(&mut commands);
+}
+
+fn handle_enemy_spawning(time: Res<Time>,) {
+    println!("{:#?}", time.last_update().unwrap());
+    // Check if there needs to spawn at least a single enemy in the current level
+    // if not, go to next level
+    // if so, check if the enemy spawn timer is ready to spawn a new enemy
+    // if so, spawn a new enemy
 }
 
 fn handle_game_over(
