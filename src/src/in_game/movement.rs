@@ -3,8 +3,8 @@ use bevy::{
     sprite::collide_aabb::{collide, Collision},
 };
 use super::game_components::*;
-const STRONG_COLLISION_PUSHBACK: f32 = 0.2;
-
+const WEAK_COLLISION_PUSHBACK: f32 = 0.2;
+const STRONG_COLLISION_PUSHBACK: f32 = 0.24;
 
 pub fn move_objects(mut query: Query<(&mut Transform, &Movement), With<Movement>>) {
     for (mut transform, movement) in query.iter_mut() {
@@ -44,7 +44,7 @@ pub fn prevent_enemy_enemy_collision(
                 movement_a = apply_collision_pushback(
                     collision,
                     movement_a,
-                    STRONG_COLLISION_PUSHBACK
+                    WEAK_COLLISION_PUSHBACK
                 );
             }
         }
@@ -61,7 +61,7 @@ pub fn prevent_wall_collision(
                 movement_a = apply_collision_pushback(
                     collision,
                     movement_a,
-                    STRONG_COLLISION_PUSHBACK,
+                    WEAK_COLLISION_PUSHBACK,
                 );
             }
         }
@@ -109,12 +109,8 @@ fn apply_collision_pushback(
         Collision::Top => movement.direction_y = pushback_strength,
         Collision::Bottom => movement.direction_y = -pushback_strength,
         Collision::Inside => {
-            println!("Stuck!");
-            movement.direction_x = if rand::random::<bool>() {5.}  else {-5.};
-            movement.direction_y = if rand::random::<bool>() {5.}  else {-5.};
         }
 
     }
-    println!("collision");
     movement
 }

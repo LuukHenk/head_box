@@ -36,7 +36,7 @@ impl ZombieBundle {
     pub fn spawn(mut commands: Commands) {
         let y = if rand::random::<bool>() { 1. } else { -1. };
         let x = if rand::random::<bool>() { 1. } else { -1. };
-        commands.spawn((ZombieBundle::new(SCREEN_CENTER * x, 100. * y), GameScreenMarker));
+        commands.spawn((ZombieBundle::new(SCREEN_CENTER * x, OUTER_Y_COORDINATES * y), GameScreenMarker));
     }
 
     pub fn set_directions(
