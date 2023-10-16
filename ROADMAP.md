@@ -26,3 +26,6 @@
 - Taking damage sound (player and enemies)
 - Dying sound (player and enemies)
 - Starting the game sound
+
+### Smarter collision handling
+- When there is a collision::inside, try to separate the entities in a smart way

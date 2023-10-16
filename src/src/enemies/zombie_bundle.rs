@@ -47,12 +47,8 @@ impl ZombieBundle {
             let player_position = player_transform.translation;
             for (enemy_movement, enemy_transform) in enemy_query.iter_mut() {
                 let enemy_position = enemy_transform.translation;
-                set_directions_to_target(enemy_movement, enemy_position, player_position)
+                set_directions_to_target(enemy_movement, enemy_position, player_position);
             }
         }
     }
-
-    fn set_direction(target_distance: f32, enemy_velocity: f32) -> f32 {
-        if target_distance > enemy_velocity {1.} else if target_distance < -enemy_velocity {-1.} else {0.}
-    }
-}
+    
