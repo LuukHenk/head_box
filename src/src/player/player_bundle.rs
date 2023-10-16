@@ -6,19 +6,19 @@ use super::game_constants::*;
 const INITIAL_PLAYER_HEALTH: f32 = 300.;
 
 #[derive(Bundle)]
-struct PlayerBundle {
-    player: PlayerMarker,
+pub struct PlayerBundle {
+    player_marker: PlayerMarker,
     health: Health,
     sprite_bundle: SpriteBundle,
     movement: Movement,
-    collider: CollisionMarker,
+    collision_marker: CollisionMarker,
 }
 
 impl PlayerBundle {
     fn new() -> PlayerBundle {
         PlayerBundle {
-            player: PlayerMarker,
-            collider: CollisionMarker,
+            player_marker: PlayerMarker,
+            collision_marker: CollisionMarker,
             sprite_bundle: SpriteBundle {
                 transform: Transform {
                     translation: Vec3::new(0., 0., Z_VALUE),
@@ -36,11 +36,7 @@ impl PlayerBundle {
             health: Health(INITIAL_PLAYER_HEALTH),
         }
     }
-}
 
-pub struct Player {}
-
-impl Player {
     pub fn spawn(mut commands: Commands) {
         commands.spawn((PlayerBundle::new(), GameScreenMarker));
     }
@@ -63,5 +59,4 @@ impl Player {
         }
     }
 }
-
 

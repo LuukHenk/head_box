@@ -11,7 +11,7 @@ use super::despawn_screen;
 const COLLISION_PUSHBACK: f32 = 0.2;
 
 const HIDDEN_WALL_COLOR: Color = Color::BLUE;
-const OUTER_Y_COORDINATES: f32 = 400.;
+
 
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
@@ -55,13 +55,7 @@ struct Wall;
 
 
 
-#[derive(Bundle)]
-struct EnemyBundle {
-    enemy: Enemy,
-    sprite_bundle: SpriteBundle,
-    movement: Movement,
-    collider: Collider
-}
+
 
 #[derive(Bundle)]
 struct WallBundle {
@@ -72,28 +66,7 @@ struct WallBundle {
 
 
 
-impl EnemyBundle {
-    fn new(x: f32, y: f32) -> EnemyBundle {
-        EnemyBundle {
-            sprite_bundle: SpriteBundle {
-                transform: Transform {
-                    translation: Vec3::new(x, y, Z_VALUE),
-                    scale: Vec3::new(20.0, 20.0, Z_VALUE),
-                    ..default()
-                },
-                sprite: Sprite { color: Color::LIME_GREEN, ..default() },
-                ..default()
-            },
-            movement: Movement {
-                direction_x: 0.,
-                direction_y: 0.,
-                velocity: 2.,
-            },
-            enemy: Enemy,
-            collider: Collider,
-        }
-    }
-}
+
 
 impl WallBundle {
     fn new(x: f32, y: f32, width: f32, height: f32, color: Color) -> WallBundle {
@@ -200,12 +173,6 @@ fn spawn_enemies_for_current_level(
         }
     }
     level.elapsed_time.tick(time.delta());
-}
-
-fn spawn_enemy(mut commands: Commands) {
-    let y = if rand::random::<bool>() {1.}  else {-1.};
-    let x = if rand::random::<bool>() {1.}  else {-1.};
-    commands.spawn((EnemyBundle::new(50. * x, OUTER_Y_COORDINATES * y), OnGameScreen));
 }
 
 fn handle_game_over(

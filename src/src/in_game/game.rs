@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use super::ScreenState;
 use super::despawn_screen;
 use super::game_components::*;
-use super::player::Player;
+use super::player_bundle::PlayerBundle;
 
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
@@ -10,12 +10,12 @@ impl Plugin for GamePlugin {
         app
             .add_systems(
                 OnEnter(ScreenState::Game), (
-                    Player::spawn
+                    PlayerBundle::spawn
                 )
             )
             .add_systems(OnExit(ScreenState::Game), despawn_screen::<GameScreenMarker>)
             .add_systems(FixedUpdate, (
-                    Player::set_direction,
+                    PlayerBundle::set_direction,
                     move_objects,
                 ).run_if(in_state(ScreenState::Game))
             )
