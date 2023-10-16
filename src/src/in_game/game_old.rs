@@ -10,7 +10,7 @@ use super::despawn_screen;
 
 
 
-const HIDDEN_WALL_COLOR: Color = Color::BLUE;
+
 
 
 pub struct GamePlugin;
@@ -22,15 +22,6 @@ impl Plugin for GamePlugin {
                     handle_game_over,
                     set_current_level.after(handle_game_over),
                     spawn_enemies_for_current_level,
-                    set_player_direction,
-                    set_enemy_directions.after(spawn_enemies_for_current_level),
-                    handle_player_enemy_collision.after(set_player_direction),
-                    prevent_enemy_enemy_collision.after(set_enemy_directions),
-                    prevent_wall_collision
-                        .after(set_player_direction)
-                        .after(set_enemy_directions)
-                    ,
-                    move_objects.after(prevent_wall_collision),
                 ).run_if(in_state(ScreenState::Game))
             );
     }
@@ -39,8 +30,6 @@ impl Plugin for GamePlugin {
 
 
 
-#[derive(Component)]
-struct Wall;
 
 
 
@@ -52,34 +41,7 @@ struct Wall;
 
 
 
-#[derive(Bundle)]
-struct WallBundle {
-    wall: Wall,
-    sprite_bundle: SpriteBundle,
-    collider: Collider,
-}
 
-
-
-
-
-impl WallBundle {
-    fn new(x: f32, y: f32, width: f32, height: f32, color: Color) -> WallBundle {
-        WallBundle {
-            wall: Wall,
-            sprite_bundle: SpriteBundle {
-                transform: Transform {
-                    translation: Vec3::new(x, y, Z_VALUE),
-                    scale: Vec3::new(width, height, Z_VALUE),
-                    ..default()
-                },
-                sprite: Sprite { color, ..default() },
-                ..default()
-            },
-            collider: Collider
-        }
-    }
-}
 
 #[derive(Component)]
 struct Level {
@@ -105,20 +67,6 @@ impl Level {
 
 #[derive(Component)]
 struct ActiveLevel;
-
-fn spawn_outer_walls(commands: &mut Commands) {
-    // Top
-    commands.spawn((WallBundle::new(0., OUTER_Y_COORDINATES, 2000., 80., HIDDEN_WALL_COLOR), OnGameScreen));
-    commands.spawn((WallBundle::new(-400., 340., 600., 40., Color::BLACK), OnGameScreen));
-    commands.spawn((WallBundle::new(400., 340., 600., 40., Color::BLACK), OnGameScreen));
-    // Bottom
-    commands.spawn((WallBundle::new(0., -OUTER_Y_COORDINATES, 2000., 80., HIDDEN_WALL_COLOR), OnGameScreen));
-    commands.spawn((WallBundle::new(-400., -340., 600., 40., Color::BLACK), OnGameScreen));
-    commands.spawn((WallBundle::new(400., -340., 600., 40., Color::BLACK), OnGameScreen));
-    // Sides
-    commands.spawn((WallBundle::new(-620., 0., 40., 2000.,Color::BLACK), OnGameScreen));
-    commands.spawn((WallBundle::new(620., 0., 40., 2000.,Color::BLACK), OnGameScreen));
-}
 
 
 fn game_setup(

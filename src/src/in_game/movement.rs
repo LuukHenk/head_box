@@ -37,7 +37,7 @@ pub fn prevent_enemy_enemy_collision(
             if entity_a == entity_b {continue}
             let collision = check_for_collision(transform_a, transform_b);
             if let Some(collision) = collision {
-                movement_a = apply_collision_pushback(collision, movement_a, WEAK_COLLISION_PUSHBACK);
+                movement_a = apply_collision_pushback(collision, movement_a, STRONG_COLLISION_PUSHBACK);
             }
         }
     }
@@ -50,7 +50,7 @@ pub fn prevent_wall_collision(
         for transform_b in wall_query.iter() {
             let collision = check_for_collision(transform_a, transform_b);
             if let Some(collision) = collision {
-                movement_a = apply_collision_pushback(collision, movement_a, STRONG_COLLISION_PUSHBACK);
+                movement_a = apply_collision_pushback(collision, movement_a, WEAK_COLLISION_PUSHBACK);
             }
         }
     }

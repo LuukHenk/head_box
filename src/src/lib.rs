@@ -5,5 +5,6 @@ mod head_box_plugin;
 mod player;
 mod enemies;
 
+mod arenas;
 
 pub use head_box_plugin::head_box_plugin::HeadBoxPlugin;

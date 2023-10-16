@@ -10,6 +10,7 @@ use super::movement::{
 };
 use super::player_bundle::PlayerBundle;
 use super::zombie_bundle::ZombieBundle;
+use super::Boxy;
 
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
@@ -17,6 +18,7 @@ impl Plugin for GamePlugin {
         app
             .add_systems(
                 OnEnter(ScreenState::Game), (
+                    Boxy::spawn,
                     PlayerBundle::spawn,
                     ZombieBundle::spawn,
                     ZombieBundle::spawn,
