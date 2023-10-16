@@ -11,6 +11,12 @@ use super::movement::{
 use super::player_bundle::PlayerBundle;
 use super::zombie_bundle::ZombieBundle;
 use super::Boxy;
+use super::level_selection_handler::{
+    spawn_levels,
+    spawn_enemies_for_current_level,
+    handle_game_over,
+    set_current_level,
+};
 
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
@@ -20,12 +26,14 @@ impl Plugin for GamePlugin {
                 OnEnter(ScreenState::Game), (
                     Boxy::spawn,
                     PlayerBundle::spawn,
-                    ZombieBundle::spawn,
-                    ZombieBundle::spawn,
+                    spawn_levels,
                 )
             )
             .add_systems(OnExit(ScreenState::Game), despawn_screen::<GameScreenMarker>)
             .add_systems(FixedUpdate, (
+                    handle_game_over,
+                    set_current_level.after(handle_game_over),
+                    spawn_enemies_for_current_level,
                     PlayerBundle::set_direction,
                     ZombieBundle::set_directions,
                     handle_player_enemy_collision.after(PlayerBundle::set_direction),

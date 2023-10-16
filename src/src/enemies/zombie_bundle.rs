@@ -34,8 +34,8 @@ impl ZombieBundle {
     }
 
     pub fn spawn(mut commands: Commands) {
-        let y = if rand::random::<bool>() {1.}  else {-1.};
-        let x = if rand::random::<bool>() {1.}  else {-1.};
+        let y = if rand::random::<bool>() { 1. } else { -1. };
+        let x = if rand::random::<bool>() { 1. } else { -1. };
         commands.spawn((ZombieBundle::new(SCREEN_CENTER * x, 100. * y), GameScreenMarker));
     }
 
@@ -51,4 +51,4 @@ impl ZombieBundle {
             }
         }
     }
-    
+}
