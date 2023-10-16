@@ -23,9 +23,9 @@ impl Plugin for GamePlugin {
             .add_systems(FixedUpdate, (
                 handle_game_over,
                 set_current_level.after(handle_game_over),
-                spawn_enemies,
+                spawn_enemies_for_current_level,
                 set_player_direction,
-                set_enemy_directions.after(spawn_enemies),
+                set_enemy_directions.after(spawn_enemies_for_current_level),
                 handle_player_enemy_collision.after(set_player_direction),
                 prevent_enemy_enemy_collision.after(set_enemy_directions),
                 prevent_wall_collision
@@ -198,7 +198,7 @@ fn game_setup(
     spawn_outer_walls(&mut commands);
 
 
-    let first_level_entity = commands.spawn((Level::new(1, 4, 5.), OnGameScreen)).id();
+    let first_level_entity = commands.spawn((Level::new(1, 100, 1.), OnGameScreen)).id();
     // commands.spawn((Level::new(2, 6, 5.), OnGameScreen));
     commands.entity(first_level_entity).insert(ActiveLevel);
 
@@ -225,7 +225,7 @@ fn set_current_level(
     game_state.set(GameState::MainMenu); // If all levels are done, go back to the main menu
 }
 
-fn spawn_enemies(
+fn spawn_enemies_for_current_level(
     time: Res<Time>,
     commands: Commands,
     mut level_query: Query<&mut Level, With<ActiveLevel>>
@@ -365,7 +365,9 @@ fn __apply_collision_pushback(collision: Collision, mut movement: Mut<Movement>)
         Collision::Right => movement.direction_x = COLLISION_PUSHBACK,
         Collision::Top => movement.direction_y = COLLISION_PUSHBACK,
         Collision::Bottom => movement.direction_y = -COLLISION_PUSHBACK,
-        Collision::Inside => { println!("Stuck!"); }
+        Collision::Inside => {
+            // println!("Stuck!");
+        }
     }
     movement
 }
