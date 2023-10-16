@@ -3,6 +3,7 @@ use super::ScreenState;
 use super::despawn_screen;
 use super::game_components::*;
 use super::player_bundle::PlayerBundle;
+use super::zombie_bundle::ZombieBundle;
 
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
@@ -10,12 +11,14 @@ impl Plugin for GamePlugin {
         app
             .add_systems(
                 OnEnter(ScreenState::Game), (
-                    PlayerBundle::spawn
+                    PlayerBundle::spawn,
+                    ZombieBundle::spawn
                 )
             )
             .add_systems(OnExit(ScreenState::Game), despawn_screen::<GameScreenMarker>)
             .add_systems(FixedUpdate, (
                     PlayerBundle::set_direction,
+                    ZombieBundle::set_directions,
                     move_objects,
                 ).run_if(in_state(ScreenState::Game))
             )

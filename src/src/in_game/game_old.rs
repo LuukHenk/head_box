@@ -41,8 +41,7 @@ impl Plugin for GamePlugin {
 struct OnGameScreen;
 
 
-#[derive(Component)]
-struct Enemy;
+
 
 #[derive(Component)]
 struct Wall;
@@ -189,30 +188,7 @@ fn handle_game_over(
 
 
 
-fn set_enemy_directions(
-    mut enemy_query: Query<(&mut Movement, &Transform), With<Enemy>>,
-    player_query: Query<&Transform, With<Player>>
-) {
-    let player_transform = player_query.single();
-    let player_position = player_transform.translation;
-    for (mut enemy_movement, enemy_transform) in enemy_query.iter_mut() {
-        let enemy_position = enemy_transform.translation;
-        let distance_x_with_target =  player_position[0] - enemy_position[0];
-        let distance_y_with_target =  player_position[1] - enemy_position[1];
-        enemy_movement.direction_x = set_enemy_direction(
-            distance_x_with_target,
-            enemy_movement.velocity
-        );
-        enemy_movement.direction_y = set_enemy_direction(
-            distance_y_with_target,
-            enemy_movement.velocity
-        );
-    }
-}
 
-fn set_enemy_direction(target_distance: f32, enemy_velocity: f32) -> f32 {
-    if target_distance > enemy_velocity {1.} else if target_distance < -enemy_velocity {-1.} else {0.}
-}
 
 
 fn handle_player_enemy_collision(
