@@ -4,10 +4,8 @@ use bevy::{
     prelude::*,
     app::AppExit,
 };
-use super::main_game_script::{
-    ScreenState,
-    despawn_screen
-};
+use super::ScreenState;
+use super::despawn_screen;
 
 
 const TEXT_COLOR: Color = Color::rgb(0.9, 0.9, 0.9);

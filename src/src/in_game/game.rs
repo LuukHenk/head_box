@@ -4,10 +4,8 @@ use bevy::{
     sprite::collide_aabb::{collide, Collision},
     time::Stopwatch,
 };
-use super::main_game_script::{
-    ScreenState,
-    despawn_screen
-};
+use super::ScreenState;
+use super::despawn_screen;
 
 const Z_VALUE: f32 = 1.;
 const COLLISION_PUSHBACK: f32 = 0.2;

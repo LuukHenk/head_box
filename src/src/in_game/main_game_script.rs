@@ -13,11 +13,7 @@ pub(crate) enum ScreenState {
 pub fn main_game_script() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .insert_resource(FixedTime::new_from_secs(1.0 / 60.0))
-        .add_state::<ScreenState>()
-        .add_systems(Startup, setup)
-        .add_plugins((game::GamePlugin, main_menu::MainMenuPlugin))
-        .run();
+
 }
 
 pub(crate) fn despawn_screen<T: Component>(to_despawn: Query<Entity, With<T>>, mut commands: Commands) {

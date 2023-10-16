@@ -1,5 +1,10 @@
-use head_box::main_game_script;
+
+use bevy::prelude::*;
+use head_box::HeadBoxDisplayPlugin;
 
 fn main() {
-    main_game_script()
+    App::new()
+        .add_plugins(DefaultPlugins)
+        .add_plugins(HeadBoxDisplayPlugin)
+        .run();
 }
