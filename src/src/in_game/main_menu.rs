@@ -4,7 +4,7 @@ use bevy::{
     prelude::*,
     app::AppExit,
 };
-use super::{
+use super::main_game_script::{
     GameState,
     despawn_screen
 };

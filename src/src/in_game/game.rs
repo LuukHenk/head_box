@@ -4,7 +4,7 @@ use bevy::{
     sprite::collide_aabb::{collide, Collision},
     time::Stopwatch,
 };
-use super::{
+use super::main_game_script::{
     GameState,
     despawn_screen
 };
