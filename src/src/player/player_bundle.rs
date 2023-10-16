@@ -42,20 +42,21 @@ impl PlayerBundle {
     }
 
     pub fn set_direction(keyboard_input: Res<Input<KeyCode>>, mut player_query: Query<&mut Movement, With<PlayerMarker>>) {
-        let mut movement = player_query.single_mut();
-        movement.direction_x = 0.;
-        movement.direction_y = 0.;
-        if keyboard_input.pressed(KeyCode::Right) {
-            movement.direction_x += 1.;
-        }
-        if keyboard_input.pressed(KeyCode::Left) {
-            movement.direction_x -= 1.;
-        }
-        if keyboard_input.pressed(KeyCode::Up) {
-            movement.direction_y += 1.;
-        }
-        if keyboard_input.pressed(KeyCode::Down) {
-            movement.direction_y -= 1.;
+        for mut movement in player_query.iter_mut() {
+            movement.direction_x = 0.;
+            movement.direction_y = 0.;
+            if keyboard_input.pressed(KeyCode::Right) {
+                movement.direction_x += 1.;
+            }
+            if keyboard_input.pressed(KeyCode::Left) {
+                movement.direction_x -= 1.;
+            }
+            if keyboard_input.pressed(KeyCode::Up) {
+                movement.direction_y += 1.;
+            }
+            if keyboard_input.pressed(KeyCode::Down) {
+                movement.direction_y -= 1.;
+            }
         }
     }
 }

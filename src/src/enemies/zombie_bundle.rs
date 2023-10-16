@@ -3,6 +3,7 @@
 use bevy::prelude::*;
 use super::game_components::*;
 use super::game_constants::*;
+use super::set_directions_to_target;
 #[derive(Bundle)]
 pub struct ZombieBundle {
     sprite_bundle: SpriteBundle,
@@ -35,27 +36,19 @@ impl ZombieBundle {
     pub fn spawn(mut commands: Commands) {
         let y = if rand::random::<bool>() {1.}  else {-1.};
         let x = if rand::random::<bool>() {1.}  else {-1.};
-        commands.spawn((ZombieBundle::new(SCREEN_CENTER * x, OUTER_Y_COORDINATES * y), GameScreenMarker));
+        commands.spawn((ZombieBundle::new(SCREEN_CENTER * x, 100. * y), GameScreenMarker));
     }
 
     pub fn set_directions(
         mut enemy_query: Query<(&mut Movement, &Transform), With<EnemyMarker>>,
         player_query: Query<&Transform, With<PlayerMarker>>
     ) {
-        let player_transform = player_query.single();
-        let player_position = player_transform.translation;
-        for (mut enemy_movement, enemy_transform) in enemy_query.iter_mut() {
-            let enemy_position = enemy_transform.translation;
-            let distance_x_with_target =  player_position[0] - enemy_position[0];
-            let distance_y_with_target =  player_position[1] - enemy_position[1];
-            enemy_movement.direction_x = ZombieBundle::set_direction(
-                distance_x_with_target,
-                enemy_movement.velocity
-            );
-            enemy_movement.direction_y = ZombieBundle::set_direction(
-                distance_y_with_target,
-                enemy_movement.velocity
-            );
+        for player_transform in player_query.iter() {
+            let player_position = player_transform.translation;
+            for (enemy_movement, enemy_transform) in enemy_query.iter_mut() {
+                let enemy_position = enemy_transform.translation;
+                set_directions_to_target(enemy_movement, enemy_position, player_position)
+            }
         }
     }
 

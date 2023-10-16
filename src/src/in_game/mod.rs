@@ -2,7 +2,7 @@
 pub mod game_plugin;
 pub mod game_components;
 pub mod game_constants;
-mod movement;
+pub mod movement;
 pub mod wall_bundle;
 
 
