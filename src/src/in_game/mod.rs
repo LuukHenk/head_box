@@ -2,6 +2,7 @@
 pub mod game;
 pub mod game_components;
 pub mod game_constants;
+mod movement;
 
 
 use super::display_handler::display_handler::ScreenState;

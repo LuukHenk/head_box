@@ -8,7 +8,7 @@ use super::ScreenState;
 use super::despawn_screen;
 
 
-const COLLISION_PUSHBACK: f32 = 0.2;
+
 
 const HIDDEN_WALL_COLOR: Color = Color::BLUE;
 
@@ -35,10 +35,6 @@ impl Plugin for GamePlugin {
             );
     }
 }
-
-
-#[derive(Component)]
-struct OnGameScreen;
 
 
 
@@ -191,67 +187,7 @@ fn handle_game_over(
 
 
 
-fn handle_player_enemy_collision(
-    mut player_query: Query<(&Transform, &mut Movement, &mut Health), With<Player>>,
-    enemies_query: Query<&Transform, With<Enemy>>,
-) {
-    let (player_transform, mut player_movement, mut player_health) = player_query.single_mut();
-    for enemy_transform in enemies_query.iter() {
-        let collision = __check_for_collision(player_transform, enemy_transform);
-        if let Some(collision) = collision {
-            player_movement = __apply_collision_pushback(collision, player_movement);
-            player_health.0 -= 1.;
-            println!("Auch! HP: {:#?}/{:#?}", player_health.0, INITIAL_PLAYER_HEALTH)
-        }
-    }
-}
-fn prevent_enemy_enemy_collision(
-    mut enemies_query_a: Query<(Entity, &Transform, &mut Movement), With<Enemy>>,
-    enemies_query_b: Query<(Entity, &Transform), With<Enemy>>,
-) {
-    for (entity_a, transform_a, mut movement_a) in enemies_query_a.iter_mut() {
-        for (entity_b, transform_b) in enemies_query_b.iter() {
-            if entity_a == entity_b {continue}
-            let collision = __check_for_collision(transform_a, transform_b);
-            if let Some(collision) = collision {
-                movement_a = __apply_collision_pushback(collision, movement_a);
-            }
-        }
-    }
-}
-fn prevent_wall_collision(
-    mut moving_objects_query: Query<(&Transform, &mut Movement), With<Movement>>,
-    wall_query: Query<&Transform, With<Wall>>,
-) {
-    for (transform_a, mut movement_a) in moving_objects_query.iter_mut() {
-        for transform_b in wall_query.iter() {
-            let collision = __check_for_collision(transform_a, transform_b);
-            if let Some(collision) = collision {
-                movement_a = __apply_collision_pushback(collision, movement_a);
-            }
-        }
-    }
-}
 
-fn __check_for_collision(transform_a: &Transform, transform_b: &Transform) -> Option<Collision> {
-    collide(
-        transform_a.translation,
-        transform_a.scale.truncate(),
-        transform_b.translation,
-        transform_b.scale.truncate()
-    )
-}
 
-fn __apply_collision_pushback(collision: Collision, mut movement: Mut<Movement>) -> Mut<Movement> {
-    match collision {
-        Collision::Left => movement.direction_x = -COLLISION_PUSHBACK,
-        Collision::Right => movement.direction_x = COLLISION_PUSHBACK,
-        Collision::Top => movement.direction_y = COLLISION_PUSHBACK,
-        Collision::Bottom => movement.direction_y = -COLLISION_PUSHBACK,
-        Collision::Inside => {
-            // println!("Stuck!");
-        }
-    }
-    movement
-}
+
 // println!("{:#?}", something);

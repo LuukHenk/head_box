@@ -2,6 +2,12 @@ use bevy::prelude::*;
 use super::ScreenState;
 use super::despawn_screen;
 use super::game_components::*;
+use super::movement::{
+    move_objects,
+    handle_player_enemy_collision,
+    prevent_enemy_enemy_collision,
+    prevent_wall_collision,
+};
 use super::player_bundle::PlayerBundle;
 use super::zombie_bundle::ZombieBundle;
 
@@ -12,23 +18,24 @@ impl Plugin for GamePlugin {
             .add_systems(
                 OnEnter(ScreenState::Game), (
                     PlayerBundle::spawn,
-                    ZombieBundle::spawn
+                    ZombieBundle::spawn,
+                    ZombieBundle::spawn,
                 )
             )
             .add_systems(OnExit(ScreenState::Game), despawn_screen::<GameScreenMarker>)
             .add_systems(FixedUpdate, (
                     PlayerBundle::set_direction,
                     ZombieBundle::set_directions,
-                    move_objects,
+                    handle_player_enemy_collision.after(PlayerBundle::set_direction),
+                    prevent_enemy_enemy_collision.after(ZombieBundle::set_directions),
+                    prevent_wall_collision
+                        .after(PlayerBundle::set_direction)
+                        .after(ZombieBundle::set_directions)
+                    ,
+                    move_objects.after(prevent_wall_collision),
                 ).run_if(in_state(ScreenState::Game))
             )
         ;
     }
 }
 
-fn move_objects(mut query: Query<(&mut Transform, &Movement), With<Movement>>) {
-    for (mut transform, movement) in query.iter_mut() {
-        transform.translation.x += movement.direction_x * movement.velocity;
-        transform.translation.y += movement.direction_y * movement.velocity;
-    }
-}

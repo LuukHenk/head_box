@@ -7,6 +7,8 @@ pub struct PlayerMarker;
 pub struct EnemyMarker;
 
 #[derive(Component)]
+pub struct WallMarker;
+#[derive(Component)]
 pub struct GameScreenMarker;
 
 #[derive(Component)]

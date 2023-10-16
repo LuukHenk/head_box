@@ -56,7 +56,6 @@ impl ZombieBundle {
                 distance_y_with_target,
                 enemy_movement.velocity
             );
-            println!("{:#?}", enemy_movement);
         }
     }
 
