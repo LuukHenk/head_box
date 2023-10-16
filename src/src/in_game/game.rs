@@ -5,7 +5,7 @@ use bevy::{
     time::Stopwatch,
 };
 use super::main_game_script::{
-    GameState,
+    ScreenState,
     despawn_screen
 };
 
@@ -18,8 +18,8 @@ const OUTER_Y_COORDINATES: f32 = 400.;
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::Game), game_setup)
-            .add_systems(OnExit(GameState::Game), despawn_screen::<OnGameScreen>)
+        app.add_systems(OnEnter(ScreenState::Game), game_setup)
+            .add_systems(OnExit(ScreenState::Game), despawn_screen::<OnGameScreen>)
             .add_systems(FixedUpdate, (
                 handle_game_over,
                 set_current_level.after(handle_game_over),
@@ -33,7 +33,7 @@ impl Plugin for GamePlugin {
                     .after(set_enemy_directions)
                 ,
                 move_objects.after(prevent_wall_collision),
-            ).run_if(in_state(GameState::Game)));
+            ).run_if(in_state(ScreenState::Game)));
     }
 }
 
@@ -209,7 +209,7 @@ fn set_current_level(
     mut commands: Commands,
     active_level_query: Query<(Entity, &Level), With<ActiveLevel>>,
     level_query: Query<(Entity, &Level)>,
-    mut game_state: ResMut<NextState<GameState>>
+    mut game_state: ResMut<NextState<ScreenState>>
 ) {
     let (active_level_entity, active_level) = active_level_query.single();
     if active_level.killed_enemies < active_level.total_enemies { return }
@@ -222,7 +222,7 @@ fn set_current_level(
         commands.entity(level_entity).insert(ActiveLevel);
         return
     }
-    game_state.set(GameState::MainMenu); // If all levels are done, go back to the main menu
+    game_state.set(ScreenState::MainMenu); // If all levels are done, go back to the main menu
 }
 
 fn spawn_enemies_for_current_level(
@@ -249,11 +249,11 @@ fn spawn_enemy(mut commands: Commands) {
 
 fn handle_game_over(
     query: Query<&Health, With<Player>>,
-    mut game_state: ResMut<NextState<GameState>>,
+    mut game_state: ResMut<NextState<ScreenState>>,
 ) {
     let health = query.single();
     if health.0 <= 0. {
-        game_state.set(GameState::MainMenu);
+        game_state.set(ScreenState::MainMenu);
     }
 }
 

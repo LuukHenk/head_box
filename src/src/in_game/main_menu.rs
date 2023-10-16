@@ -5,7 +5,7 @@ use bevy::{
     app::AppExit,
 };
 use super::main_game_script::{
-    GameState,
+    ScreenState,
     despawn_screen
 };
 
@@ -21,11 +21,11 @@ pub struct MainMenuPlugin;
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(OnEnter(GameState::MainMenu), main_menu_setup)
-            .add_systems(OnExit(GameState::MainMenu), despawn_screen::<OnMainMenuScreen>)
+            .add_systems(OnEnter(ScreenState::MainMenu), main_menu_setup)
+            .add_systems(OnExit(ScreenState::MainMenu), despawn_screen::<OnMainMenuScreen>)
             .add_systems(
                 Update,
-                (menu_action, button_system).run_if(in_state(GameState::MainMenu)),
+                (menu_action, button_system).run_if(in_state(ScreenState::MainMenu)),
             );
     }
 }
@@ -112,13 +112,13 @@ fn menu_action(
         (Changed<Interaction>, With<Button>),
     >,
     mut app_exit_events: EventWriter<AppExit>,
-    mut game_state: ResMut<NextState<GameState>>,
+    mut game_state: ResMut<NextState<ScreenState>>,
 ) {
     for (interaction, menu_button_action) in &interaction_query {
         if *interaction == Interaction::Pressed {
             match menu_button_action {
                 MenuButtonAction::Quit => app_exit_events.send(AppExit),
-                MenuButtonAction::Play => {game_state.set(GameState::Game);}
+                MenuButtonAction::Play => {game_state.set(ScreenState::Game);}
             }
         }
     }
