@@ -37,6 +37,7 @@ impl Plugin for GamePlugin {
                     PlayerBundle::set_direction,
                     ZombieBundle::set_directions,
                     handle_player_enemy_collision.after(PlayerBundle::set_direction),
+                    PlayerBundle::shoot,
                     prevent_enemy_enemy_collision.after(ZombieBundle::set_directions),
                     prevent_wall_collision
                         .after(PlayerBundle::set_direction)

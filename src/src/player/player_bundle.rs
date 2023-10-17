@@ -1,5 +1,5 @@
 
-
+use std::time::Duration;
 use bevy::prelude::*;
 use super::game_components::*;
 use super::game_constants::*;
@@ -15,6 +15,7 @@ pub struct PlayerBundle {
     movement: Movement,
     collision_marker: CollisionMarker,
 }
+
 
 impl PlayerBundle {
     fn new() -> PlayerBundle {
@@ -62,10 +63,57 @@ impl PlayerBundle {
         }
     }
 
-    // pub fn shoot(keyboard_input: Res<Input<KeyCode>>, mut shoot_event: EventWriter<ShootEvent>) {
-    //     if keyboard_input.pressed(KeyCode::Space) {
-    //         shoot_event.send(ShootEvent);
-    //     }
-    // }
+    pub fn shoot(
+        keyboard_input: Res<Input<KeyCode>>,
+        player_query: Query<(&Movement, &Transform), With<PlayerMarker>>,
+        mut commands: Commands,
+    ) {
+        if keyboard_input.pressed(KeyCode::Space) {
+            for (movement, transform) in player_query.iter() {
+                commands.spawn(Bullet::new(transform.translation));
+            }
+        }
+    }
 }
 
+
+
+
+
+// Bullet
+
+#[derive(Component)]
+struct BulletMarker;
+
+#[derive(Component)]
+struct Damage(f32);
+
+#[derive(Component)]
+struct LifeTime(Timer);
+
+#[derive(Bundle)]
+pub struct Bullet {
+    bullet_marker: BulletMarker,
+    damage: Damage,
+    life_time: LifeTime,
+    sprite_bundle: SpriteBundle,
+}
+
+impl Bullet {
+    fn new(translation: Vec3) -> Bullet {
+        Bullet {
+            sprite_bundle: SpriteBundle {
+                transform: Transform {
+                    translation,
+                    scale: Vec3::new(20.0, 20.0, Z_VALUE),
+                    ..default()
+                },
+                sprite: Sprite { color: Color::PURPLE, ..default() },
+                ..default()
+            },
+            damage: Damage(0.5),
+            life_time: LifeTime(Timer::new(Duration::from_secs(1), TimerMode::Once)),
+            bullet_marker: BulletMarker,
+        }
+    }
+}
