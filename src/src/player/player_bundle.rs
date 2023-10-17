@@ -4,7 +4,7 @@ use bevy::prelude::*;
 use super::game_components::*;
 use super::game_constants::*;
 const INITIAL_PLAYER_HEALTH: f32 = 300.;
-
+const PLAYER_SIZE: f32 = 20.;
 
 
 #[derive(Bundle)]
@@ -72,7 +72,7 @@ impl PlayerBundle {
     ) {
         if keyboard_input.pressed(KeyCode::Space) {
             for (movement, mut transform) in player_query.iter_mut() {
-                let bullet = Bullet::new( &mut transform, movement.direction_x, movement.direction_y);
+                let bullet = Bullet::new( &mut transform);
                 commands.spawn((bullet, GameScreenMarker));
             }
         }
@@ -103,20 +103,19 @@ pub struct Bullet {
 }
 
 impl Bullet {
-    fn new(mut player_transform: &mut Transform, direction_x: f32, direction_y: f32) -> Bullet {
-
+    fn new(mut player_transform: &mut Transform) -> Bullet {
         let bullet_length = 100.;
+        let front = (player_transform.rotation * Vec3::Y).truncate().normalize();
+
         let mut transform = Transform {
             translation: Vec3::new(
-                player_transform.translation.x,
-                // player_transform.translation.y,
-                player_transform.translation.y,
+                player_transform.translation.x + (PLAYER_SIZE/2. + bullet_length / 2.)*front[0],
+                player_transform.translation.y + (PLAYER_SIZE/2. + bullet_length / 2.)*front[1],
                 player_transform.translation.z
             ),
             scale: Vec3::new(1., bullet_length, Z_VALUE),
             rotation: player_transform.rotation,
         };
-        // transform = transform.with_rotation(Quat::from_rotation_z(45.0_f32.to_radians()));
 
         Bullet {
             sprite_bundle: SpriteBundle {

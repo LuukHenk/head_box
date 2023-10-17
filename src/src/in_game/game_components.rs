@@ -23,6 +23,3 @@ pub struct Movement {
     pub direction_y: f32,
     pub velocity: f32,
 }
-
-// #[derive(Event)]
-// pub struct ShootEvent;

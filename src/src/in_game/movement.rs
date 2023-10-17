@@ -8,9 +8,10 @@ const STRONG_COLLISION_PUSHBACK: f32 = 0.24;
 
 use std::f32::consts::TAU;
 
-pub fn move_objects(mut query: Query<(&mut Transform, &Movement), With<Movement>>) {
 
-    for (mut transform, movement) in query.iter_mut() {
+pub fn move_objects(mut query: Query<(&mut Transform, &mut Movement), With<Movement>>) {
+
+    for (mut transform, mut movement) in query.iter_mut() {
 
         if movement.direction_y == 0. && movement.direction_x == -1. {
             transform.rotation = Quat::from_rotation_z((90.0_f32.to_radians()))
@@ -29,8 +30,6 @@ pub fn move_objects(mut query: Query<(&mut Transform, &Movement), With<Movement>
         } else if movement.direction_y == -1. && movement.direction_x == -1. {
             transform.rotation = Quat::from_rotation_z((135.0_f32.to_radians()))
         };
-
-        // *transform = transform.with_rotation(Quat::from_rotation_z(rotation.to_radians()));;
         transform.translation.x += movement.direction_x * movement.velocity;
         transform.translation.y += movement.direction_y * movement.velocity;
     }
