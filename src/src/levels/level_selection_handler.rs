@@ -8,29 +8,29 @@ use super::ScreenState;
 
 
 #[derive(Component)]
-pub struct ActiveLevel;
+pub struct ActiveLevelMarker;
 
 
 pub fn spawn_levels(mut commands: Commands) {
     let first_level_entity = commands.spawn((Level::new(1, 10, 1.), GameScreenMarker)).id();
     commands.spawn((Level::new(2, 6, 5.), GameScreenMarker));
-    commands.entity(first_level_entity).insert(ActiveLevel);
+    commands.entity(first_level_entity).insert(ActiveLevelMarker);
 }
 pub fn set_current_level(
     mut commands: Commands,
-    active_level_query: Query<(Entity, &Level), With<ActiveLevel>>,
+    active_level_query: Query<(Entity, &Level), With<ActiveLevelMarker>>,
     level_query: Query<(Entity, &Level)>,
     mut game_state: ResMut<NextState<ScreenState>>
 ) {
     let (active_level_entity, active_level) = active_level_query.single();
     if active_level.level_over() { return }
 
-    commands.entity(active_level_entity).remove::<ActiveLevel>();
+    commands.entity(active_level_entity).remove::<ActiveLevelMarker>();
 
     let next_level_id = active_level.get_id() + 1;
     for (level_entity, level) in level_query.iter() {
         if level.get_id() != next_level_id { continue }
-        commands.entity(level_entity).insert(ActiveLevel);
+        commands.entity(level_entity).insert(ActiveLevelMarker);
         return
     }
     game_state.set(ScreenState::MainMenu); // If all levels are done, go back to the main menu
@@ -39,7 +39,7 @@ pub fn set_current_level(
 pub fn spawn_enemies_for_current_level(
     time: Res<Time>,
     commands: Commands,
-    mut level_query: Query<&mut Level, With<ActiveLevel>>
+    mut level_query: Query<&mut Level, With<ActiveLevelMarker>>
 ) {
     let mut level = level_query.single_mut();
     level.spawn_timed_enemy(time, commands)

@@ -6,7 +6,6 @@ pub enum ScreenState {
     #[default]
     Game,
     MainMenu,
-
 }
 
 

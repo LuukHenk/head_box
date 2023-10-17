@@ -5,6 +5,8 @@ use super::game_components::*;
 use super::game_constants::*;
 const INITIAL_PLAYER_HEALTH: f32 = 300.;
 
+
+
 #[derive(Bundle)]
 pub struct PlayerBundle {
     player_marker: PlayerMarker,
@@ -59,5 +61,11 @@ impl PlayerBundle {
             }
         }
     }
+
+    // pub fn shoot(keyboard_input: Res<Input<KeyCode>>, mut shoot_event: EventWriter<ShootEvent>) {
+    //     if keyboard_input.pressed(KeyCode::Space) {
+    //         shoot_event.send(ShootEvent);
+    //     }
+    // }
 }
 
