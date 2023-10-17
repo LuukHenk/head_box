@@ -7,7 +7,30 @@ const WEAK_COLLISION_PUSHBACK: f32 = 0.2;
 const STRONG_COLLISION_PUSHBACK: f32 = 0.24;
 
 pub fn move_objects(mut query: Query<(&mut Transform, &Movement), With<Movement>>) {
+
     for (mut transform, movement) in query.iter_mut() {
+        println!("{:#?}", transform.rotation.z.to());
+        let rotation: f32 = if movement.direction_y == 0. && movement.direction_x == 1. {
+            90.
+        } else if movement.direction_y == 1. && movement.direction_x == 1. {
+            45.
+        } else if movement.direction_y == 1. && movement.direction_x == 0. {
+            0.
+        } else if movement.direction_y == 1. && movement.direction_x == -1. {
+            315.
+        } else if movement.direction_y == 0. && movement.direction_x == -1. {
+            270.
+        } else if movement.direction_y == -1. && movement.direction_x == -1. {
+            225.
+        } else if movement.direction_y == -1. && movement.direction_x == 0. {
+            180.
+        } else if movement.direction_y == -1. && movement.direction_x == 1. {
+            135.
+        } else {
+            transform.rotation.z
+        };
+
+        *transform = transform.with_rotation(Quat::from_rotation_z(rotation.to_radians()));
         transform.translation.x += movement.direction_x * movement.velocity;
         transform.translation.y += movement.direction_y * movement.velocity;
     }

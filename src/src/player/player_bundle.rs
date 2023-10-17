@@ -34,7 +34,7 @@ impl PlayerBundle {
             movement: Movement {
                 direction_x: 0.,
                 direction_y: 0.,
-                velocity: 7.,
+                velocity: 6.,
             },
             health: Health(INITIAL_PLAYER_HEALTH),
         }
@@ -65,12 +65,13 @@ impl PlayerBundle {
 
     pub fn shoot(
         keyboard_input: Res<Input<KeyCode>>,
-        player_query: Query<(&Movement, &Transform), With<PlayerMarker>>,
+        mut player_query: Query<(&Movement, &mut Transform), With<PlayerMarker>>,
         mut commands: Commands,
     ) {
         if keyboard_input.pressed(KeyCode::Space) {
-            for (movement, transform) in player_query.iter() {
-                commands.spawn(Bullet::new(transform.translation));
+            for (movement, mut transform) in player_query.iter_mut() {
+                let bullet = Bullet::new( &mut transform, movement.direction_x, movement.direction_y);
+                commands.spawn((bullet, GameScreenMarker));
             }
         }
     }
@@ -100,15 +101,25 @@ pub struct Bullet {
 }
 
 impl Bullet {
-    fn new(translation: Vec3) -> Bullet {
+    fn new(mut player_transform: &mut Transform, direction_x: f32, direction_y: f32) -> Bullet {
+        println!("x:{:#?} Y:{:#?}", direction_x, direction_y);
+
+        let bullet_length = 100.;
+        let mut transform = Transform {
+            translation: Vec3::new(
+                player_transform.translation.x,
+                player_transform.translation.y + (player_transform.scale.y / 2. + bullet_length / 2.) * direction_y,
+                player_transform.translation.z
+            ),
+            scale: Vec3::new(1., bullet_length, Z_VALUE),
+            rotation: player_transform.rotation,
+        };
+        // transform = transform.with_rotation(Quat::from_rotation_z(45.0_f32.to_radians()));
+
         Bullet {
             sprite_bundle: SpriteBundle {
-                transform: Transform {
-                    translation,
-                    scale: Vec3::new(20.0, 20.0, Z_VALUE),
-                    ..default()
-                },
-                sprite: Sprite { color: Color::PURPLE, ..default() },
+                transform,
+                sprite: Sprite { color: Color::BLUE, ..default() },
                 ..default()
             },
             damage: Damage(0.5),

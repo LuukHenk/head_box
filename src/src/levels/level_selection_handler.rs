@@ -12,7 +12,7 @@ pub struct ActiveLevelMarker;
 
 
 pub fn spawn_levels(mut commands: Commands) {
-    let first_level_entity = commands.spawn((Level::new(1, 10, 1.), GameScreenMarker)).id();
+    let first_level_entity = commands.spawn((Level::new(1, 1, 1.), GameScreenMarker)).id();
     commands.spawn((Level::new(2, 6, 5.), GameScreenMarker));
     commands.entity(first_level_entity).insert(ActiveLevelMarker);
 }
