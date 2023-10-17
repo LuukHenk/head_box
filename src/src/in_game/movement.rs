@@ -6,36 +6,35 @@ use super::game_components::*;
 const WEAK_COLLISION_PUSHBACK: f32 = 0.2;
 const STRONG_COLLISION_PUSHBACK: f32 = 0.24;
 
+use std::f32::consts::TAU;
+
 pub fn move_objects(mut query: Query<(&mut Transform, &Movement), With<Movement>>) {
 
     for (mut transform, movement) in query.iter_mut() {
-        println!("{:#?}", transform.rotation.z.to());
-        let rotation: f32 = if movement.direction_y == 0. && movement.direction_x == 1. {
-            90.
-        } else if movement.direction_y == 1. && movement.direction_x == 1. {
-            45.
-        } else if movement.direction_y == 1. && movement.direction_x == 0. {
-            0.
+
+        if movement.direction_y == 0. && movement.direction_x == -1. {
+            transform.rotation = Quat::from_rotation_z((90.0_f32.to_radians()))
         } else if movement.direction_y == 1. && movement.direction_x == -1. {
-            315.
-        } else if movement.direction_y == 0. && movement.direction_x == -1. {
-            270.
-        } else if movement.direction_y == -1. && movement.direction_x == -1. {
-            225.
-        } else if movement.direction_y == -1. && movement.direction_x == 0. {
-            180.
+            transform.rotation = Quat::from_rotation_z((45.0_f32.to_radians()))
+        } else if movement.direction_y == 1. && movement.direction_x == 0. {
+            transform.rotation = Quat::from_rotation_z((0.0_f32.to_radians()))
+        } else if movement.direction_y == 1. && movement.direction_x == 1. {
+            transform.rotation = Quat::from_rotation_z((315.0_f32.to_radians()))
+        } else if movement.direction_y == 0. && movement.direction_x == 1. {
+            transform.rotation = Quat::from_rotation_z((270.0_f32.to_radians()))
         } else if movement.direction_y == -1. && movement.direction_x == 1. {
-            135.
-        } else {
-            transform.rotation.z
+            transform.rotation = Quat::from_rotation_z((225.0_f32.to_radians()))
+        } else if movement.direction_y == -1. && movement.direction_x == 0. {
+            transform.rotation = Quat::from_rotation_z((180.0_f32.to_radians()))
+        } else if movement.direction_y == -1. && movement.direction_x == -1. {
+            transform.rotation = Quat::from_rotation_z((135.0_f32.to_radians()))
         };
 
-        *transform = transform.with_rotation(Quat::from_rotation_z(rotation.to_radians()));
+        // *transform = transform.with_rotation(Quat::from_rotation_z(rotation.to_radians()));;
         transform.translation.x += movement.direction_x * movement.velocity;
         transform.translation.y += movement.direction_y * movement.velocity;
     }
 }
-
 pub fn handle_player_enemy_collision(
     mut player_query: Query<(&Transform, &mut Movement, &mut Health), With<PlayerMarker>>,
     enemies_query: Query<&Transform, With<EnemyMarker>>,

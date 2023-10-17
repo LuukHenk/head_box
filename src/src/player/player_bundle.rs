@@ -18,14 +18,16 @@ pub struct PlayerBundle {
 
 
 impl PlayerBundle {
-    fn new() -> PlayerBundle {
+    fn new(asset_server: Res<AssetServer>) -> PlayerBundle {
+        let ship_handle = asset_server.load("textures/image10.png");
         PlayerBundle {
             player_marker: PlayerMarker,
             collision_marker: CollisionMarker,
             sprite_bundle: SpriteBundle {
+                texture: ship_handle,
                 transform: Transform {
                     translation: Vec3::new(0., 0., Z_VALUE),
-                    scale: Vec3::new(20.0, 20.0, Z_VALUE),
+                    // scale: Vec3::new(20.0, 20.0, Z_VALUE),
                     ..default()
                 },
                 sprite: Sprite { color: Color::PURPLE, ..default() },
@@ -40,8 +42,8 @@ impl PlayerBundle {
         }
     }
 
-    pub fn spawn(mut commands: Commands) {
-        commands.spawn((PlayerBundle::new(), GameScreenMarker));
+    pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
+        commands.spawn((PlayerBundle::new(asset_server), GameScreenMarker));
     }
 
     pub fn set_direction(keyboard_input: Res<Input<KeyCode>>, mut player_query: Query<&mut Movement, With<PlayerMarker>>) {
@@ -102,13 +104,13 @@ pub struct Bullet {
 
 impl Bullet {
     fn new(mut player_transform: &mut Transform, direction_x: f32, direction_y: f32) -> Bullet {
-        println!("x:{:#?} Y:{:#?}", direction_x, direction_y);
 
         let bullet_length = 100.;
         let mut transform = Transform {
             translation: Vec3::new(
                 player_transform.translation.x,
-                player_transform.translation.y + (player_transform.scale.y / 2. + bullet_length / 2.) * direction_y,
+                // player_transform.translation.y,
+                player_transform.translation.y,
                 player_transform.translation.z
             ),
             scale: Vec3::new(1., bullet_length, Z_VALUE),

@@ -13,7 +13,7 @@ pub struct ActiveLevelMarker;
 
 pub fn spawn_levels(mut commands: Commands) {
     let first_level_entity = commands.spawn((Level::new(1, 1, 1.), GameScreenMarker)).id();
-    commands.spawn((Level::new(2, 6, 5.), GameScreenMarker));
+    // commands.spawn((Level::new(2, 6, 5.), GameScreenMarker));
     commands.entity(first_level_entity).insert(ActiveLevelMarker);
 }
 pub fn set_current_level(
@@ -42,7 +42,7 @@ pub fn spawn_enemies_for_current_level(
     mut level_query: Query<&mut Level, With<ActiveLevelMarker>>
 ) {
     let mut level = level_query.single_mut();
-    level.spawn_timed_enemy(time, commands)
+    // level.spawn_timed_enemy(time, commands)
 }
 
 pub fn handle_game_over(
