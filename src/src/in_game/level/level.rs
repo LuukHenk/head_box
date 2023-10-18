@@ -2,7 +2,7 @@ use bevy::{
     prelude::*,
     time::Stopwatch,
 };
-use super::ZombieBundle;
+use super::enemies::enemy_systems::EnemySystems;
 #[derive(Component)]
 pub struct Level {
     id: u32,
@@ -26,7 +26,7 @@ impl Level {
 
     pub fn spawn_enemy(&mut self, commands: Commands) {
         if !self.all_enemies_spawned() {
-            ZombieBundle::spawn(commands);
+            EnemySystems::spawn_zombie(commands);
             self.spawned_enemies += 1;
         }
     }

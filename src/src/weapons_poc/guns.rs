@@ -4,11 +4,6 @@ use bevy::{
     prelude::*,
     time::Timer,
 };
-use crate::weapons::bullets::Bullet;
-
-use super::game_components::*;
-use super::bullets::PistolBullet;
-
 #[derive(Component)]
 pub struct BulletsPerShot(pub u32);
 

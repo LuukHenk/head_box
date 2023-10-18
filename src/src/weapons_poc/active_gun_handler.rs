@@ -1,7 +1,4 @@
 use bevy::prelude::*;
-use super::game_components::*;
-use super::guns::*;
-use super::bullets::Bullet;
 
 
 #[derive(Component)]

@@ -3,7 +3,7 @@ use bevy::prelude::{
     Commands,
     Bundle,
 };
-use super::generic_components::GameScreenMarker;
+use super::GameScreenMarker;
 
 pub struct GenericFunctions;
 

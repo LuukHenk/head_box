@@ -1,3 +1,3 @@
 pub mod generic_functions;
-pub mod generic_components;
-pub mod generic_constants;
+
+use super::data_classes::generic_components::GameScreenMarker;

@@ -1,13 +1,11 @@
 
 pub mod player_systems;
 mod player_bundle;
-pub mod player_components;
-mod player_constants;
 
 
-use crate::in_game;
-use in_game::generic::generic_functions;
-use in_game::generic::generic_components;
-use in_game::generic::generic_constants;
-
-use in_game::bullet::bullet_bundle;
+use super::bullet::bullet_bundle;
+use super::generic::generic_functions;
+use super::data_classes::generic_components;
+use super::data_classes::generic_constants;
+use super::data_classes::player_constants;
+use super::data_classes::player_components;

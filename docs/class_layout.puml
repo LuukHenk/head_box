@@ -5,6 +5,29 @@ class DisplayHandler
 class MainMenuPlugin
 class GamePlugin
 
+
+package Generic {
+    class GenericFunctions
+}
+
+package player {
+    class PlayerSystems
+    class PlayerBundle
+}
+
+package Bullet {
+    class BulletBundle
+}
+
+package Enemies {
+    class EnemySystems
+    class ZombieBundle
+}
+package Movement {
+    class MovementSystems
+}
+
+
 Main <-- HeadBoxPlugin
 
 HeadBoxPlugin <-- MainMenuPlugin
@@ -13,5 +36,14 @@ HeadBoxPlugin <-- DisplayHandler
 
 MainMenuPlugin <- DisplayHandler
 
+GamePlugin <-- PlayerSystems
+PlayerSystems <-- PlayerBundle
 
+
+PlayerSystems <-- BulletBundle
+
+GamePlugin <-- EnemySystems
+EnemySystems <-- ZombieBundle
+
+GamePlugin <-- MovementSystems
 @enduml

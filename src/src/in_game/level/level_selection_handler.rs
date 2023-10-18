@@ -1,8 +1,8 @@
 
 use bevy::prelude::*;
-use super::game_components::*;
+use crate::in_game::game_components::*;
 use super::level::Level;
-use super::ScreenState;
+use crate::display_handler::display_handler::ScreenState;
 
 
 
@@ -33,7 +33,7 @@ pub fn set_current_level(
         commands.entity(level_entity).insert(ActiveLevelMarker);
         return
     }
-    game_state.set(ScreenState::MainMenu); // If all levels are done, go back to the main menu
+    game_state.set(ScreenState::MainMenu); // If all level are done, go back to the main menu
 }
 
 pub fn spawn_enemies_for_current_level(

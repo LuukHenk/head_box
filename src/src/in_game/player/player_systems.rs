@@ -11,12 +11,9 @@ use bevy::prelude::{
     With,
     Transform,
 };
-use crate::in_game::generic::generic_components::GameScreenMarker;
 
 use super::generic_functions::GenericFunctions;
-use super::generic_components::{
-    Movement,
-};
+use super::generic_components::{Movement, GameScreenMarker};
 use super::bullet_bundle::BulletBundle;
 use super::player_bundle::PlayerBundle;
 use super::player_components::PlayerMarker;

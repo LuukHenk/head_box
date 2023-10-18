@@ -1,9 +1,17 @@
 
-use bevy::prelude::*;
-use super::game_components::*;
-use super::game_constants::*;
 
-pub const HIDDEN_WALL_COLOR: Color = Color::BLUE;
+use bevy::prelude::{
+    Bundle,
+    SpriteBundle,
+    Sprite,
+    default,
+    Vec3,
+    Transform,
+    Color,
+};
+use super::WallMarker;
+use super::Z_VALUE;
+use super::CollisionMarker;
 
 #[derive(Bundle)]
 pub struct WallBundle {
