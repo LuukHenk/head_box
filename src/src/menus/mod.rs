@@ -1,4 +1,4 @@
-pub mod main_menu;
+pub mod main_menu_plugin;
 
 
 use crate::display_handler::display_handler;

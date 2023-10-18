@@ -2,7 +2,12 @@ use bevy::{
     prelude::*,
     sprite::collide_aabb::{collide, Collision},
 };
-use super::game_components::*;
+use super::game_components::{EnemyMarker, WallMarker};
+use super::generic::generic_components::{
+    Movement,
+    Health,
+};
+use super::player::player_components::PlayerMarker;
 const WEAK_COLLISION_PUSHBACK: f32 = 0.2;
 const STRONG_COLLISION_PUSHBACK: f32 = 0.24;
 
@@ -10,12 +15,12 @@ use std::f32::consts::TAU;
 
 
 pub fn move_objects(mut query: Query<(&mut Transform, &mut Movement), With<Movement>>) {
-
     for (mut transform, mut movement) in query.iter_mut() {
 
         rotate_object(&mut *transform, &mut *movement);
         transform.translation.x += movement.direction_x * movement.velocity;
         transform.translation.y += movement.direction_y * movement.velocity;
+
     }
 }
 

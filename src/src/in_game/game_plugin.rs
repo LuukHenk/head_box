@@ -1,14 +1,15 @@
 use bevy::prelude::*;
 use super::ScreenState;
 use super::despawn_screen;
-use super::game_components::*;
+
 use super::movement::{
     move_objects,
     handle_player_enemy_collision,
     prevent_enemy_enemy_collision,
     prevent_wall_collision,
 };
-use super::player_bundle::PlayerBundle;
+use super::player::player_systems::PlayerSystems;
+use super::generic::generic_components::GameScreenMarker;
 use super::zombie_bundle::ZombieBundle;
 use super::Boxy;
 use super::level_selection_handler::{
@@ -25,7 +26,7 @@ impl Plugin for GamePlugin {
             .add_systems(
                 OnEnter(ScreenState::Game), (
                     Boxy::spawn,
-                    PlayerBundle::spawn,
+                    PlayerSystems::spawn,
                     spawn_levels,
                 )
             )
@@ -34,13 +35,13 @@ impl Plugin for GamePlugin {
                     handle_game_over,
                     set_current_level.after(handle_game_over),
                     spawn_enemies_for_current_level,
-                    PlayerBundle::set_direction,
+                    PlayerSystems::set_direction,
                     ZombieBundle::set_directions,
-                    handle_player_enemy_collision.after(PlayerBundle::set_direction),
-                    PlayerBundle::shoot,
+                    handle_player_enemy_collision.after(PlayerSystems::set_direction),
+                    PlayerSystems::shoot,
                     prevent_enemy_enemy_collision.after(ZombieBundle::set_directions),
                     prevent_wall_collision
-                        .after(PlayerBundle::set_direction)
+                        .after(PlayerSystems::set_direction)
                         .after(ZombieBundle::set_directions)
                     ,
                     move_objects.after(prevent_wall_collision),

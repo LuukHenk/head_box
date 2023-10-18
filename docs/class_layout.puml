@@ -1,0 +1,17 @@
+@startuml
+class Main
+class HeadBoxPlugin
+class DisplayHandler
+class MainMenuPlugin
+class GamePlugin
+
+Main <-- HeadBoxPlugin
+
+HeadBoxPlugin <-- MainMenuPlugin
+HeadBoxPlugin <-- GamePlugin
+HeadBoxPlugin <-- DisplayHandler
+
+MainMenuPlugin <- DisplayHandler
+
+
+@enduml
