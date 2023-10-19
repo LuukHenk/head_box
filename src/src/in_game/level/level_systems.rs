@@ -46,7 +46,6 @@ impl LevelSystems {
         if killed_enemies.0 < total_enemies.0 { return }
 
         commands.entity(active_level_entity).remove::<ActiveLevelMarker>();
-        println!("{:#?},{:#?}", killed_enemies.0, total_enemies.0);
         let next_level_id = current_level_id.0 + 1;
         for (level_entity, level_id) in level_query.iter() {
             if level_id.0 != next_level_id { continue }
@@ -68,7 +67,7 @@ impl LevelSystems {
 
         if spawned_enemies.0 < expected_spawned_enemies as u32 {
             if spawned_enemies.0 < total_enemies.0 {
-                // EnemySystems::spawn_zombie(commands);
+                EnemySystems::spawn_zombie(commands);
                 spawned_enemies.0 += 1;
             }
         }

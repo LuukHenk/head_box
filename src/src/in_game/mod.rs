@@ -4,7 +4,6 @@ pub mod game_plugin;
 mod movement;
 mod arena;
 mod player;
-mod generic;
 mod bullet;
 mod enemy;
 mod data_classes;

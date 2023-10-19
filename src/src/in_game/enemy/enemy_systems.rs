@@ -9,12 +9,12 @@ use bevy::prelude::{
     Mut,
     Vec3,
 };
+use crate::in_game::data_classes::generic_components::GameScreenMarker;
 
 use super::generic_constants::{
     SCREEN_CENTER,
     OUTER_Y_COORDINATES
 };
-use super::generic_functions::GenericFunctions;
 use super::data_classes::movement_components::{
     Movement
 };
@@ -28,11 +28,11 @@ use super::zombie_bundle::ZombieBundle;
 impl EnemySystems {
 
 
-    pub fn spawn_zombie(commands: Commands) {
+    pub fn spawn_zombie(mut commands: Commands) {
         let y = if rand::random::<bool>() { 1. } else { -1. };
         let x = if rand::random::<bool>() { 1. } else { -1. };
         let zombie = ZombieBundle::new(SCREEN_CENTER * x, OUTER_Y_COORDINATES * y);
-        GenericFunctions::spawn(commands , zombie);
+        commands.spawn((zombie, GameScreenMarker));
     }
 
     pub fn set_directions(

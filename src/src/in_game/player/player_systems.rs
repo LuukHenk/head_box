@@ -12,7 +12,6 @@ use bevy::prelude::{
     Transform,
 };
 
-use super::generic_functions::GenericFunctions;
 use super::generic_components::GameScreenMarker;
 use super::data_classes::movement_components::Movement;
 use super::bullet_bundle::BulletBundle;
@@ -25,8 +24,8 @@ pub struct PlayerSystems;
 
 impl PlayerSystems {
 
-    pub fn spawn(commands: Commands, asset_server: Res<AssetServer>) {
-        GenericFunctions::spawn(commands, PlayerBundle::new(asset_server));
+    pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
+        commands.spawn((PlayerBundle::new(asset_server), GameScreenMarker));
     }
 
     pub fn set_direction(
@@ -60,7 +59,7 @@ impl PlayerSystems {
         if keyboard_input.pressed(KeyCode::Space) {
             for transform in player_query.iter_mut() {
                 let bullet_bundle = BulletBundle::new(transform, PLAYER_SIZE);
-                commands.spawn((bullet_bundle, GameScreenMarker)); // FIXME: Use the GenericFunctions instead
+                commands.spawn((bullet_bundle, GameScreenMarker));
             }
         }
     }
