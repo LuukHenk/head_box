@@ -13,7 +13,8 @@ use bevy::prelude::{
 };
 
 use super::generic_functions::GenericFunctions;
-use super::generic_components::{Movement, GameScreenMarker};
+use super::generic_components::GameScreenMarker;
+use super::data_classes::movement_components::Movement;
 use super::bullet_bundle::BulletBundle;
 use super::player_bundle::PlayerBundle;
 use super::player_components::PlayerMarker;

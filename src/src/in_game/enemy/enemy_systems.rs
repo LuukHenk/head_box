@@ -15,7 +15,7 @@ use super::generic_constants::{
     OUTER_Y_COORDINATES
 };
 use super::generic_functions::GenericFunctions;
-use super::generic_components::{
+use super::data_classes::movement_components::{
     Movement
 };
 use super::player_components::PlayerMarker;

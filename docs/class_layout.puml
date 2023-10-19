@@ -1,13 +1,15 @@
 @startuml
 class Main
 class HeadBoxPlugin
-class DisplayHandler
 class MainMenuPlugin
 class GamePlugin
 
 
 package Generic {
+    note "The generic classes should not use any crates" as N1
     class GenericFunctions
+    class Dataclasses
+    class DisplayHandler
 }
 
 package player {
@@ -26,15 +28,20 @@ package Enemies {
 package Movement {
     class MovementSystems
 }
+package Arena{
+    class WallBundle
+    class Boxy
+}
+package Level{
+    class LevelBundle
+    class LevelSystems
+}
 
 
 Main <-- HeadBoxPlugin
 
 HeadBoxPlugin <-- MainMenuPlugin
 HeadBoxPlugin <-- GamePlugin
-HeadBoxPlugin <-- DisplayHandler
-
-MainMenuPlugin <- DisplayHandler
 
 GamePlugin <-- PlayerSystems
 PlayerSystems <-- PlayerBundle
@@ -46,4 +53,11 @@ GamePlugin <-- EnemySystems
 EnemySystems <-- ZombieBundle
 
 GamePlugin <-- MovementSystems
+
+GamePlugin <-- Boxy
+Boxy <-- WallBundle
+
+GamePlugin <-- LevelSystems
+LevelSystems <-- LevelBundle
+LevelSystems <-- EnemySystems
 @enduml

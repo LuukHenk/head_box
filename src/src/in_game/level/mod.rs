@@ -1,9 +1,12 @@
-pub mod level_selection_handler;
-mod level;
-
-use crate::display_handler::display_handler::ScreenState;
+pub mod level_systems;
+mod level_bundle;
 
 
-use crate::in_game;
-use in_game::game_components;
-use crate::in_game::enemies;
+use super::data_classes;
+use data_classes::level_components;
+use data_classes::player_components::PlayerMarker;
+use data_classes::generic_components::Health;
+
+
+use super::enemy::enemy_systems::EnemySystems;
+use super::display_handler::ScreenState;

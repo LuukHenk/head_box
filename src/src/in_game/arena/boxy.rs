@@ -1,9 +1,11 @@
-use bevy::prelude::*;
-use crate::in_game::game_components::GameScreenMarker;
-use super::game_components::*;
-use super::game_constants::*;
-use super::WallBundle;
+use bevy::prelude::{
+    Commands,
+    Color,
+};
+use super::wall_bundle::WallBundle;
 use super::HIDDEN_WALL_COLOR;
+use super::generic_constants::OUTER_Y_COORDINATES;
+use super::generic_components::GameScreenMarker;
 pub struct Boxy;
 
 impl Boxy {

@@ -7,3 +7,4 @@ pub mod movement_constants;
 pub mod movement_components;
 pub mod wall_constants;
 pub mod wall_components;
+pub mod level_components;

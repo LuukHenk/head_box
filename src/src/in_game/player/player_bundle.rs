@@ -12,11 +12,8 @@ use bevy::prelude::{
     Vec3,
 };
 
-use super::generic_components::{
-    Movement,
-    Health,
-    CollisionMarker,
-};
+use super::generic_components::Health;
+use super::data_classes::movement_components::{Movement, CollisionMarker};
 use super::generic_constants::Z_VALUE;
 use super::player_constants::INITIAL_PLAYER_HEALTH;
 use super::player_components::{

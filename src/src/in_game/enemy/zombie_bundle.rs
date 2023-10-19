@@ -9,7 +9,7 @@ use bevy::prelude::{
     Color,
 };
 use super::generic_constants::Z_VALUE;
-use super::generic_components::{
+use super::data_classes::movement_components::{
     Movement,
     CollisionMarker
 };

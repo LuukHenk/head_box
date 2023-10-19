@@ -10,7 +10,7 @@ use bevy::prelude::{
     Color,
 };
 use super::WallMarker;
-use super::Z_VALUE;
+use super::generic_constants::Z_VALUE;
 use super::CollisionMarker;
 
 #[derive(Bundle)]
