@@ -23,7 +23,7 @@ pub struct MovementSystems;
 impl MovementSystems{
     pub fn move_objects(mut query: Query<(&mut Transform, &mut Movement), With<Movement>>) {
         for (mut transform, mut movement) in query.iter_mut() {
-
+            // println!("{:#?}", movement);
             Self::rotate_object(&mut *transform, &mut *movement);
             transform.translation.x += movement.direction_x * movement.velocity;
             transform.translation.y += movement.direction_y * movement.velocity;
@@ -78,7 +78,7 @@ impl MovementSystems{
                     movement_a = Self::apply_collision_pushback(
                         collision,
                         movement_a,
-                        WEAK_COLLISION_PUSHBACK,
+                        STRONG_COLLISION_PUSHBACK,
                     );
                 }
             }
