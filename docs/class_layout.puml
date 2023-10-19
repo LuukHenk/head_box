@@ -7,7 +7,6 @@ class GamePlugin
 
 package Generic {
     note "The generic classes should not use any crates" as N1
-    class GenericFunctions
     class Dataclasses
     class DisplayHandler
 }

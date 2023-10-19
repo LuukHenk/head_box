@@ -2,7 +2,7 @@
 
 # User stories
 
-### Add a weapon
+### Add a weapon [In progress]
 - Add player aiming direction
 - Add bullets
 - Add bullet damage on collision
@@ -11,6 +11,10 @@
 - Add final score screen with exit and restart button
 
 ### Add Score
+- Each time a zombie is killed, you get some points
+
+### Add score multiplier
+- The faster you kill enemies, the higher the multiplier
 
 ### Add boss
 - Add special bullet for the boss
@@ -29,3 +33,7 @@
 
 ### Smarter collision handling
 - When there is a collision::inside, try to separate the entities in a smart way
+
+### Add Uzi
+- Add a weapon selection system
+- Add uzi
