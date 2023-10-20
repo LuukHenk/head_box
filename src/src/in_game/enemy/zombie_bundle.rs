@@ -23,7 +23,7 @@ pub struct ZombieBundle {
     collision_marker: CollisionMarker,
 }
 impl ZombieBundle {
-    pub fn new(x: f32, y: f32) -> ZombieBundle {
+    pub fn new(x: f32, y: f32, velocity: f32) -> ZombieBundle {
         ZombieBundle {
             sprite_bundle: SpriteBundle {
                 transform: Transform {
@@ -37,7 +37,7 @@ impl ZombieBundle {
             movement: Movement {
                 direction_x: 0.,
                 direction_y: 0.,
-                velocity: 2.,
+                velocity,
             },
             enemy_marker: EnemyMarker,
             collision_marker: CollisionMarker,

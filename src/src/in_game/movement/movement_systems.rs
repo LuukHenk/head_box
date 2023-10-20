@@ -41,7 +41,7 @@ impl MovementSystems{
                     player_movement = Self::apply_collision_pushback(
                         collision,
                         player_movement,
-                        STRONG_COLLISION_PUSHBACK
+                        0.3
                     );
                     player_health.0 -= 1.;
                     println!("Auch! HP: {:#?}", player_health.0) // TODO: Remove when there is a health display

@@ -31,7 +31,12 @@ impl EnemySystems {
     pub fn spawn_zombie(mut commands: Commands) {
         let y = if rand::random::<bool>() { 1. } else { -1. };
         let x = if rand::random::<bool>() { 1. } else { -1. };
-        let zombie = ZombieBundle::new(SCREEN_CENTER * x, OUTER_Y_COORDINATES * y);
+        let zombie = ZombieBundle::new(SCREEN_CENTER * x, OUTER_Y_COORDINATES * y, 4.);
+        commands.spawn((zombie, GameScreenMarker));
+    }
+
+    pub fn spawn_dummy(mut commands: Commands) {
+        let zombie = ZombieBundle::new(100.0, 0.0, 0.);
         commands.spawn((zombie, GameScreenMarker));
     }
 
