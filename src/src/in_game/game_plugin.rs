@@ -39,7 +39,12 @@ impl Plugin for GamePlugin {
                         .after(PlayerSystems::set_direction)
                         .after(EnemySystems::set_directions)
                     ,
-                    MovementSystems::move_objects.after(CollisionSystems::prevent_wall_collision),
+                    MovementSystems::move_objects
+                        .after(CollisionSystems::prevent_wall_collision)
+                        .after(CollisionSystems::handle_bullet_collision)
+                        .after(CollisionSystems::prevent_enemy_enemy_collision)
+                        .after(CollisionSystems::handle_player_enemy_collision)
+                    ,
                 ).run_if(in_state(ScreenState::Game))
             )
         ;

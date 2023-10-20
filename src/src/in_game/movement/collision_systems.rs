@@ -10,7 +10,6 @@ use bevy::sprite::collide_aabb::{collide, Collision};
 use crate::in_game::data_classes::direction_constants::{DOWN, LEFT, RIGHT, UP};
 use super::movement_components::Movement;
 use super::bullet_components::BulletOwner;
-use super::movement_constants::{WEAK_COLLISION_PUSHBACK, STRONG_COLLISION_PUSHBACK};
 use super::player_components::PlayerMarker;
 use super::enemy_components::EnemyMarker;
 use super::generic_components::Health;
@@ -50,7 +49,10 @@ impl CollisionSystems {
                 if target_entity == bullet_owner.0 {continue}
                 let collision = Self::check_for_collision(bullet_transform, target_transform);
                 if let Some(collision) = collision {
-
+                    // movement = Self::apply_collision_pushback(
+                    //     collision,
+                    //     movement,
+                    // )
                 }
             }
         }
@@ -76,7 +78,7 @@ impl CollisionSystems {
         mut moving_objects_query: Query<(&Transform, &mut Movement), With<Movement>>,
         wall_query: Query<&Transform, With<WallMarker>>,
     ) {
-        for (transform_a, mut movement_a) in moving_objects_query.iter_mut() { ;
+        for (transform_a, mut movement_a) in moving_objects_query.iter_mut() {
             for transform_b in wall_query.iter() {
                 let collision = Self::check_for_collision(transform_a, transform_b);
                 if let Some(collision) = collision {
