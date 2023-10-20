@@ -10,12 +10,14 @@ use bevy::prelude::{
     Mut,
 };
 use bevy::sprite::collide_aabb::{collide, Collision};
+use crate::in_game::data_classes::movement_components::CollisionMarker;
 use super::movement_components::Movement;
 use super::movement_constants::{WEAK_COLLISION_PUSHBACK, STRONG_COLLISION_PUSHBACK};
 use super::player_components::PlayerMarker;
 use super::enemy_components::EnemyMarker;
 use super::generic_components::Health;
 use super::wall_components::WallMarker;
+use super::bullet_components::BulletMarker;
 
 
 pub struct MovementSystems;
@@ -49,6 +51,13 @@ impl MovementSystems{
             }
         }
     }
+
+    pub fn handle_bullet_collision(
+        bullet_query: Query<&Transform, With<BulletMarker>>,
+        collision_query: Query<&Transform, With<CollisionMarker>>
+    ){
+
+    }
     pub fn prevent_enemy_enemy_collision(
         mut enemies_query_a: Query<(Entity, &Transform, &mut Movement), With<EnemyMarker>>,
         enemies_query_b: Query<(Entity, &Transform), With<EnemyMarker>>,
@@ -72,13 +81,14 @@ impl MovementSystems{
         wall_query: Query<&Transform, With<WallMarker>>,
     ) {
         for (transform_a, mut movement_a) in moving_objects_query.iter_mut() {
+            let pushback_strength = movement_a.velocity / 25.;
             for transform_b in wall_query.iter() {
                 let collision = Self::check_for_collision(transform_a, transform_b);
                 if let Some(collision) = collision {
                     movement_a = Self::apply_collision_pushback(
                         collision,
                         movement_a,
-                        STRONG_COLLISION_PUSHBACK,
+                        pushback_strength,
                     );
                 }
             }

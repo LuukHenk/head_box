@@ -1,7 +1,7 @@
 use std::time::Duration;
 use bevy::prelude::{Bundle, Transform, Vec3, SpriteBundle, Sprite, default, Color, Timer, TimerMode, Mut};
 
-use super::bullet_components::{
+use crate::in_game::data_classes::bullet_components::{
     BulletMarker,
     Damage,
     LifeTime,
