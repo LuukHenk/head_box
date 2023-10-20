@@ -1,15 +1,8 @@
 
 
 
-use bevy::prelude::{
-    Commands,
-    Query,
-    Transform,
-    With,
-    Mut,
-    Vec3,
-};
-use crate::in_game::data_classes::generic_components::GameScreenMarker;
+use bevy::prelude::{Commands, Query, Transform, With, Mut, Vec3, Entity};
+use crate::in_game::data_classes::generic_components::{GameScreenMarker, Health};
 
 use super::generic_constants::{
     SCREEN_CENTER,
@@ -40,6 +33,14 @@ impl EnemySystems {
         commands.spawn((zombie, GameScreenMarker));
     }
 
+
+    pub fn despawn_enemies(mut commands: Commands, query: Query<(Entity, &Health), With<EnemyMarker>>) {
+        for (entity, health) in query.iter() {
+            if health.0 <= 0.0 {
+                commands.entity(entity).despawn()
+            }
+        }
+    }
     pub fn set_directions(
         mut enemy_query: Query<(&mut Movement, &Transform), With<EnemyMarker>>,
         player_query: Query<&Transform, With<PlayerMarker>>
