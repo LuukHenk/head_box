@@ -8,6 +8,7 @@ use bevy::prelude::{
     Sprite,
     Color,
 };
+use crate::in_game::data_classes::generic_components::Health;
 use super::generic_constants::Z_VALUE;
 use super::data_classes::movement_components::{
     Movement,
@@ -19,6 +20,7 @@ pub struct ZombieBundle {
     sprite_bundle: SpriteBundle,
     movement: Movement,
     enemy_marker: EnemyMarker,
+    health: Health
 }
 impl ZombieBundle {
     pub fn new(x: f32, y: f32, velocity: f32) -> ZombieBundle {
@@ -39,6 +41,7 @@ impl ZombieBundle {
                 current_velocity: 0.
             },
             enemy_marker: EnemyMarker,
+            health: Health(10.),
         }
     }
 }

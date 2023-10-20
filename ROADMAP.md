@@ -33,6 +33,7 @@
 
 ### Smarter collision handling
 - When there is a collision::inside, try to separate the entities in a smart way
+- https://rapier.rs/docs/user_guides/bevy_plugin/rigid_bodies Maybe this article helps
 
 ### Add Uzi
 - Add a weapon selection system

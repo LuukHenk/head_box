@@ -1,12 +1,7 @@
 
-use bevy::prelude::{
-    Query,
-    Transform,
-    With,
-    Entity,
-    Mut,
-};
+use bevy::prelude::{Query, Transform, With, Entity, Mut, Commands};
 use bevy::sprite::collide_aabb::{collide, Collision};
+use crate::in_game::data_classes::bullet_components::Damage;
 use crate::in_game::data_classes::direction_constants::{DOWN, LEFT, RIGHT, UP};
 use super::movement_components::Movement;
 use super::bullet_components::BulletOwner;
@@ -41,18 +36,16 @@ impl CollisionSystems {
     }
 
     pub fn handle_bullet_collision(
-        bullet_query: Query<(&Transform, &BulletOwner), With<BulletMarker>>,
-        mut collision_query: Query<(&Transform, &mut Movement, Entity), With<Movement>>
+        bullet_query: Query<(&Transform, &Damage, &BulletOwner), With<BulletMarker>>,
+        mut collision_query: Query<(&Transform, &mut Health, Entity), With<Health>>
     ){
-        for (target_transform, mut movement, target_entity) in collision_query.iter_mut() {
-            for (bullet_transform, bullet_owner) in bullet_query.iter() {
+        for (target_transform, mut health, target_entity) in collision_query.iter_mut() {
+            for (bullet_transform, bullet_damage, bullet_owner) in bullet_query.iter() {
                 if target_entity == bullet_owner.0 {continue}
-                let collision = Self::check_for_collision(bullet_transform, target_transform);
-                if let Some(collision) = collision {
-                    // movement = Self::apply_collision_pushback(
-                    //     collision,
-                    //     movement,
-                    // )
+                let collision = Self::check_for_collision( bullet_transform, target_transform);
+                if let Some(_) = collision {
+                    health.0 -= bullet_damage.0;
+                    println!("Auch! HP: {:#?}", health.0) // TODO: Remove when there is a health display
                 }
             }
         }

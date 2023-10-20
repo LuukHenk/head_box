@@ -18,6 +18,7 @@ package player {
 
 package Bullet {
     class BulletBundle
+    class BulletSystems
 }
 
 package Enemies {
@@ -46,7 +47,7 @@ HeadBoxPlugin <-- GamePlugin
 GamePlugin <-- PlayerSystems
 PlayerSystems <-- PlayerBundle
 
-
+GamePlugin <-- BulletSystems
 PlayerSystems <-- BulletBundle
 
 GamePlugin <-- EnemySystems

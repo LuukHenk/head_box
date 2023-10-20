@@ -1,14 +1,16 @@
 use bevy::prelude::*;
+
 use super::ScreenState;
 use super::despawn_screen;
 
+use super::data_classes::generic_components::GameScreenMarker;
+use super::arena::boxy::Boxy;
 use super::movement::movement_systems::MovementSystems;
 use super::movement::collision_systems::CollisionSystems;
 use super::player::player_systems::PlayerSystems;
-use super::data_classes::generic_components::GameScreenMarker;
 use super::enemy::enemy_systems::EnemySystems;
-use super::arena::boxy::Boxy;
 use super::level::level_systems::LevelSystems;
+use super::bullet::bullet_systems::BulletSystems;
 
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
@@ -27,8 +29,9 @@ impl Plugin for GamePlugin {
                     LevelSystems::set_current_level.after(LevelSystems::handle_game_over),
                     LevelSystems::spawn_enemies_for_current_level,
                     EnemySystems::set_directions,
+                    BulletSystems::despawn_bullets,
                     PlayerSystems::set_direction,
-                    PlayerSystems::shoot,
+                    PlayerSystems::shoot.after(BulletSystems::despawn_bullets),
                     CollisionSystems::handle_player_enemy_collision.after(PlayerSystems::set_direction),
                     CollisionSystems::prevent_enemy_enemy_collision.after(EnemySystems::set_directions),
                     CollisionSystems::handle_bullet_collision

@@ -24,10 +24,11 @@ impl BulletBundle {
             translation: Vec3::new(
                 shooter_transform.translation.x + (shooter_size/2. + bullet_length / 2.)* shooter_front[0],
                 shooter_transform.translation.y + (shooter_size/2. + bullet_length / 2.)* shooter_front[1],
-                shooter_transform.translation.z
+                1.
             ),
-            scale: Vec3::new(2., bullet_length, Z_VALUE),
+            scale: Vec3::new(1., bullet_length, Z_VALUE),
             rotation: shooter_transform.rotation,
+            ..default()
         };
 
         BulletBundle {
@@ -37,7 +38,7 @@ impl BulletBundle {
                 ..default()
             },
             damage: Damage(0.5),
-            life_time: LifeTime(Timer::new(Duration::from_secs(1), TimerMode::Once)),
+            life_time: LifeTime(Timer::new(Duration::from_secs_f32(0.1), TimerMode::Once)),
             bullet_marker: BulletMarker,
             bullet_owner: BulletOwner(bullet_owner),
         }
