@@ -1,5 +1,6 @@
 pub mod movement_systems;
-mod movement_bundle;
+
+pub mod collision_systems;
 
 
 use super::data_classes;

@@ -11,13 +11,10 @@ use bevy::prelude::{
 };
 use super::WallMarker;
 use super::generic_constants::Z_VALUE;
-use super::CollisionMarker;
-
 #[derive(Bundle)]
 pub struct WallBundle {
     wall_marker: WallMarker,
     sprite_bundle: SpriteBundle,
-    collision_marker: CollisionMarker,
 }
 
 impl WallBundle {
@@ -33,7 +30,6 @@ impl WallBundle {
                 sprite: Sprite { color, ..default() },
                 ..default()
             },
-            collision_marker: CollisionMarker,
         }
     }
 }

@@ -14,7 +14,7 @@ use bevy::prelude::{
 use crate::in_game::data_classes::player_constants::PLAYER_SIZE;
 
 use super::generic_components::Health;
-use super::data_classes::movement_components::{Movement, CollisionMarker};
+use super::data_classes::movement_components::{Movement};
 use super::generic_constants::Z_VALUE;
 use super::player_constants::INITIAL_PLAYER_HEALTH;
 use super::player_components::{
@@ -27,7 +27,6 @@ pub struct PlayerBundle {
     health: Health,
     sprite_bundle: SpriteBundle,
     movement: Movement,
-    collision_marker: CollisionMarker,
 }
 
 
@@ -36,7 +35,6 @@ impl PlayerBundle {
         // let ship_handle = asset_server.load("textures/image10.png");
         PlayerBundle {
             player_marker: PlayerMarker,
-            collision_marker: CollisionMarker,
             sprite_bundle: SpriteBundle {
                 // texture: ship_handle,
                 transform: Transform {

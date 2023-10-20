@@ -11,7 +11,6 @@ use bevy::prelude::{
 use super::generic_constants::Z_VALUE;
 use super::data_classes::movement_components::{
     Movement,
-    CollisionMarker
 };
 use super::enemy_components::EnemyMarker;
 
@@ -20,7 +19,6 @@ pub struct ZombieBundle {
     sprite_bundle: SpriteBundle,
     movement: Movement,
     enemy_marker: EnemyMarker,
-    collision_marker: CollisionMarker,
 }
 impl ZombieBundle {
     pub fn new(x: f32, y: f32, velocity: f32) -> ZombieBundle {
@@ -40,7 +38,6 @@ impl ZombieBundle {
                 velocity,
             },
             enemy_marker: EnemyMarker,
-            collision_marker: CollisionMarker,
         }
     }
 }

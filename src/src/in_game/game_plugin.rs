@@ -3,6 +3,7 @@ use super::ScreenState;
 use super::despawn_screen;
 
 use super::movement::movement_systems::MovementSystems;
+use super::movement::collision_systems::CollisionSystems;
 use super::player::player_systems::PlayerSystems;
 use super::data_classes::generic_components::GameScreenMarker;
 use super::enemy::enemy_systems::EnemySystems;
@@ -28,17 +29,17 @@ impl Plugin for GamePlugin {
                     EnemySystems::set_directions,
                     PlayerSystems::set_direction,
                     PlayerSystems::shoot,
-                    MovementSystems::handle_player_enemy_collision.after(PlayerSystems::set_direction),
-                    MovementSystems::prevent_enemy_enemy_collision.after(EnemySystems::set_directions),
-                    MovementSystems::handle_bullet_collision
+                    CollisionSystems::handle_player_enemy_collision.after(PlayerSystems::set_direction),
+                    CollisionSystems::prevent_enemy_enemy_collision.after(EnemySystems::set_directions),
+                    CollisionSystems::handle_bullet_collision
                         .after(PlayerSystems::shoot)
                         .after(PlayerSystems::set_direction)
                         .after(EnemySystems::set_directions),
-                    MovementSystems::prevent_wall_collision
+                    CollisionSystems::prevent_wall_collision
                         .after(PlayerSystems::set_direction)
                         .after(EnemySystems::set_directions)
                     ,
-                    MovementSystems::move_objects.after(MovementSystems::prevent_wall_collision),
+                    MovementSystems::move_objects.after(CollisionSystems::prevent_wall_collision),
                 ).run_if(in_state(ScreenState::Game))
             )
         ;
