@@ -1,8 +1,5 @@
 use bevy::prelude::Component;
 
-#[derive(Component)]
-pub struct CollisionMarker;
-
 #[derive(Component, Debug)]
 pub struct Movement {
     pub direction_x: f32,

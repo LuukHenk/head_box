@@ -10,6 +10,7 @@ use bevy::prelude::{
     Query,
     With,
     Transform,
+    Entity,
 };
 
 use super::generic_components::GameScreenMarker;
@@ -53,12 +54,12 @@ impl PlayerSystems {
 
     pub fn shoot(
         keyboard_input: Res<Input<KeyCode>>,
-        mut player_query: Query<&mut Transform, With<PlayerMarker>>,
+        mut player_query: Query<(&mut Transform, Entity), With<PlayerMarker>>,
         mut commands: Commands,
     ) {
         if keyboard_input.pressed(KeyCode::Space) {
-            for transform in player_query.iter_mut() {
-                let bullet_bundle = BulletBundle::new(transform, PLAYER_SIZE);
+            for (transform, entity) in player_query.iter_mut() {
+                let bullet_bundle = BulletBundle::new(transform, PLAYER_SIZE, entity);
                 commands.spawn((bullet_bundle, GameScreenMarker));
             }
         }

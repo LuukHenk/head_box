@@ -25,11 +25,15 @@ impl Plugin for GamePlugin {
                     LevelSystems::handle_game_over,
                     LevelSystems::set_current_level.after(LevelSystems::handle_game_over),
                     LevelSystems::spawn_enemies_for_current_level,
-                    PlayerSystems::set_direction,
                     EnemySystems::set_directions,
-                    MovementSystems::handle_player_enemy_collision.after(PlayerSystems::set_direction),
+                    PlayerSystems::set_direction,
                     PlayerSystems::shoot,
+                    MovementSystems::handle_player_enemy_collision.after(PlayerSystems::set_direction),
                     MovementSystems::prevent_enemy_enemy_collision.after(EnemySystems::set_directions),
+                    MovementSystems::handle_bullet_collision
+                        .after(PlayerSystems::shoot)
+                        .after(PlayerSystems::set_direction)
+                        .after(EnemySystems::set_directions),
                     MovementSystems::prevent_wall_collision
                         .after(PlayerSystems::set_direction)
                         .after(EnemySystems::set_directions)

@@ -1,11 +1,7 @@
 use std::time::Duration;
-use bevy::prelude::{Bundle, Transform, Vec3, SpriteBundle, Sprite, default, Color, Timer, TimerMode, Mut};
+use bevy::prelude::{Bundle, Transform, Vec3, SpriteBundle, Sprite, default, Color, Timer, TimerMode, Mut, Entity};
 
-use crate::in_game::data_classes::bullet_components::{
-    BulletMarker,
-    Damage,
-    LifeTime,
-};
+use crate::in_game::data_classes::bullet_components::{BulletMarker, BulletOwner, Damage, LifeTime};
 use super::generic_constants::{
     Z_VALUE
 };
@@ -16,11 +12,12 @@ pub struct BulletBundle {
     damage: Damage,
     life_time: LifeTime,
     sprite_bundle: SpriteBundle,
+    bullet_owner: BulletOwner,
 }
 
 impl BulletBundle {
-    pub fn new(shooter_transform: Mut<Transform>, shooter_size: f32) -> BulletBundle {
-        let bullet_length = 100.;
+    pub fn new(shooter_transform: Mut<Transform>, shooter_size: f32, bullet_owner: Entity) -> BulletBundle {
+        let bullet_length = 200.;
         let shooter_front = (shooter_transform.rotation * Vec3::Y).truncate().normalize();
 
         let transform = Transform {
@@ -29,7 +26,7 @@ impl BulletBundle {
                 shooter_transform.translation.y + (shooter_size/2. + bullet_length / 2.)* shooter_front[1],
                 shooter_transform.translation.z
             ),
-            scale: Vec3::new(1., bullet_length, Z_VALUE),
+            scale: Vec3::new(2., bullet_length, Z_VALUE),
             rotation: shooter_transform.rotation,
         };
 
@@ -42,6 +39,7 @@ impl BulletBundle {
             damage: Damage(0.5),
             life_time: LifeTime(Timer::new(Duration::from_secs(1), TimerMode::Once)),
             bullet_marker: BulletMarker,
+            bullet_owner: BulletOwner(bullet_owner),
         }
     }
 }

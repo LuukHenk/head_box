@@ -10,7 +10,7 @@ use bevy::prelude::{
     Mut,
 };
 use bevy::sprite::collide_aabb::{collide, Collision};
-use crate::in_game::data_classes::movement_components::CollisionMarker;
+use super::bullet_components::BulletOwner;
 use super::movement_components::Movement;
 use super::movement_constants::{WEAK_COLLISION_PUSHBACK, STRONG_COLLISION_PUSHBACK};
 use super::player_components::PlayerMarker;
@@ -53,10 +53,27 @@ impl MovementSystems{
     }
 
     pub fn handle_bullet_collision(
-        bullet_query: Query<&Transform, With<BulletMarker>>,
-        collision_query: Query<&Transform, With<CollisionMarker>>
+        bullet_query: Query<(&Transform, &BulletOwner), With<BulletMarker>>,
+        mut collision_query: Query<(&Transform, &mut Movement, Entity), With<Movement>>
     ){
+        for (target_transform, mut movement, target_entity) in collision_query.iter_mut() {
+            for (bullet_transform, bullet_owner) in bullet_query.iter() {
+                if target_entity == bullet_owner.0 {continue}
+                let collision = Self::check_for_collision(bullet_transform, target_transform);
+                if let Some(collision) = collision {
+                    match collision {
+                        Collision::Left => movement.direction_x = -STRONG_COLLISION_PUSHBACK,
+                        Collision::Right => movement.direction_x = STRONG_COLLISION_PUSHBACK,
+                        Collision::Top => movement.direction_y = STRONG_COLLISION_PUSHBACK,
+                        Collision::Bottom => movement.direction_y = -STRONG_COLLISION_PUSHBACK,
+                        Collision::Inside => {
+                            println!("Collision inside!")
+                        }
 
+                    }
+                }
+            }
+        }
     }
     pub fn prevent_enemy_enemy_collision(
         mut enemies_query_a: Query<(Entity, &Transform, &mut Movement), With<EnemyMarker>>,
@@ -137,6 +154,7 @@ impl MovementSystems{
             Collision::Top => movement.direction_y = pushback_strength,
             Collision::Bottom => movement.direction_y = -pushback_strength,
             Collision::Inside => {
+                println!("Collision inside!")
             }
 
         }
