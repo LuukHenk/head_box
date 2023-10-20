@@ -36,7 +36,7 @@ impl EnemySystems {
     }
 
     pub fn spawn_dummy(mut commands: Commands) {
-        let zombie = ZombieBundle::new(100.0, 0.0, 0.);
+        let zombie = ZombieBundle::new(100.0, 0.0, 2.);
         commands.spawn((zombie, GameScreenMarker));
     }
 
@@ -59,12 +59,12 @@ impl EnemySystems {
         target_position: Vec3
     ) {
         movement.direction_x = Self::set_direction_to_target(
-            movement.velocity,
+            movement.current_velocity,
             position[0],
             target_position[0],
         );
         movement.direction_y = Self::set_direction_to_target(
-            movement.velocity,
+            movement.current_velocity,
             position[1],
             target_position[1],
         );

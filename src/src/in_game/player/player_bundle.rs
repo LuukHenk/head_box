@@ -48,7 +48,8 @@ impl PlayerBundle {
             movement: Movement {
                 direction_x: 0.,
                 direction_y: 0.,
-                velocity: 6.,
+                default_velocity: 6.,
+                current_velocity: 0.,
             },
             health: Health(INITIAL_PLAYER_HEALTH),
         }

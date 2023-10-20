@@ -35,7 +35,8 @@ impl ZombieBundle {
             movement: Movement {
                 direction_x: 0.,
                 direction_y: 0.,
-                velocity,
+                default_velocity: velocity,
+                current_velocity: 0.
             },
             enemy_marker: EnemyMarker,
         }

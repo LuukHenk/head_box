@@ -26,6 +26,7 @@ package Enemies {
 }
 package Movement {
     class MovementSystems
+    class CollisionSystems
 }
 package Arena{
     class WallBundle
@@ -52,6 +53,8 @@ GamePlugin <-- EnemySystems
 EnemySystems <-- ZombieBundle
 
 GamePlugin <-- MovementSystems
+GamePlugin <-- CollisionSystems
+CollisionSystems <- MovementSystems
 
 GamePlugin <-- Boxy
 Boxy <-- WallBundle

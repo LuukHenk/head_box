@@ -19,6 +19,12 @@ use super::bullet_bundle::BulletBundle;
 use super::player_bundle::PlayerBundle;
 use super::player_components::PlayerMarker;
 use super::player_constants::PLAYER_SIZE;
+use super::data_classes::direction_constants::{
+    UP,
+    DOWN,
+    RIGHT,
+    LEFT
+};
 
 pub struct PlayerSystems;
 
@@ -38,16 +44,16 @@ impl PlayerSystems {
             movement.direction_x = 0.;
             movement.direction_y = 0.;
             if keyboard_input.pressed(KeyCode::Right) {
-                movement.direction_x += 1.;
+                movement.direction_x += RIGHT;
             }
             if keyboard_input.pressed(KeyCode::Left) {
-                movement.direction_x -= 1.;
+                movement.direction_x += LEFT;
             }
             if keyboard_input.pressed(KeyCode::Up) {
-                movement.direction_y += 1.;
+                movement.direction_y += UP;
             }
             if keyboard_input.pressed(KeyCode::Down) {
-                movement.direction_y -= 1.;
+                movement.direction_y += DOWN;
             }
         }
     }

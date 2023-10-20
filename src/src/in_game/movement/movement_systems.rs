@@ -17,11 +17,10 @@ pub struct MovementSystems;
 impl MovementSystems{
     pub fn move_objects(mut query: Query<(&mut Transform, &mut Movement), With<Movement>>) {
         for (mut transform, mut movement) in query.iter_mut() {
-            // println!("{:#?}", movement);
             Self::rotate_object(&mut *transform, &mut *movement);
-            transform.translation.x += movement.direction_x * movement.velocity;
-            transform.translation.y += movement.direction_y * movement.velocity;
-
+            transform.translation.x += movement.direction_x * movement.current_velocity;
+            transform.translation.y += movement.direction_y * movement.current_velocity;
+            movement.current_velocity = movement.default_velocity;
         }
     }
 
@@ -44,9 +43,4 @@ impl MovementSystems{
             transform.rotation = Quat::from_rotation_z(135.0_f32.to_radians())
         };
     }
-
-
-
-
-
 }
