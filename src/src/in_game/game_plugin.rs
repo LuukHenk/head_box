@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::{CollisionGroups, Group};
 
 use super::ScreenState;
 use super::despawn_screen;
@@ -17,6 +18,9 @@ use super::bullet::bullet_systems::BulletSystems;
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
+        let collision_group = CollisionGroups::new(Group::from_bits(0x0010).unwrap(), Group::from_bits(0b1101).unwrap());
+        println!("{:#?}", collision_group);
+        println!("{:#?}", Group::default());
         app
             .add_systems(OnExit(ScreenState::Game), despawn_screen::<GameScreenMarker>)
             .add_systems(OnEnter(ScreenState::Game), (PlayerSystems::spawn))

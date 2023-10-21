@@ -1,3 +1,5 @@
+#![feature(const_option)]
+
 mod in_game;
 mod menus;
 mod display_handler;

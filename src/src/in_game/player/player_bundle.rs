@@ -1,7 +1,7 @@
 
 
 use bevy::prelude::{Commands, Res, AssetServer, Bundle, Transform, Vec2, SpriteBundle, Vec3, default};
-use bevy_rapier2d::prelude::{Ccd, Collider, GravityScale, RigidBody, Velocity, Sleeping};
+use bevy_rapier2d::prelude::{Ccd, Collider, GravityScale, RigidBody, Velocity, Sleeping, CollisionGroups};
 
 
 use super::rigid_body_bundle::RigidBodyBundle;
@@ -12,7 +12,7 @@ use super::data_classes::generic_constants::CENTER_COORDINATES;
 use super::player_components::{
     PlayerMarker,
 };
-
+use super::data_classes::rigid_body_constants::PLAYER_COLLISION_GROUPS;
 #[derive(Bundle)]
 pub struct PlayerBundle {
     player_marker: PlayerMarker,
@@ -43,6 +43,7 @@ impl PlayerBundle {
                 ..default()
             },
             sleeping: Sleeping::disabled(),
+            collision_groups: PLAYER_COLLISION_GROUPS,
         };
         let player = PlayerBundle {
             player_marker: PlayerMarker,
@@ -50,6 +51,7 @@ impl PlayerBundle {
             health: Health(INITIAL_PLAYER_HEALTH),
             rigid_body_bundle: player_rigid_body
         };
+
         player
     }
 }

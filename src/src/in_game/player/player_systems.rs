@@ -1,10 +1,9 @@
 
 
 
-use bevy::prelude::{Commands, Res, AssetServer, Input, KeyCode, Query, With, Transform, Entity, Vec2};
-use bevy_rapier2d::prelude::{Velocity};
+use bevy::prelude::{Commands, Res, AssetServer, Input, KeyCode, Query, With, Transform, Entity, Vec2, ResMut};
+use bevy_rapier2d::prelude::{CollisionGroups, Velocity};
 
-use super::generic_components::GameScreenMarker;
 use super::bullet_bundle::BulletBundle;
 use super::player_bundle::PlayerBundle;
 use super::player_components::PlayerMarker;
@@ -14,7 +13,10 @@ pub struct PlayerSystems;
 
 impl PlayerSystems {
 
-    pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
+    pub fn spawn(
+        mut commands: Commands,
+        asset_server: Res<AssetServer>,
+    ) {
         commands.spawn(PlayerBundle::new(asset_server));
     }
 
@@ -43,13 +45,13 @@ impl PlayerSystems {
 
     pub fn shoot(
         keyboard_input: Res<Input<KeyCode>>,
-        mut player_query: Query<(&mut Transform, Entity), With<PlayerMarker>>,
+        mut player_query: Query<(&mut Transform, &CollisionGroups), With<PlayerMarker>>,
         mut commands: Commands,
         asset_server: Res<AssetServer>
     ) {
         if keyboard_input.pressed(KeyCode::Space) {
-            for (transform, entity) in player_query.iter_mut() {
-                let bullet_bundle = BulletBundle::new(transform, PLAYER_SIZE, entity, &asset_server);
+            for (transform, collision_groups) in player_query.iter_mut() {
+                let bullet_bundle = BulletBundle::new(transform, PLAYER_SIZE, *collision_groups, &asset_server);
                 commands.spawn(bullet_bundle);
             }
         }

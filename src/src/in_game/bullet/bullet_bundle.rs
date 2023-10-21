@@ -13,7 +13,7 @@ use bevy::prelude::{
     Res,
     AssetServer
 };
-use bevy_rapier2d::prelude::{Ccd, Collider, GravityScale, RigidBody, Sleeping, Velocity};
+use bevy_rapier2d::prelude::{Ccd, Collider, CollisionGroups, GravityScale, RigidBody, Sleeping, Velocity};
 
 use super::data_classes::bullet_constants::{BULLET_LENGTH, BULLET_WIDTH, SHOOTER_DISTANCE_BUFFER};
 use super::data_classes::bullet_components::{BulletMarker, BulletOwner, Damage, LifeTime};
@@ -26,7 +26,6 @@ pub struct BulletBundle {
     bullet_marker: BulletMarker,
     damage: Damage,
     life_time: LifeTime,
-    bullet_owner: BulletOwner,
     rigid_body_bundle: RigidBodyBundle,
     game_screen_marker: GameScreenMarker,
 }
@@ -35,7 +34,7 @@ impl BulletBundle {
     pub fn new(
         shooter_transform: Mut<Transform>,
         shooter_size: f32,
-        bullet_owner: Entity,
+        collision_groups: CollisionGroups,
         asset_server: &Res<AssetServer>
     ) -> BulletBundle {
 
@@ -66,6 +65,7 @@ impl BulletBundle {
                 ..default()
             },
             sleeping: Sleeping::disabled(),
+            collision_groups
         };
 
 
@@ -73,7 +73,6 @@ impl BulletBundle {
             damage: Damage(0.5),
             life_time: LifeTime(Timer::new(Duration::from_secs_f32(0.1), TimerMode::Once)),
             bullet_marker: BulletMarker,
-            bullet_owner: BulletOwner(bullet_owner),
             rigid_body_bundle: bullet_rigid_body,
             game_screen_marker: GameScreenMarker,
         }
