@@ -12,22 +12,25 @@ impl Plugin for HeadBoxPlugin {
         app
             .insert_resource(FixedTime::new_from_secs(1.0 / 60.0))
             .add_state::<ScreenState>()
-            // .add_systems(Startup, setup)
-            // .add_plugins((GamePlugin, MainMenuPlugin));
-            .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-            .add_plugins(RapierDebugRenderPlugin::default())
-
-
-
-            .add_systems(Startup, (
-                rigid_bodies::setup,
-                rigid_bodies::WallSystems::spawn,
-                rigid_bodies::PlayerSystems::spawn,
-            ))
-            .add_systems(FixedUpdate, (
-                rigid_bodies::set_velocity,
-                rigid_bodies::rotate
+            .add_systems(Startup, setup)
+            .add_plugins((
+                GamePlugin,
+                MainMenuPlugin,
+                RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0),
+                RapierDebugRenderPlugin::default()
             ));
+
+
+
+            // .add_systems(Startup, (
+            //     rigid_bodies::setup,
+            //     rigid_bodies::WallSystems::spawn,
+            //     rigid_bodies::PlayerSystems::spawn,
+            // ))
+            // .add_systems(FixedUpdate, (
+            //     rigid_bodies::set_velocity,
+            //     rigid_bodies::rotate
+            // ));
     }
 
 }

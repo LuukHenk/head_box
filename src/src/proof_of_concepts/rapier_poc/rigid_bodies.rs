@@ -127,5 +127,4 @@ pub fn rotate(mut query: Query<(&Velocity, &mut Transform), With<RigidBody>>) {
             transform.rotation = Quat::from_rotation_z(135.0_f32.to_radians())
         };
     }
-
 }

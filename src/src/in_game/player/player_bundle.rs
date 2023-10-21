@@ -1,24 +1,14 @@
 
 
-use bevy::prelude::{
-    Bundle,
-    SpriteBundle,
-    AssetServer,
-    Res,
-    Transform,
-    Sprite,
-    default,
-    Color,
-    Vec3,
-};
-use bevy_rapier2d::prelude::RigidBody;
+use bevy::prelude::{Commands, Res, AssetServer, Bundle, Transform, Vec2, SpriteBundle, Vec3, default};
+use bevy_rapier2d::prelude::{Ccd, Collider, GravityScale, RigidBody, Velocity, Sleeping};
 
-use crate::in_game::data_classes::player_constants::PLAYER_SIZE;
 
+use super::rigid_body_bundle::RigidBodyBundle;
+use super::data_classes::generic_components::GameScreenMarker;
+use super::data_classes::player_constants::{PLAYER_SIZE, INITIAL_PLAYER_HEALTH};
 use super::generic_components::Health;
-use super::data_classes::movement_components::{Movement};
-use super::generic_constants::Z_VALUE;
-use super::player_constants::INITIAL_PLAYER_HEALTH;
+use super::data_classes::generic_constants::CENTER_COORDINATES;
 use super::player_components::{
     PlayerMarker,
 };
@@ -26,36 +16,40 @@ use super::player_components::{
 #[derive(Bundle)]
 pub struct PlayerBundle {
     player_marker: PlayerMarker,
+    game_screen_marker: GameScreenMarker,
     health: Health,
-    sprite_bundle: SpriteBundle,
-    movement: Movement,
-    rigid_body: RigidBody,
+    rigid_body_bundle: RigidBodyBundle
+
 }
 
 
 impl PlayerBundle {
     pub fn new(asset_server: Res<AssetServer>) -> PlayerBundle {
-        // let ship_handle = asset_server.load("textures/image10.png");
-        PlayerBundle {
-            player_marker: PlayerMarker,
+        let player_rigid_body = RigidBodyBundle {
+            rigid_body: RigidBody::Dynamic,
+            velocity: Velocity {
+                linvel: Vec2::new(0.0, 0.0),
+                angvel: 0.0,
+            },
+            gravity: GravityScale(0.0),
+            collider: Collider::cuboid(PLAYER_SIZE, PLAYER_SIZE),
+            continuous_collision_detection: Ccd::enabled(),
             sprite_bundle: SpriteBundle {
-                // texture: ship_handle,
+                texture: asset_server.load("textures/image11.png"),
                 transform: Transform {
-                    translation: Vec3::new(0., 0., Z_VALUE),
-                    scale: Vec3::new(PLAYER_SIZE, PLAYER_SIZE, Z_VALUE),
+                    translation: CENTER_COORDINATES,
                     ..default()
                 },
-                sprite: Sprite { color: Color::PURPLE, ..default() },
                 ..default()
             },
-            movement: Movement {
-                direction_x: 0.,
-                direction_y: 0.,
-                default_velocity: 6.,
-                current_velocity: 0.,
-            },
+            sleeping: Sleeping::disabled(),
+        };
+        let player = PlayerBundle {
+            player_marker: PlayerMarker,
+            game_screen_marker: GameScreenMarker,
             health: Health(INITIAL_PLAYER_HEALTH),
-            rigid_body: RigidBody::Dynamic,
-        }
+            rigid_body_bundle: player_rigid_body
+        };
+        player
     }
 }

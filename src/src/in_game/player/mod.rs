@@ -4,6 +4,7 @@ mod player_bundle;
 
 
 use super::bullet::bullet_bundle;
+use super::rigid_body::rigid_body_bundle;
 use super::data_classes;
 use data_classes::generic_components;
 use data_classes::generic_constants;

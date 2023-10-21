@@ -1,59 +1,42 @@
 
 
 
-use bevy::prelude::{
-    Commands,
-    Res,
-    AssetServer,
-    Input,
-    KeyCode,
-    Query,
-    With,
-    Transform,
-    Entity,
-};
+use bevy::prelude::{Commands, Res, AssetServer, Input, KeyCode, Query, With, Transform, Entity, Vec2};
+use bevy_rapier2d::prelude::{Velocity};
 
 use super::generic_components::GameScreenMarker;
-use super::data_classes::movement_components::Movement;
 use super::bullet_bundle::BulletBundle;
 use super::player_bundle::PlayerBundle;
 use super::player_components::PlayerMarker;
 use super::player_constants::PLAYER_SIZE;
-use super::data_classes::direction_constants::{
-    UP,
-    DOWN,
-    RIGHT,
-    LEFT
-};
-
 pub struct PlayerSystems;
 
 
 impl PlayerSystems {
 
     pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
-        commands.spawn((PlayerBundle::new(asset_server), GameScreenMarker));
+        commands.spawn(PlayerBundle::new(asset_server));
     }
 
-    pub fn set_direction(
+    pub fn set_velocity(
         keyboard_input: Res<Input<KeyCode>>,
-        mut player_query: Query<&mut Movement, With<PlayerMarker>>
+        mut velocity_query: Query<&mut Velocity, With<PlayerMarker>>
     ) {
+        let velocity_speed = 200.;
+        for mut velocity in velocity_query.iter_mut() {
 
-        for mut movement in player_query.iter_mut() {
-            movement.direction_x = 0.;
-            movement.direction_y = 0.;
+            velocity.linvel = Vec2::new(0., 0.);
             if keyboard_input.pressed(KeyCode::Right) {
-                movement.direction_x += RIGHT;
+                velocity.linvel[0] += velocity_speed;
             }
             if keyboard_input.pressed(KeyCode::Left) {
-                movement.direction_x += LEFT;
+                velocity.linvel[0] -= velocity_speed;
             }
             if keyboard_input.pressed(KeyCode::Up) {
-                movement.direction_y += UP;
+                velocity.linvel[1] += velocity_speed;
             }
             if keyboard_input.pressed(KeyCode::Down) {
-                movement.direction_y += DOWN;
+                velocity.linvel[1] -= velocity_speed;
             }
         }
     }
