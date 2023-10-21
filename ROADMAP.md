@@ -7,6 +7,10 @@
 - When the player is rotated, take this into account with the collision
 - https://rapier.rs/docs/user_guides/bevy_plugin/rigid_bodies Maybe this article helps
 
+### Add pistol
+- Has a reload time, and a bullet
+- Rename the bullet crate to weapons
+- Has the shoot system, used by the player
 
 ### Add sound effects
 - Shooting sound

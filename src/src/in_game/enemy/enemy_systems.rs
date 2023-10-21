@@ -1,7 +1,8 @@
 
 
 
-use bevy::prelude::{Commands, Query, Transform, With, Mut, Vec3, Entity};
+use bevy::prelude::{Commands, Query, Transform, With, Mut, Vec3, Entity, AssetServer, Res};
+use bevy_rapier2d::prelude::Velocity;
 use crate::in_game::data_classes::generic_components::{GameScreenMarker, Health};
 use crate::in_game::data_classes::level_components::{ActiveLevelMarker, KilledEnemies};
 
@@ -22,17 +23,17 @@ use super::zombie_bundle::ZombieBundle;
 impl EnemySystems {
 
 
-    pub fn spawn_zombie(mut commands: Commands) {
+    pub fn spawn_zombie(mut commands: Commands, asset_server: Res<AssetServer>) {
         let y = if rand::random::<bool>() { 1. } else { -1. };
         let x = if rand::random::<bool>() { 1. } else { -1. };
-        let zombie = ZombieBundle::new(SCREEN_CENTER * x, OUTER_Y_COORDINATES * y, 4.);
-        commands.spawn((zombie, GameScreenMarker));
+        let zombie = ZombieBundle::new(SCREEN_CENTER * x, 350. * y, asset_server);
+        commands.spawn(zombie);
     }
 
-    pub fn spawn_dummy(mut commands: Commands) {
-        let zombie = ZombieBundle::new(100.0, 0.0, 0.);
-        commands.spawn((zombie, GameScreenMarker));
-    }
+    // pub fn spawn_dummy(mut commands: Commands) {
+    //     let zombie = ZombieBundle::new(100.0, 0.0, 0.);
+    //     commands.spawn((zombie, GameScreenMarker));
+    // }
 
 
     pub fn despawn_enemies(
@@ -49,37 +50,40 @@ impl EnemySystems {
             }
         }
     }
-    pub fn set_directions(
-        mut enemy_query: Query<(&mut Movement, &Transform), With<EnemyMarker>>,
+
+    pub fn set_velocity(
+        mut enemy_query: Query<(&mut Velocity, &Transform), With<EnemyMarker>>,
         player_query: Query<&Transform, With<PlayerMarker>>
     ) {
         for player_transform in player_query.iter() {
             let player_position = player_transform.translation;
-            for (enemy_movement, enemy_transform) in enemy_query.iter_mut() {
+            for (enemy_velocity, enemy_transform) in enemy_query.iter_mut() {
                 let enemy_position = enemy_transform.translation;
-                Self::set_directions_to_target(enemy_movement, enemy_position, player_position);
+                Self::set_directions_to_target(enemy_velocity, enemy_position, player_position);
             }
         }
     }
 
+
     fn set_directions_to_target(
-        mut movement: Mut<Movement>,
+        mut velocity: Mut<Velocity>,
         position: Vec3,
         target_position: Vec3
     ) {
-        movement.direction_x = Self::set_direction_to_target(
-            movement.current_velocity,
+        velocity.linvel[0] = Self::set_direction_to_target(
+            0.,
             position[0],
             target_position[0],
         );
-        movement.direction_y = Self::set_direction_to_target(
-            movement.current_velocity,
+        velocity.linvel[1] = Self::set_direction_to_target(
+            0.,
             position[1],
             target_position[1],
         );
     }
     fn set_direction_to_target(minimum_distance_difference: f32, position: f32, target_position: f32) -> f32 {
+        let speed = 150.;
         let target_distance =  target_position - position;
-        if target_distance > minimum_distance_difference {1.} else if target_distance < -minimum_distance_difference {-1.} else {0.}
+        if target_distance > minimum_distance_difference {speed} else if target_distance < -minimum_distance_difference {-speed} else {0.}
     }
 }

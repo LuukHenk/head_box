@@ -18,8 +18,7 @@ pub struct PlayerBundle {
     player_marker: PlayerMarker,
     game_screen_marker: GameScreenMarker,
     health: Health,
-    rigid_body_bundle: RigidBodyBundle
-
+    rigid_body_bundle: RigidBodyBundle,
 }
 
 
@@ -49,7 +48,7 @@ impl PlayerBundle {
             player_marker: PlayerMarker,
             game_screen_marker: GameScreenMarker,
             health: Health(INITIAL_PLAYER_HEALTH),
-            rigid_body_bundle: player_rigid_body
+            rigid_body_bundle: player_rigid_body,
         };
 
         player

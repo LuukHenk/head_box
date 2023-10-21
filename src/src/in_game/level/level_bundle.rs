@@ -1,6 +1,7 @@
 
 use bevy::prelude::{Bundle};
 use bevy::time::Stopwatch;
+use crate::in_game::data_classes::generic_components::GameScreenMarker;
 use super::level_components::{
     LevelMarker,
     TotalEnemies,
@@ -20,6 +21,7 @@ pub struct Level {
     enemy_spawn_delay: EnemySpawnDelay,
     level_timer: LevelTimer,
     level_marker: LevelMarker,
+    game_screen_marker: GameScreenMarker,
 }
 
 impl Level {
@@ -32,6 +34,7 @@ impl Level {
             enemy_spawn_delay: EnemySpawnDelay(enemy_spawn_delay),
             level_timer: LevelTimer(Stopwatch::new()),
             level_marker: LevelMarker,
+            game_screen_marker: GameScreenMarker,
         }
     }
 }

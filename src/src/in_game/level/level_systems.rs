@@ -1,14 +1,5 @@
 
-use bevy::prelude::{
-    Commands,
-    Query,
-    Entity,
-    With,
-    ResMut,
-    NextState,
-    Res,
-    Time,
-};
+use bevy::prelude::{Commands, Query, Entity, With, ResMut, NextState, Res, Time, AssetServer};
 use super::PlayerMarker;
 use super::Health;
 use super::level_components::{
@@ -29,10 +20,10 @@ pub struct LevelSystems;
 
 impl LevelSystems {
     pub fn spawn_levels(mut commands: Commands) {
-        let level_1 = Level::new(1, 1, 1.);
-        let level_2 = Level::new(2, 2, 2.);
-        commands.spawn((level_1, GameScreenMarker, ActiveLevelMarker));
-        commands.spawn((level_2, GameScreenMarker));
+        let level_1 = Level::new(1, 10, 5.);
+        let level_2 = Level::new(2, 20, 4.);
+        commands.spawn((level_1, ActiveLevelMarker));
+        commands.spawn(level_2);
     }
 
     pub fn set_current_level(
@@ -57,6 +48,7 @@ impl LevelSystems {
     pub fn spawn_enemies_for_current_level(
         time: Res<Time>,
         commands: Commands,
+        asset_server: Res<AssetServer>,
         mut level_query: Query<(&mut LevelTimer, &EnemySpawnDelay, &mut SpawnedEnemies, &TotalEnemies), With<ActiveLevelMarker>>
     ) {
         let (mut level_timer, enemy_spawn_delay, mut spawned_enemies, total_enemies) = level_query.single_mut();
@@ -66,7 +58,7 @@ impl LevelSystems {
 
         if spawned_enemies.0 < expected_spawned_enemies as u32 {
             if spawned_enemies.0 < total_enemies.0 {
-                EnemySystems::spawn_dummy(commands);
+                EnemySystems::spawn_zombie(commands, asset_server);
                 spawned_enemies.0 += 1;
             }
         }

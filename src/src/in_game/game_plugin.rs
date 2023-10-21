@@ -22,28 +22,26 @@ impl Plugin for GamePlugin {
             .add_systems(
                 OnEnter(ScreenState::Game), (
                     PlayerSystems::spawn,
-                    ArenaSystems::spawn_boxy_arena
+                    ArenaSystems::spawn_boxy_arena,
+                    LevelSystems::spawn_levels,
                 )
             )
             .add_systems(
                 FixedUpdate, (
+                    LevelSystems::set_current_level.after(LevelSystems::handle_game_over),
+                    LevelSystems::spawn_enemies_for_current_level.after(LevelSystems::set_current_level),
                     PlayerSystems::set_velocity,
-                    PlayerSystems::shoot,
+                    PlayerSystems::shoot.after(PlayerSystems::set_velocity),
+                    EnemySystems::set_velocity.after(PlayerSystems::set_velocity),
                     BulletSystems::despawn_bullets,
                     RigidBodySystems::rotate,
                 ).run_if(in_state(ScreenState::Game))
             )
         ;
 
-        // On enter
-        // LevelSystems::spawn_levels,
-
         // Fixed update
         // LevelSystems::handle_game_over,
-        // LevelSystems::set_current_level.after(LevelSystems::handle_game_over),
-        // LevelSystems::spawn_enemies_for_current_level,
         // EnemySystems::despawn_enemies,
-        // EnemySystems::set_directions.after(EnemySystems::despawn_enemies),
         // CollisionSystems::handle_player_enemy_collision.after(PlayerSystems::set_direction),
 
     }
