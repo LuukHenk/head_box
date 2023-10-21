@@ -1,7 +1,7 @@
 
 
 use bevy::prelude::{Commands, Res, AssetServer, Bundle, Transform, Vec2, SpriteBundle, Vec3, default};
-use bevy_rapier2d::prelude::{Ccd, Collider, GravityScale, RigidBody, Velocity, Sleeping, CollisionGroups};
+use bevy_rapier2d::prelude::{Ccd, Collider, GravityScale, RigidBody, Velocity, Sleeping, CollisionGroups, ActiveEvents};
 
 
 use super::rigid_body_bundle::RigidBodyBundle;
@@ -43,6 +43,7 @@ impl PlayerBundle {
             },
             sleeping: Sleeping::disabled(),
             collision_groups: PLAYER_COLLISION_GROUPS,
+            active_events: ActiveEvents::COLLISION_EVENTS,
         };
         let player = PlayerBundle {
             player_marker: PlayerMarker,

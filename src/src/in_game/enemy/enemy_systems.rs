@@ -30,11 +30,6 @@ impl EnemySystems {
         commands.spawn(zombie);
     }
 
-    // pub fn spawn_dummy(mut commands: Commands) {
-    //     let zombie = ZombieBundle::new(100.0, 0.0, 0.);
-    //     commands.spawn((zombie, GameScreenMarker));
-    // }
-
 
     pub fn despawn_enemies(
         mut commands: Commands,

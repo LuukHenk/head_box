@@ -2,7 +2,7 @@ use bevy::prelude::{
     Bundle,
     SpriteBundle,
 };
-use bevy_rapier2d::prelude::{RigidBody, Velocity, GravityScale, Collider, Ccd, Sleeping, CollisionGroups};
+use bevy_rapier2d::prelude::{RigidBody, Velocity, GravityScale, Collider, Ccd, Sleeping, CollisionGroups, ActiveEvents};
 
 
 
@@ -17,4 +17,5 @@ pub struct RigidBodyBundle {
     pub continuous_collision_detection: Ccd,
     pub sleeping: Sleeping,
     pub collision_groups: CollisionGroups,
+    pub active_events: ActiveEvents,
 }

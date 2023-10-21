@@ -1,6 +1,6 @@
 use bevy::asset::Handle;
 use bevy::prelude::{Bundle, SpriteBundle, Sprite, default, Vec3, Transform, Color, Vec2, Image};
-use bevy_rapier2d::prelude::{Ccd, Collider, GravityScale, RigidBody, Sleeping, Velocity};
+use bevy_rapier2d::prelude::{ActiveEvents, Ccd, Collider, GravityScale, RigidBody, Sleeping, Velocity};
 use crate::in_game::data_classes::generic_components::GameScreenMarker;
 use crate::in_game::data_classes::rigid_body_constants::DEFAULT_COLLISION_GROUPS;
 use crate::in_game::rigid_body::rigid_body_bundle::RigidBodyBundle;
@@ -34,6 +34,7 @@ impl WallBundle {
             },
             sleeping: Sleeping::disabled(),
             collision_groups: DEFAULT_COLLISION_GROUPS,
+            active_events: ActiveEvents::COLLISION_EVENTS,
         };
         WallBundle {
             game_screen_marker: GameScreenMarker,

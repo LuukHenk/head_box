@@ -1,5 +1,6 @@
 
 use bevy::prelude::{Bundle, SpriteBundle, Transform, Vec3, default, Sprite, Color, Res, AssetServer, Vec2};
+use bevy_rapier2d::geometry::ActiveEvents;
 use bevy_rapier2d::prelude::{Ccd, Collider, GravityScale, RigidBody, Velocity, Sleeping, CollisionGroups};
 
 use crate::in_game::data_classes::generic_components::{GameScreenMarker, Health};
@@ -40,6 +41,7 @@ impl ZombieBundle {
             },
             sleeping: Sleeping::disabled(),
             collision_groups: DEFAULT_COLLISION_GROUPS,
+            active_events: ActiveEvents::COLLISION_EVENTS,
         };
 
         ZombieBundle {

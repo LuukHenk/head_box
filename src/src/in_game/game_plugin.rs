@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::{CollisionGroups, Group};
+use bevy_rapier2d::prelude::{CollisionEvent, CollisionGroups, ContactForceEvent, Group};
 
 use super::ScreenState;
 use super::despawn_screen;
@@ -35,6 +35,7 @@ impl Plugin for GamePlugin {
                     EnemySystems::set_velocity.after(PlayerSystems::set_velocity),
                     BulletSystems::despawn_bullets,
                     RigidBodySystems::rotate,
+                    display_events,
                 ).run_if(in_state(ScreenState::Game))
             )
         ;
@@ -44,5 +45,19 @@ impl Plugin for GamePlugin {
         // EnemySystems::despawn_enemies,
         // CollisionSystems::handle_player_enemy_collision.after(PlayerSystems::set_direction),
 
+    }
+}
+
+
+fn display_events(
+    mut collision_events: EventReader<CollisionEvent>,
+    mut contact_force_events: EventReader<ContactForceEvent>,
+) {
+    for collision_event in collision_events.iter() {
+        println!("Received collision event: {:?}", collision_event);
+    }
+
+    for contact_force_event in contact_force_events.iter() {
+        println!("Received contact force event: {:?}", contact_force_event);
     }
 }

@@ -13,6 +13,7 @@ use bevy::prelude::{
     Res,
     AssetServer
 };
+use bevy_rapier2d::geometry::ActiveEvents;
 use bevy_rapier2d::prelude::{Ccd, Collider, CollisionGroups, GravityScale, RigidBody, Sleeping, Velocity};
 
 use super::data_classes::bullet_constants::{BULLET_LENGTH, BULLET_WIDTH, SHOOTER_DISTANCE_BUFFER};
@@ -65,7 +66,8 @@ impl BulletBundle {
                 ..default()
             },
             sleeping: Sleeping::disabled(),
-            collision_groups
+            collision_groups,
+            active_events: ActiveEvents::COLLISION_EVENTS,
         };
 
 
