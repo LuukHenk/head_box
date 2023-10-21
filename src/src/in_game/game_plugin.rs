@@ -17,55 +17,34 @@ use super::bullet::bullet_systems::BulletSystems;
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        let collision_group = CollisionGroups::new(Group::from_bits(0x0010).unwrap(), Group::from_bits(0b1101).unwrap());
         app
             .add_systems(OnExit(ScreenState::Game), despawn_screen::<GameScreenMarker>)
-            .add_systems(OnEnter(ScreenState::Game), (PlayerSystems::spawn, ArenaSystems::spawn_boxy_arena))
-            .add_systems(FixedUpdate, (
-                PlayerSystems::set_velocity,
-                PlayerSystems::shoot,
-                BulletSystems::despawn_bullets,
-                RigidBodySystems::rotate,
-            ))
+            .add_systems(
+                OnEnter(ScreenState::Game), (
+                    PlayerSystems::spawn,
+                    ArenaSystems::spawn_boxy_arena
+                )
+            )
+            .add_systems(
+                FixedUpdate, (
+                    PlayerSystems::set_velocity,
+                    PlayerSystems::shoot,
+                    BulletSystems::despawn_bullets,
+                    RigidBodySystems::rotate,
+                ).run_if(in_state(ScreenState::Game))
+            )
         ;
 
-        // app
-            //
-            //
-            //         Boxy::spawn,
-            //         LevelSystems::spawn_levels,
-            //     )
-            // )
+        // On enter
+        // LevelSystems::spawn_levels,
 
-            //
-                    // LevelSystems::handle_game_over,
-                    // LevelSystems::set_current_level.after(LevelSystems::handle_game_over),
-                    // LevelSystems::spawn_enemies_for_current_level,
-                    // EnemySystems::despawn_enemies,
-                    // EnemySystems::set_directions.after(EnemySystems::despawn_enemies),
-                    // BulletSystems::despawn_bullets,
-                    // PlayerSystems::set_direction,
-                    // PlayerSystems::shoot.after(BulletSystems::despawn_bullets),
-                    // CollisionSystems::handle_player_enemy_collision.after(PlayerSystems::set_direction),
-                    // CollisionSystems::prevent_enemy_enemy_collision.after(EnemySystems::set_directions),
-                    // CollisionSystems::handle_bullet_collision
-                    //     .after(PlayerSystems::shoot)
-                    //     .after(PlayerSystems::set_direction)
-                    //     .after(EnemySystems::set_directions),
-                    // CollisionSystems::prevent_wall_collision
-                    //     .after(PlayerSystems::set_direction)
-                    //     .after(EnemySystems::set_directions)
-                    // ,
-                    // MovementSystems::move_objects
-                    //     .after(PlayerSystems::set_direction) // FIXME: TMP until the collision works again
-                    //     .after(EnemySystems::set_directions)    // FIXME: TMP until the collision works again
-                        // .after(CollisionSystems::prevent_wall_collision)
-                        // .after(CollisionSystems::handle_bullet_collision)
-                        // .after(CollisionSystems::prevent_enemy_enemy_collision)
-                        // .after(CollisionSystems::handle_player_enemy_collision)
-                    // ,
-                // ).run_if(in_state(ScreenState::Game))
-            // )
-        // ;
+        // Fixed update
+        // LevelSystems::handle_game_over,
+        // LevelSystems::set_current_level.after(LevelSystems::handle_game_over),
+        // LevelSystems::spawn_enemies_for_current_level,
+        // EnemySystems::despawn_enemies,
+        // EnemySystems::set_directions.after(EnemySystems::despawn_enemies),
+        // CollisionSystems::handle_player_enemy_collision.after(PlayerSystems::set_direction),
+
     }
 }
