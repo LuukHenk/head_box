@@ -6,7 +6,7 @@ use super::despawn_screen;
 use super::data_classes::generic_components::GameScreenMarker;
 use super::arena::boxy::Boxy;
 use super::movement::movement_systems::MovementSystems;
-use super::movement::collision_systems::CollisionSystems;
+// use super::movement::collision_systems::CollisionSystems;
 use super::player::player_systems::PlayerSystems;
 use super::enemy::enemy_systems::EnemySystems;
 use super::level::level_systems::LevelSystems;
@@ -33,21 +33,23 @@ impl Plugin for GamePlugin {
                     BulletSystems::despawn_bullets,
                     PlayerSystems::set_direction,
                     PlayerSystems::shoot.after(BulletSystems::despawn_bullets),
-                    CollisionSystems::handle_player_enemy_collision.after(PlayerSystems::set_direction),
-                    CollisionSystems::prevent_enemy_enemy_collision.after(EnemySystems::set_directions),
-                    CollisionSystems::handle_bullet_collision
-                        .after(PlayerSystems::shoot)
-                        .after(PlayerSystems::set_direction)
-                        .after(EnemySystems::set_directions),
-                    CollisionSystems::prevent_wall_collision
-                        .after(PlayerSystems::set_direction)
-                        .after(EnemySystems::set_directions)
-                    ,
+                    // CollisionSystems::handle_player_enemy_collision.after(PlayerSystems::set_direction),
+                    // CollisionSystems::prevent_enemy_enemy_collision.after(EnemySystems::set_directions),
+                    // CollisionSystems::handle_bullet_collision
+                    //     .after(PlayerSystems::shoot)
+                    //     .after(PlayerSystems::set_direction)
+                    //     .after(EnemySystems::set_directions),
+                    // CollisionSystems::prevent_wall_collision
+                    //     .after(PlayerSystems::set_direction)
+                    //     .after(EnemySystems::set_directions)
+                    // ,
                     MovementSystems::move_objects
-                        .after(CollisionSystems::prevent_wall_collision)
-                        .after(CollisionSystems::handle_bullet_collision)
-                        .after(CollisionSystems::prevent_enemy_enemy_collision)
-                        .after(CollisionSystems::handle_player_enemy_collision)
+                        .after(PlayerSystems::set_direction) // FIXME: TMP until the collision works again
+                        .after(EnemySystems::set_directions)    // FIXME: TMP until the collision works again
+                        // .after(CollisionSystems::prevent_wall_collision)
+                        // .after(CollisionSystems::handle_bullet_collision)
+                        // .after(CollisionSystems::prevent_enemy_enemy_collision)
+                        // .after(CollisionSystems::handle_player_enemy_collision)
                     ,
                 ).run_if(in_state(ScreenState::Game))
             )

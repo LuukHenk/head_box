@@ -17,6 +17,9 @@
 ### Sprites
 - Add sprites for everything at the moment
 
+## Add Life indicator
+- Add life indicator in the top corner or above head
+
 ### Add music
 - Add a theme song for the game
 
