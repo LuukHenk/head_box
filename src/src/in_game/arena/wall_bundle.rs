@@ -9,12 +9,14 @@ use bevy::prelude::{
     Transform,
     Color,
 };
+use bevy_rapier2d::prelude::RigidBody;
 use super::WallMarker;
 use super::generic_constants::Z_VALUE;
 #[derive(Bundle)]
 pub struct WallBundle {
     wall_marker: WallMarker,
     sprite_bundle: SpriteBundle,
+    rigid_body: RigidBody,
 }
 
 impl WallBundle {
@@ -30,6 +32,7 @@ impl WallBundle {
                 sprite: Sprite { color, ..default() },
                 ..default()
             },
+            rigid_body: RigidBody::Fixed,
         }
     }
 }

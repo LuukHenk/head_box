@@ -11,6 +11,8 @@ use bevy::prelude::{
     Color,
     Vec3,
 };
+use bevy_rapier2d::prelude::RigidBody;
+
 use crate::in_game::data_classes::player_constants::PLAYER_SIZE;
 
 use super::generic_components::Health;
@@ -27,6 +29,7 @@ pub struct PlayerBundle {
     health: Health,
     sprite_bundle: SpriteBundle,
     movement: Movement,
+    rigid_body: RigidBody,
 }
 
 
@@ -52,6 +55,7 @@ impl PlayerBundle {
                 current_velocity: 0.,
             },
             health: Health(INITIAL_PLAYER_HEALTH),
+            rigid_body: RigidBody::Dynamic,
         }
     }
 }
