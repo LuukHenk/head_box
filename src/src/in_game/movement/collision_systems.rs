@@ -1,6 +1,7 @@
 
-use bevy::prelude::{Query, Transform, With, Entity, Mut, Commands};
+use bevy::prelude::{Query, Transform, With, Entity, Mut, Commands, Res};
 use bevy::sprite::collide_aabb::{collide, Collision};
+use bevy_rapier2d::prelude::RapierContext;
 use crate::in_game::data_classes::bullet_components::Damage;
 use crate::in_game::data_classes::direction_constants::{DOWN, LEFT, RIGHT, UP};
 use super::movement_components::Movement;
@@ -17,39 +18,41 @@ pub struct CollisionSystems;
 impl CollisionSystems {
 
     pub fn handle_player_enemy_collision(
-        mut player_query: Query<(&Transform, &mut Movement, &mut Health), With<PlayerMarker>>,
-        enemies_query: Query<&Transform, With<EnemyMarker>>,
+        rapier_context: Res<RapierContext>,
+        mut player_query: Query<(Entity, &mut Health), With<PlayerMarker>>,
+        enemy_query: Query<Entity, With<EnemyMarker>>
     ) {
-        for (player_transform, mut player_movement, mut player_health) in player_query.iter_mut() {
-            for enemy_transform in enemies_query.iter() {
-                let collision = Self::check_for_collision(player_transform, enemy_transform);
-                if let Some(collision) = collision {
-                    player_movement = Self::apply_collision_pushback(
-                        collision,
-                        player_movement,
-                    );
+        for (player_entity, mut player_health) in player_query.iter_mut() {
+            for enemy_entity in enemy_query.iter() {
+                if Self::detect_collision(player_entity, enemy_entity, &rapier_context) {
                     player_health.0 -= 1.;
-                    println!("Auch! HP: {:#?}", player_health.0) // TODO: Remove when there is a health display
+                    println!("Auch! HP: {:#?}", player_health.0)
                 }
             }
         }
+    }
+    pub fn handle_bullet_collision(
+        rapier_context: Res<RapierContext>,
+        mut target_query: Query<(Entity, &mut Health), With<Health>>,
+        bullet_query: Query<Entity, With<BulletMarker>>
+    ){
+        for (target_entity, mut target_health) in target_query.iter_mut() {
+            for enemy_entity in bullet_query.iter() {
+                if Self::detect_collision(target_entity, enemy_entity, &rapier_context) {
+                    target_health.0 -= 1.;
+                    println!("Auch! HP: {:#?}", target_health.0)
+                }
+            }
+        }
+    }
+    fn detect_collision(entity1: Entity, entity2: Entity, rapier_context: &Res<RapierContext>) -> bool {
+        if let Some(contact_pair) = rapier_context.contact_pair(entity1, entity2) {
+            return contact_pair.has_any_active_contacts()
+        }
+        false
     }
 
-    pub fn handle_bullet_collision(
-        bullet_query: Query<(&Transform, &Damage, &BulletOwner), With<BulletMarker>>,
-        mut collision_query: Query<(&Transform, &mut Health, Entity), With<Health>>
-    ){
-        for (target_transform, mut health, target_entity) in collision_query.iter_mut() {
-            for (bullet_transform, bullet_damage, bullet_owner) in bullet_query.iter() {
-                if target_entity == bullet_owner.0 {continue}
-                let collision = Self::check_for_collision( bullet_transform, target_transform);
-                if let Some(_) = collision {
-                    health.0 -= bullet_damage.0;
-                    println!("Auch! HP: {:#?}", health.0) // TODO: Remove when there is a health display
-                }
-            }
-        }
-    }
+
     pub fn prevent_enemy_enemy_collision(
         mut enemies_query_a: Query<(Entity, &Transform, &mut Movement), With<EnemyMarker>>,
         enemies_query_b: Query<(Entity, &Transform), With<EnemyMarker>>,

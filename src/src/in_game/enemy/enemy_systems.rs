@@ -77,7 +77,7 @@ impl EnemySystems {
         );
     }
     fn set_direction_to_target(minimum_distance_difference: f32, position: f32, target_position: f32) -> f32 {
-        let speed = 150.;
+        let speed = 100.;
         let target_distance =  target_position - position;
         if target_distance > minimum_distance_difference {speed} else if target_distance < -minimum_distance_difference {-speed} else {0.}
     }
