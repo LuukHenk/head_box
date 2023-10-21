@@ -4,7 +4,7 @@ use bevy_rapier2d::prelude::*;
 use super::GamePlugin;
 use super::MainMenuPlugin;
 use super::ScreenState;
-use super::proof_of_concepts::rapier_poc::rigid_bodies;
+// use super::proof_of_concepts::rapier_poc::rigid_bodies;
 
 pub struct HeadBoxPlugin;
 impl Plugin for HeadBoxPlugin {

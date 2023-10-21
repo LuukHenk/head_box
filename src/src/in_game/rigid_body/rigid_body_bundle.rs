@@ -2,14 +2,7 @@ use bevy::prelude::{
     Bundle,
     SpriteBundle,
 };
-use bevy_rapier2d::prelude::{
-    RigidBody,
-    Velocity,
-    GravityScale,
-    Collider,
-    Ccd,
-    Sleeping,
-};
+use bevy_rapier2d::prelude::{RigidBody, Velocity, GravityScale, Collider, Ccd, Sleeping};
 
 
 

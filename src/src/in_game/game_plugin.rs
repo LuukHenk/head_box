@@ -22,6 +22,8 @@ impl Plugin for GamePlugin {
             .add_systems(OnEnter(ScreenState::Game), (PlayerSystems::spawn))
             .add_systems(FixedUpdate, (
                 PlayerSystems::set_velocity,
+                PlayerSystems::shoot,
+                BulletSystems::despawn_bullets,
                 RigidBodySystems::rotate,
             ))
         ;

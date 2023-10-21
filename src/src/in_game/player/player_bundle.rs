@@ -35,7 +35,7 @@ impl PlayerBundle {
             collider: Collider::cuboid(PLAYER_SIZE, PLAYER_SIZE),
             continuous_collision_detection: Ccd::enabled(),
             sprite_bundle: SpriteBundle {
-                texture: asset_server.load("textures/image11.png"),
+                texture: asset_server.load("textures/player.png"),
                 transform: Transform {
                     translation: CENTER_COORDINATES,
                     ..default()

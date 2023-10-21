@@ -10,3 +10,4 @@ pub mod wall_components;
 pub mod level_components;
 pub mod bullet_components;
 pub mod direction_constants;
+pub mod bullet_constants;

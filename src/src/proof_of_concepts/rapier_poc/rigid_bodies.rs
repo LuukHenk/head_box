@@ -16,6 +16,7 @@ struct RigidBodyBundle {
     collider: Collider,
     continuous_collision_detection: Ccd,
     sleeping: Sleeping,
+    // collision_groups: CollisionGroups,
 }
 
 
@@ -40,6 +41,7 @@ impl PlayerSystems {
                 ..default()
             },
             sleeping: Sleeping::disabled(),
+            // collision_groups: CollisionGroups::new(0b0001.into(), 0b0001.into())
         };
         commands.spawn(player);
     }

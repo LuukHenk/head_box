@@ -24,7 +24,7 @@ impl PlayerSystems {
     ) {
         let velocity_speed = 200.;
         for mut velocity in velocity_query.iter_mut() {
-
+            velocity.angvel = 0.;
             velocity.linvel = Vec2::new(0., 0.);
             if keyboard_input.pressed(KeyCode::Right) {
                 velocity.linvel[0] += velocity_speed;
@@ -45,11 +45,12 @@ impl PlayerSystems {
         keyboard_input: Res<Input<KeyCode>>,
         mut player_query: Query<(&mut Transform, Entity), With<PlayerMarker>>,
         mut commands: Commands,
+        asset_server: Res<AssetServer>
     ) {
         if keyboard_input.pressed(KeyCode::Space) {
             for (transform, entity) in player_query.iter_mut() {
-                let bullet_bundle = BulletBundle::new(transform, PLAYER_SIZE, entity);
-                commands.spawn((bullet_bundle, GameScreenMarker));
+                let bullet_bundle = BulletBundle::new(transform, PLAYER_SIZE, entity, &asset_server);
+                commands.spawn(bullet_bundle);
             }
         }
     }
