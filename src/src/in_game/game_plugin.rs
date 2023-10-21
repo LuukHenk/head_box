@@ -7,8 +7,7 @@ use super::despawn_screen;
 use super::data_classes::generic_components::GameScreenMarker;
 use super::player::player_systems::PlayerSystems;
 use super::rigid_body::rigid_body_systems::RigidBodySystems;
-
-use super::arena::boxy::Boxy;
+use super::arena::arena_systems::ArenaSystems;
 use super::movement::movement_systems::MovementSystems;
 // use super::movement::collision_systems::CollisionSystems;
 use super::enemy::enemy_systems::EnemySystems;
@@ -19,11 +18,9 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         let collision_group = CollisionGroups::new(Group::from_bits(0x0010).unwrap(), Group::from_bits(0b1101).unwrap());
-        println!("{:#?}", collision_group);
-        println!("{:#?}", Group::default());
         app
             .add_systems(OnExit(ScreenState::Game), despawn_screen::<GameScreenMarker>)
-            .add_systems(OnEnter(ScreenState::Game), (PlayerSystems::spawn))
+            .add_systems(OnEnter(ScreenState::Game), (PlayerSystems::spawn, ArenaSystems::spawn_boxy_arena))
             .add_systems(FixedUpdate, (
                 PlayerSystems::set_velocity,
                 PlayerSystems::shoot,
@@ -36,7 +33,6 @@ impl Plugin for GamePlugin {
             //
             //
             //         Boxy::spawn,
-            //         PlayerSystems::spawn,
             //         LevelSystems::spawn_levels,
             //     )
             // )
