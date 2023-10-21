@@ -3,6 +3,7 @@
 
 use bevy::prelude::{Commands, Query, Transform, With, Mut, Vec3, Entity};
 use crate::in_game::data_classes::generic_components::{GameScreenMarker, Health};
+use crate::in_game::data_classes::level_components::{ActiveLevelMarker, KilledEnemies};
 
 use super::generic_constants::{
     SCREEN_CENTER,
@@ -34,10 +35,17 @@ impl EnemySystems {
     }
 
 
-    pub fn despawn_enemies(mut commands: Commands, query: Query<(Entity, &Health), With<EnemyMarker>>) {
+    pub fn despawn_enemies(
+        mut commands: Commands,
+        query: Query<(Entity, &Health), With<EnemyMarker>>,
+        mut active_level_query: Query<&mut KilledEnemies, With<ActiveLevelMarker>>
+    ) {
+
         for (entity, health) in query.iter() {
             if health.0 <= 0.0 {
-                commands.entity(entity).despawn()
+                commands.entity(entity).despawn();
+                let mut killed_enemies = active_level_query.single_mut();
+                killed_enemies.0 += 1;
             }
         }
     }

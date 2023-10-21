@@ -30,7 +30,7 @@ pub struct LevelSystems;
 impl LevelSystems {
     pub fn spawn_levels(mut commands: Commands) {
         let level_1 = Level::new(1, 1, 1.);
-        let level_2 = Level::new(2, 6, 5.);
+        let level_2 = Level::new(2, 2, 2.);
         commands.spawn((level_1, GameScreenMarker, ActiveLevelMarker));
         commands.spawn((level_2, GameScreenMarker));
     }
@@ -44,7 +44,6 @@ impl LevelSystems {
 
         let (active_level_entity, killed_enemies, total_enemies, current_level_id) = active_level_query.single();
         if killed_enemies.0 < total_enemies.0 { return }
-
         commands.entity(active_level_entity).remove::<ActiveLevelMarker>();
         let next_level_id = current_level_id.0 + 1;
         for (level_entity, level_id) in level_query.iter() {
