@@ -1,17 +1,14 @@
 
 
 
-use bevy::prelude::{Commands, Query, Transform, With, Mut, Vec3, Entity, AssetServer, Res};
+use bevy::prelude::*;
 use bevy_rapier2d::prelude::Velocity;
-use crate::in_game::data_classes::generic_components::{GameScreenMarker, Health};
+use crate::in_game::data_classes::generic_components::Health;
 use crate::in_game::data_classes::level_components::{ActiveLevelMarker, KilledEnemies};
+use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
 
 use super::generic_constants::{
     SCREEN_CENTER,
-    OUTER_Y_COORDINATES
-};
-use super::data_classes::movement_components::{
-    Movement
 };
 use super::player_components::PlayerMarker;
 use super::enemy_components::EnemyMarker;
@@ -47,38 +44,29 @@ impl EnemySystems {
     }
 
     pub fn set_velocity(
-        mut enemy_query: Query<(&mut Velocity, &Transform), With<EnemyMarker>>,
+        mut enemy_query: Query<(&mut Velocity, &Transform, &WalkingVelocity), With<EnemyMarker>>,
         player_query: Query<&Transform, With<PlayerMarker>>
     ) {
         for player_transform in player_query.iter() {
             let player_position = player_transform.translation;
-            for (enemy_velocity, enemy_transform) in enemy_query.iter_mut() {
+            for (mut enemy_velocity, enemy_transform, walking_velocity) in enemy_query.iter_mut() {
                 let enemy_position = enemy_transform.translation;
-                Self::set_directions_to_target(enemy_velocity, enemy_position, player_position);
+                enemy_velocity.linvel[0] = Self::set_direction_to_target(
+                    walking_velocity.0,
+                    enemy_position[0],
+                    player_position[0],
+                );
+                enemy_velocity.linvel[1] = Self::set_direction_to_target(
+                    walking_velocity.0,
+                    enemy_position[1],
+                    player_position[1],
+                );
             }
         }
     }
 
-
-    fn set_directions_to_target(
-        mut velocity: Mut<Velocity>,
-        position: Vec3,
-        target_position: Vec3
-    ) {
-        velocity.linvel[0] = Self::set_direction_to_target(
-            0.,
-            position[0],
-            target_position[0],
-        );
-        velocity.linvel[1] = Self::set_direction_to_target(
-            0.,
-            position[1],
-            target_position[1],
-        );
-    }
-    fn set_direction_to_target(minimum_distance_difference: f32, position: f32, target_position: f32) -> f32 {
-        let speed = 100.;
+    fn set_direction_to_target(velocity: f32, position: f32, target_position: f32) -> f32 {
         let target_distance =  target_position - position;
-        if target_distance > minimum_distance_difference {speed} else if target_distance < -minimum_distance_difference {-speed} else {0.}
+        if target_distance > 0. {velocity} else if target_distance < - 0. {-velocity} else {0.}
     }
 }

@@ -4,7 +4,6 @@ use bevy_rapier2d::prelude::*;
 use super::GamePlugin;
 use super::MainMenuPlugin;
 use super::ScreenState;
-// use super::proof_of_concepts::rapier_poc::rigid_bodies;
 
 pub struct HeadBoxPlugin;
 impl Plugin for HeadBoxPlugin {
@@ -17,20 +16,7 @@ impl Plugin for HeadBoxPlugin {
                 GamePlugin,
                 MainMenuPlugin,
                 RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0),
-                // RapierDebugRenderPlugin::default()
             ));
-
-
-
-            // .add_systems(Startup, (
-            //     rigid_bodies::setup,
-            //     rigid_bodies::WallSystems::spawn,
-            //     rigid_bodies::PlayerSystems::spawn,
-            // ))
-            // .add_systems(FixedUpdate, (
-            //     rigid_bodies::set_velocity,
-            //     rigid_bodies::rotate
-            // ));
     }
 
 }

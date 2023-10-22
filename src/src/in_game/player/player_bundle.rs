@@ -1,7 +1,9 @@
 
 
-use bevy::prelude::{Commands, Res, AssetServer, Bundle, Transform, Vec2, SpriteBundle, Vec3, default};
-use bevy_rapier2d::prelude::{Ccd, Collider, GravityScale, RigidBody, Velocity, Sleeping, CollisionGroups, ActiveEvents};
+use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
+use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
+use crate::in_game::data_classes::rigid_body_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY};
 
 
 use super::rigid_body_bundle::RigidBodyBundle;
@@ -26,11 +28,9 @@ impl PlayerBundle {
     pub fn new(asset_server: Res<AssetServer>) -> PlayerBundle {
         let player_rigid_body = RigidBodyBundle {
             rigid_body: RigidBody::Dynamic,
-            velocity: Velocity {
-                linvel: Vec2::new(0.0, 0.0),
-                angvel: 0.0,
-            },
-            gravity: GravityScale(0.0),
+            velocity: DEFAULT_VELOCITY,
+            walking_velocity: WalkingVelocity(200.),
+            gravity: DEFAULT_GRAVITY,
             collider: Collider::cuboid(PLAYER_SIZE, PLAYER_SIZE),
             continuous_collision_detection: Ccd::enabled(),
             sprite_bundle: SpriteBundle {
@@ -43,7 +43,7 @@ impl PlayerBundle {
             },
             sleeping: Sleeping::disabled(),
             collision_groups: PLAYER_COLLISION_GROUPS,
-            active_events: ActiveEvents::COLLISION_EVENTS,
+            active_events: DEFAULT_ACTIVE_EVENTS,
         };
         let player = PlayerBundle {
             player_marker: PlayerMarker,

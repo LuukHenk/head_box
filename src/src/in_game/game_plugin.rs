@@ -7,7 +7,7 @@ use super::data_classes::generic_components::GameScreenMarker;
 use super::player::player_systems::PlayerSystems;
 use super::rigid_body::rigid_body_systems::RigidBodySystems;
 use super::arena::arena_systems::ArenaSystems;
-use super::movement::collision_systems::CollisionSystems;
+use super::collision::collision_systems::CollisionSystems;
 use super::enemy::enemy_systems::EnemySystems;
 use super::level::level_systems::LevelSystems;
 use super::bullet::bullet_systems::BulletSystems;

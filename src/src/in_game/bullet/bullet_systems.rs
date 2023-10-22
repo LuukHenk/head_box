@@ -1,6 +1,6 @@
 
 
-use bevy::prelude::{Commands, Entity, Query, Res, With};
+use bevy::prelude::*;
 use bevy::time::Time;
 use crate::in_game::data_classes::bullet_components::{BulletMarker, LifeTime};
 

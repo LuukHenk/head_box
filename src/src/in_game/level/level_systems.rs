@@ -13,15 +13,14 @@ use super::level_components::{
     ActiveLevelMarker,
 };
 use super::level_bundle::Level;
-use super::data_classes::generic_components::GameScreenMarker;
 use super::ScreenState;
 use super::EnemySystems;
 pub struct LevelSystems;
 
 impl LevelSystems {
     pub fn spawn_levels(mut commands: Commands) {
-        let level_1 = Level::new(1, 10, 5.);
-        let level_2 = Level::new(2, 20, 4.);
+        let level_1 = Level::new(1, 10, 1.);
+        let level_2 = Level::new(2, 20, 0.8);
         commands.spawn((level_1, ActiveLevelMarker));
         commands.spawn(level_2);
     }

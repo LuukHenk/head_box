@@ -1,7 +1,7 @@
 
 pub mod game_plugin;
 
-mod movement;
+mod collision;
 mod arena;
 mod player;
 mod bullet;

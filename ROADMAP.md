@@ -2,24 +2,22 @@
 
 # User stories
 
-### Smarter collision handling
-- When there is a collision::inside, try to separate the entities in a smart way
-- When the player is rotated, take this into account with the collision
-- https://rapier.rs/docs/user_guides/bevy_plugin/rigid_bodies Maybe this article helps
-
 ### Add pistol
 - Has a reload time, and a bullet
 - Rename the bullet crate to weapons
 - Has the shoot system, used by the player
+
+### Assets system
+- Add an assets system which is easy to access
+
+
+----------------------------------------------------
 
 ### Add sound effects
 - Shooting sound
 - Taking damage sound (player and enemies)
 - Dying sound (player and enemies)
 - Starting the game sound
-
-### Sprites
-- Add sprites for everything at the moment
 
 ## Add Life indicator
 - Add life indicator in the top corner or above head
