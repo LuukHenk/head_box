@@ -3,17 +3,17 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use crate::in_game::data_classes::rigid_body_constants::DEFAULT_WALING_VELOCITY;
 
-use super::data_classes::generic_components::GameScreenMarker;
-use super::data_classes::rigid_body_constants::{
+use crate::in_game::data_classes::generic_components::GameScreenMarker;
+use crate::in_game::data_classes::rigid_body_constants::{
     DEFAULT_COLLISION_GROUPS,
     DEFAULT_GRAVITY,
     DEFAULT_ACTIVE_EVENTS,
     DEFAULT_VELOCITY
 };
-use super::data_classes::wall_components::WallMarker;
-use super::data_classes::generic_constants::Z_VALUE;
+use crate::in_game::data_classes::wall_components::WallMarker;
+use crate::in_game::data_classes::generic_constants::Z_VALUE;
 
-use super::rigid_body::rigid_body_bundle::RigidBodyBundle;
+use super::rigid_body_bundle::RigidBodyBundle;
 
 #[derive(Bundle)]
 pub struct WallBundle {

@@ -1,16 +1,16 @@
 use bevy::prelude::*;
 
-use super::ScreenState;
-use super::despawn_screen;
+use crate::display_handler::display_handler::{ScreenState, despawn_screen};
 
-use super::data_classes::generic_components::GameScreenMarker;
-use super::player::player_systems::PlayerSystems;
-use super::rigid_body::rigid_body_systems::RigidBodySystems;
-use super::arena::arena_systems::ArenaSystems;
-use super::collision::collision_systems::CollisionSystems;
-use super::enemy::enemy_systems::EnemySystems;
-use super::level::level_systems::LevelSystems;
-use super::bullet::bullet_systems::BulletSystems;
+use crate::in_game::data_classes::generic_components::GameScreenMarker;
+
+use crate::in_game::systems::player_systems::PlayerSystems;
+use crate::in_game::systems::rigid_body_systems::RigidBodySystems;
+use crate::in_game::systems::arena_systems::ArenaSystems;
+use crate::in_game::systems::collision_systems::CollisionSystems;
+use crate::in_game::systems::enemy_systems::EnemySystems;
+use crate::in_game::systems::level_systems::LevelSystems;
+use crate::in_game::systems::bullet_systems::BulletSystems;
 
 pub struct GamePlugin;
 impl Plugin for GamePlugin {

@@ -11,62 +11,49 @@ package Generic {
     class DisplayHandler
 }
 
-package player {
+package Systems {
     class PlayerSystems
-    class PlayerBundle
-}
-
-package Bullet {
-    class BulletBundle
     class BulletSystems
-}
-
-package Enemies {
     class EnemySystems
-    class ZombieBundle
-}
-package Collision {
     class CollisionSystems
-}
-package Arena{
-    class WallBundle
+    class LevelSystems
+    class RigidBodySystems
     class ArenaSystems
 }
-package Level{
-    class LevelBundle
-    class LevelSystems
-}
-package RigidBody {
-    class RigidBodyBundle
-    class RigidBodySystems
-}
 
+package DataLayer {
+    class PlayerBundle
+    class BulletBundle
+    class ZombieBundle
+    class WallBundle
+    class LevelBundle
+    class RigidBodyBundle
+
+}
 Main <-- HeadBoxPlugin
 
 HeadBoxPlugin <-- MainMenuPlugin
 HeadBoxPlugin <-- GamePlugin
 
 GamePlugin <-- PlayerSystems
-PlayerSystems <-- PlayerBundle
-
 GamePlugin <-- BulletSystems
-PlayerSystems <-- BulletBundle
-
 GamePlugin <-- EnemySystems
-EnemySystems <-- ZombieBundle
-
 GamePlugin <-- CollisionSystems
-
-GamePlugin <-- ArenaSystems
-ArenaSystems <-- WallBundle
-
 GamePlugin <-- LevelSystems
+GamePlugin <-- RigidBodySystems
+GamePlugin <-- ArenaSystems
+
+PlayerSystems <-- PlayerBundle
+PlayerSystems <-- BulletBundle
+EnemySystems <-- ZombieBundle
+ArenaSystems <-- WallBundle
 LevelSystems <-- LevelBundle
 LevelSystems <-- EnemySystems
 
-GamePlugin <-- RigidBodySystems
+
 WallBundle <|-- RigidBodyBundle
 ZombieBundle <|-- RigidBodyBundle
 BulletBundle <|-- RigidBodyBundle
 PlayerBundle <|-- RigidBodyBundle
+
 @enduml

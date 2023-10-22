@@ -1,7 +1,8 @@
 
 
-use bevy::prelude::{Commands, AssetServer, Res, Handle, Image};
-use super::wall_bundle::WallBundle;
+use bevy::prelude::*;
+
+use crate::in_game::data_layers::wall_bundle::WallBundle;
 pub struct ArenaSystems;
 
 impl ArenaSystems {

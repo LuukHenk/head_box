@@ -2,7 +2,7 @@
 use bevy::prelude::{Bundle};
 use bevy::time::Stopwatch;
 use crate::in_game::data_classes::generic_components::GameScreenMarker;
-use super::level_components::{
+use crate::in_game::data_classes::level_components::{
     LevelMarker,
     TotalEnemies,
     SpawnedEnemies,

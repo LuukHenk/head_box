@@ -1,8 +1,9 @@
 
-use bevy::prelude::{Commands, Query, Entity, With, ResMut, NextState, Res, Time, AssetServer};
-use super::PlayerMarker;
-use super::Health;
-use super::level_components::{
+use bevy::prelude::*;
+
+use crate::display_handler::display_handler::ScreenState;
+
+use crate::in_game::data_classes::level_components::{
     LevelMarker,
     TotalEnemies,
     SpawnedEnemies,
@@ -12,9 +13,14 @@ use super::level_components::{
     LevelId,
     ActiveLevelMarker,
 };
-use super::level_bundle::Level;
-use super::ScreenState;
-use super::EnemySystems;
+use crate::in_game::data_classes::player_components::PlayerMarker;
+use crate::in_game::data_classes::generic_components::Health;
+
+use crate::in_game::data_layers::level_bundle::Level;
+
+use crate::in_game::systems::enemy_systems::EnemySystems;
+
+
 pub struct LevelSystems;
 
 impl LevelSystems {

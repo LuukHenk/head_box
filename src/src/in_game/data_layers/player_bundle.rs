@@ -2,19 +2,18 @@
 
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
+
 use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
 use crate::in_game::data_classes::rigid_body_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY};
-
+use crate::in_game::data_classes::generic_components::GameScreenMarker;
+use crate::in_game::data_classes::player_constants::{PLAYER_SIZE, INITIAL_PLAYER_HEALTH};
+use crate::in_game::data_classes::generic_components::Health;
+use crate::in_game::data_classes::generic_constants::CENTER_COORDINATES;
+use crate::in_game::data_classes::player_components::PlayerMarker;
+use crate::in_game::data_classes::rigid_body_constants::PLAYER_COLLISION_GROUPS;
 
 use super::rigid_body_bundle::RigidBodyBundle;
-use super::data_classes::generic_components::GameScreenMarker;
-use super::data_classes::player_constants::{PLAYER_SIZE, INITIAL_PLAYER_HEALTH};
-use super::generic_components::Health;
-use super::data_classes::generic_constants::CENTER_COORDINATES;
-use super::player_components::{
-    PlayerMarker,
-};
-use super::data_classes::rigid_body_constants::PLAYER_COLLISION_GROUPS;
+
 #[derive(Bundle)]
 pub struct PlayerBundle {
     player_marker: PlayerMarker,

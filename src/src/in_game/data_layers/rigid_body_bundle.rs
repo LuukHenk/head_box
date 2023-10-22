@@ -1,8 +1,6 @@
-use bevy::prelude::{
-    Bundle,
-    SpriteBundle,
-};
-use bevy_rapier2d::prelude::{RigidBody, Velocity, GravityScale, Collider, Ccd, Sleeping, CollisionGroups, ActiveEvents};
+use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
+
 use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
 
 

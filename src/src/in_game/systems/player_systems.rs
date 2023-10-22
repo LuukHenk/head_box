@@ -3,12 +3,14 @@
 
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
-use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
 
-use super::bullet_bundle::BulletBundle;
-use super::player_bundle::PlayerBundle;
-use super::player_components::PlayerMarker;
-use super::player_constants::PLAYER_SIZE;
+use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
+use crate::in_game::data_classes::player_components::PlayerMarker;
+use crate::in_game::data_classes::player_constants::PLAYER_SIZE;
+
+use crate::in_game::data_layers::bullet_bundle::BulletBundle;
+use crate::in_game::data_layers::player_bundle::PlayerBundle;
+
 pub struct PlayerSystems;
 
 

@@ -4,8 +4,8 @@ use bevy::prelude::*;
 use bevy::time::Time;
 use crate::in_game::data_classes::bullet_components::{BulletMarker, LifeTime};
 
-pub struct BulletSystems;
 
+pub struct BulletSystems;
 impl BulletSystems {
 
     pub fn despawn_bullets(

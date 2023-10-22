@@ -1,13 +1,15 @@
 use std::time::Duration;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
-use crate::in_game::data_classes::rigid_body_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY, DEFAULT_WALING_VELOCITY};
 
-use super::data_classes::bullet_constants::{BULLET_LENGTH, BULLET_WIDTH, SHOOTER_DISTANCE_BUFFER};
-use super::data_classes::bullet_components::{BulletMarker, Damage, LifeTime};
-use super::data_classes::generic_components::GameScreenMarker;
-use super::rigid_body::rigid_body_bundle::RigidBodyBundle;
-use super::data_classes::generic_constants::{Z_VALUE};
+use crate::in_game::data_classes::rigid_body_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY, DEFAULT_WALING_VELOCITY};
+use crate::in_game::data_classes::bullet_constants::{BULLET_LENGTH, BULLET_WIDTH, SHOOTER_DISTANCE_BUFFER};
+use crate::in_game::data_classes::bullet_components::{BulletMarker, Damage, LifeTime};
+use crate::in_game::data_classes::generic_components::GameScreenMarker;
+use crate::in_game::data_classes::generic_constants::{Z_VALUE};
+
+use super::rigid_body_bundle::RigidBodyBundle;
+
 
 #[derive(Bundle)]
 pub struct BulletBundle {

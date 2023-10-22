@@ -2,20 +2,18 @@
 
 
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::Velocity;
+use bevy_rapier2d::prelude::*;
 use crate::in_game::data_classes::generic_components::Health;
 use crate::in_game::data_classes::level_components::{ActiveLevelMarker, KilledEnemies};
 use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
+use crate::in_game::data_classes::generic_constants::SCREEN_CENTER;
+use crate::in_game::data_classes::player_components::PlayerMarker;
+use crate::in_game::data_classes::enemy_components::EnemyMarker;
 
-use super::generic_constants::{
-    SCREEN_CENTER,
-};
-use super::player_components::PlayerMarker;
-use super::enemy_components::EnemyMarker;
+use crate::in_game::data_layers::enemy_bundle::EnemyBundle;
+
 
 pub struct EnemySystems;
-
-use super::zombie_bundle::ZombieBundle;
 
 impl EnemySystems {
 
@@ -23,7 +21,7 @@ impl EnemySystems {
     pub fn spawn_zombie(mut commands: Commands, asset_server: Res<AssetServer>) {
         let y = if rand::random::<bool>() { 1. } else { -1. };
         let x = if rand::random::<bool>() { 1. } else { -1. };
-        let zombie = ZombieBundle::new(SCREEN_CENTER * x, 350. * y, asset_server);
+        let zombie = EnemyBundle::new(SCREEN_CENTER * x, 350. * y, asset_server);
         commands.spawn(zombie);
     }
 
