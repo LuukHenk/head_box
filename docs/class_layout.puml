@@ -65,8 +65,8 @@ LevelSystems <-- LevelBundle
 LevelSystems <-- EnemySystems
 
 GamePlugin <-- RigidBodySystems
-WallBundle <-- RigidBodyBundle
-ZombieBundle <-- RigidBodyBundle
-BulletBundle <-- RigidBodyBundle
-PlayerBundle <-- RigidBodyBundle
+WallBundle <|-- RigidBodyBundle
+ZombieBundle <|-- RigidBodyBundle
+BulletBundle <|-- RigidBodyBundle
+PlayerBundle <|-- RigidBodyBundle
 @enduml

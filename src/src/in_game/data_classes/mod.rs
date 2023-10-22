@@ -10,3 +10,4 @@ pub mod bullet_components;
 pub mod bullet_constants;
 pub mod rigid_body_constants;
 pub mod rigid_body_components;
+pub mod weapon_components;

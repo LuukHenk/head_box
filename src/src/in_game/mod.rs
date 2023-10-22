@@ -10,6 +10,7 @@ mod data_classes;
 mod level;
 
 mod rigid_body;
+mod weapon;
 
 use crate::display_handler::display_handler;
 use display_handler::ScreenState;
