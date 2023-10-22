@@ -5,7 +5,7 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
-use crate::in_game::data_classes::player_components::PlayerMarker;
+use crate::in_game::data_classes::player_components::{CoolDownTimer, PlayerMarker};
 use crate::in_game::data_classes::player_constants::PLAYER_SIZE;
 
 use crate::in_game::data_layers::bullet_bundle::BulletBundle;
@@ -47,15 +47,17 @@ impl PlayerSystems {
 
     pub fn shoot(
         keyboard_input: Res<Input<KeyCode>>,
-        mut player_query: Query<(&mut Transform, &CollisionGroups), With<PlayerMarker>>,
+        mut player_query: Query<(&mut Transform, &CollisionGroups, &mut CoolDownTimer), With<PlayerMarker>>,
         mut commands: Commands,
+        time: Res<Time>,
         asset_server: Res<AssetServer>
     ) {
-        if keyboard_input.pressed(KeyCode::Space) {
-            for (transform, collision_groups) in player_query.iter_mut() {
-                let bullet_bundle = BulletBundle::new(transform, PLAYER_SIZE, *collision_groups, &asset_server);
-                commands.spawn(bullet_bundle);
-            }
+        for (transform, collision_groups, mut cooldown_timer) in player_query.iter_mut() {
+            cooldown_timer.0.tick(time.delta());
+            if !keyboard_input.pressed(KeyCode::Space) || !cooldown_timer.0.finished() {continue};
+            let bullet_bundle = BulletBundle::new(transform, PLAYER_SIZE, *collision_groups, &asset_server);
+            commands.spawn(bullet_bundle);
+            cooldown_timer.0.reset();
         }
     }
 }

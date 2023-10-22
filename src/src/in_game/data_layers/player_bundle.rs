@@ -1,5 +1,4 @@
-
-
+use std::time::Duration;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
@@ -9,7 +8,7 @@ use crate::in_game::data_classes::generic_components::GameScreenMarker;
 use crate::in_game::data_classes::player_constants::{PLAYER_SIZE, INITIAL_PLAYER_HEALTH};
 use crate::in_game::data_classes::generic_components::Health;
 use crate::in_game::data_classes::generic_constants::CENTER_COORDINATES;
-use crate::in_game::data_classes::player_components::PlayerMarker;
+use crate::in_game::data_classes::player_components::{PlayerMarker, CoolDownTimer};
 use crate::in_game::data_classes::rigid_body_constants::PLAYER_COLLISION_GROUPS;
 
 use super::rigid_body_bundle::RigidBodyBundle;
@@ -20,6 +19,7 @@ pub struct PlayerBundle {
     game_screen_marker: GameScreenMarker,
     health: Health,
     rigid_body_bundle: RigidBodyBundle,
+    shooting_cooldown_timer: CoolDownTimer
 }
 
 
@@ -49,6 +49,7 @@ impl PlayerBundle {
             game_screen_marker: GameScreenMarker,
             health: Health(INITIAL_PLAYER_HEALTH),
             rigid_body_bundle: player_rigid_body,
+            shooting_cooldown_timer: CoolDownTimer(Timer::new(Duration::from_secs_f32(1.), TimerMode::Once))
         };
 
         player

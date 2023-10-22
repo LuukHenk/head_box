@@ -25,7 +25,7 @@ impl EnemyBundle {
         let zombie_rigid_body = RigidBodyBundle {
             rigid_body: RigidBody::Dynamic,
             velocity: DEFAULT_VELOCITY,
-            walking_velocity: WalkingVelocity(130.),
+            walking_velocity: WalkingVelocity(100.),
             gravity: DEFAULT_GRAVITY,
             collider: Collider::cuboid(10., 10.),
             continuous_collision_detection: Ccd::enabled(),
@@ -45,7 +45,7 @@ impl EnemyBundle {
         EnemyBundle {
             game_screen_marker: GameScreenMarker,
             enemy_marker: EnemyMarker,
-            health: Health(100.),
+            health: Health(10.),
             rigid_body_bundle: zombie_rigid_body,
             damage: Damage(1.),
         }

@@ -2,11 +2,6 @@
 
 # User stories
 
-### Add pistol
-- Has a reload time, and a bullet
-- Rename the bullet crate to weapons
-- Has the shoot system, used by the player
-
 ### Assets system
 - Add an assets system which is easy to access
 

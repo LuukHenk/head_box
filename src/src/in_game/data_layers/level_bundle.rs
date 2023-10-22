@@ -37,4 +37,12 @@ impl Level {
             game_screen_marker: GameScreenMarker,
         }
     }
+
+    pub fn level_1() -> Level {
+        Self::new(1, 10, 3.)
+    }
+
+    pub fn level_2() -> Level {
+        Self::new(2, 12, 2.)
+    }
 }

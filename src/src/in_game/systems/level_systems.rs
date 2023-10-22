@@ -25,10 +25,8 @@ pub struct LevelSystems;
 
 impl LevelSystems {
     pub fn spawn_levels(mut commands: Commands) {
-        let level_1 = Level::new(1, 10, 1.);
-        let level_2 = Level::new(2, 20, 0.8);
-        commands.spawn((level_1, ActiveLevelMarker));
-        commands.spawn(level_2);
+        commands.spawn((Level::level_1(), ActiveLevelMarker));
+        commands.spawn(Level::level_2());
     }
 
     pub fn set_current_level(
