@@ -25,19 +25,21 @@ package Enemies {
     class EnemySystems
     class ZombieBundle
 }
-package Movement {
-    class MovementSystems
+package Collision {
     class CollisionSystems
 }
 package Arena{
     class WallBundle
-    class Boxy
+    class ArenaSystems
 }
 package Level{
     class LevelBundle
     class LevelSystems
 }
-
+package RigidBody {
+    class RigidBodyBundle
+    class RigidBodySystems
+}
 
 Main <-- HeadBoxPlugin
 
@@ -53,14 +55,18 @@ PlayerSystems <-- BulletBundle
 GamePlugin <-- EnemySystems
 EnemySystems <-- ZombieBundle
 
-GamePlugin <-- MovementSystems
 GamePlugin <-- CollisionSystems
-CollisionSystems <- MovementSystems
 
-GamePlugin <-- Boxy
-Boxy <-- WallBundle
+GamePlugin <-- ArenaSystems
+ArenaSystems <-- WallBundle
 
 GamePlugin <-- LevelSystems
 LevelSystems <-- LevelBundle
 LevelSystems <-- EnemySystems
+
+GamePlugin <-- RigidBodySystems
+WallBundle <-- RigidBodyBundle
+ZombieBundle <-- RigidBodyBundle
+BulletBundle <-- RigidBodyBundle
+PlayerBundle <-- RigidBodyBundle
 @enduml
