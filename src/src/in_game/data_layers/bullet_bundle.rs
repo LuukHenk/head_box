@@ -6,7 +6,7 @@ use crate::in_game::data_classes::rigid_body_constants::{DEFAULT_ACTIVE_EVENTS, 
 use crate::in_game::data_classes::bullet_constants::{BULLET_LENGTH, BULLET_WIDTH, SHOOTER_DISTANCE_BUFFER};
 use crate::in_game::data_classes::bullet_components::{BulletMarker, Damage, LifeTime};
 use crate::in_game::data_classes::generic_components::GameScreenMarker;
-use crate::in_game::data_classes::generic_constants::{Z_VALUE};
+use crate::generic_constants::{Z_VALUE};
 
 use super::rigid_body_bundle::RigidBodyBundle;
 

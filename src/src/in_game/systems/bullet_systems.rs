@@ -9,7 +9,7 @@ use crate::assets::asset_components::BulletTexture;
 use crate::in_game::data_classes::bullet_components::{BulletMarker, LifeTime};
 use crate::in_game::data_classes::bullet_constants::{BULLET_LENGTH, SHOOTER_DISTANCE_BUFFER};
 use crate::in_game::data_classes::bullet_events::PlayerShootEvent;
-use crate::in_game::data_classes::generic_constants::Z_VALUE;
+use crate::generic_constants::Z_VALUE;
 use crate::in_game::data_classes::player_components::PlayerMarker;
 use crate::in_game::data_classes::player_constants::PLAYER_SIZE;
 

@@ -11,7 +11,7 @@ use crate::in_game::data_classes::rigid_body_constants::{
     DEFAULT_VELOCITY
 };
 use crate::in_game::data_classes::wall_components::WallMarker;
-use crate::in_game::data_classes::generic_constants::Z_VALUE;
+use crate::generic_constants::Z_VALUE;
 
 use super::rigid_body_bundle::RigidBodyBundle;
 

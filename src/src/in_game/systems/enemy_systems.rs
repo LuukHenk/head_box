@@ -7,7 +7,7 @@ use crate::assets::asset_components::ZombieTexture;
 use crate::in_game::data_classes::generic_components::Health;
 use crate::in_game::data_classes::level_components::{ActiveLevelMarker, KilledEnemies};
 use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
-use crate::in_game::data_classes::generic_constants::SCREEN_CENTER;
+use crate::generic_constants::SCREEN_CENTER;
 use crate::in_game::data_classes::player_components::PlayerMarker;
 use crate::in_game::data_classes::enemy_components::EnemyMarker;
 use crate::in_game::data_classes::player_constants::PLAYER_SIZE;

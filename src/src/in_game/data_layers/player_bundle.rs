@@ -7,7 +7,7 @@ use crate::in_game::data_classes::rigid_body_constants::{DEFAULT_ACTIVE_EVENTS, 
 use crate::in_game::data_classes::generic_components::GameScreenMarker;
 use crate::in_game::data_classes::player_constants::{PLAYER_SIZE, INITIAL_PLAYER_HEALTH};
 use crate::in_game::data_classes::generic_components::Health;
-use crate::in_game::data_classes::generic_constants::CENTER_COORDINATES;
+use crate::generic_constants::CENTER_COORDINATES;
 use crate::in_game::data_classes::player_components::{PlayerMarker, CoolDownTimer};
 use crate::in_game::data_classes::rigid_body_constants::PLAYER_COLLISION_GROUPS;
 

@@ -2,7 +2,7 @@
 
 use bevy::prelude::*;
 use crate::in_game::data_classes::generic_components::GameScreenMarker;
-use crate::in_game::data_classes::generic_constants::Z_VALUE;
+use crate::generic_constants::Z_VALUE;
 
 use crate::in_game::data_layers::wall_bundle::WallBundle;
 pub struct ArenaSystems;

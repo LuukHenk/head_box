@@ -6,7 +6,7 @@ use crate::in_game::data_classes::bullet_components::Damage;
 use crate::in_game::data_classes::generic_components::{GameScreenMarker, Health};
 use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
 use crate::in_game::data_classes::rigid_body_constants::{DEFAULT_COLLISION_GROUPS, DEFAULT_GRAVITY, DEFAULT_VELOCITY};
-use crate::in_game::data_classes::generic_constants::Z_VALUE;
+use crate::generic_constants::Z_VALUE;
 use crate::in_game::data_classes::enemy_components::EnemyMarker;
 
 use super::rigid_body_bundle::RigidBodyBundle;
