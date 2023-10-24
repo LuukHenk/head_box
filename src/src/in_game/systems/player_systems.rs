@@ -3,13 +3,12 @@
 
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
-use crate::assets::asset_components::{BulletTexture, PlayerTexture};
+use crate::assets::asset_components::PlayerTexture;
+use crate::in_game::data_classes::bullet_events::PlayerShootEvent;
 
 use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
 use crate::in_game::data_classes::player_components::{CoolDownTimer, PlayerMarker};
-use crate::in_game::data_classes::player_constants::PLAYER_SIZE;
 
-use crate::in_game::data_layers::bullet_bundle::BulletBundle;
 use crate::in_game::data_layers::player_bundle::PlayerBundle;
 
 pub struct PlayerSystems;
@@ -49,23 +48,17 @@ impl PlayerSystems {
 
     pub fn shoot(
         keyboard_input: Res<Input<KeyCode>>,
-        mut player_query: Query<(&mut Transform, &CollisionGroups, &mut CoolDownTimer), With<PlayerMarker>>,
-        mut commands: Commands,
+        mut player_query: Query<(Entity, &mut CoolDownTimer), With<PlayerMarker>>,
+        mut player_shoot_event: EventWriter<PlayerShootEvent>,
         time: Res<Time>,
-        bullet_texture_query: Query<&BulletTexture>,
+
     ) {
-        for (transform, collision_groups, mut cooldown_timer) in player_query.iter_mut() {
+        for (entity, mut cooldown_timer) in player_query.iter_mut() {
             cooldown_timer.0.tick(time.delta());
-            if !keyboard_input.pressed(KeyCode::Space) || !cooldown_timer.0.finished() {continue};
-            let texture = bullet_texture_query.single();
-            let bullet_bundle = BulletBundle::new(
-                transform,
-                PLAYER_SIZE,
-                *collision_groups,
-                texture.0.clone(),
-            );
-            commands.spawn(bullet_bundle);
-            cooldown_timer.0.reset();
+            if keyboard_input.pressed(KeyCode::Space) && cooldown_timer.0.finished() {
+                player_shoot_event.send(PlayerShootEvent(entity));
+                cooldown_timer.0.reset();
+            };
         }
     }
 }

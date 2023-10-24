@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 use crate::display_handler::display_handler::{ScreenState, despawn_screen};
+use crate::in_game::data_classes::bullet_events::PlayerShootEvent;
 
 use crate::in_game::data_classes::generic_components::GameScreenMarker;
 
@@ -24,6 +25,7 @@ impl Plugin for GamePlugin {
                     LevelSystems::spawn_levels,
                 )
             )
+            .add_event::<PlayerShootEvent>()
             .add_systems(
                 FixedUpdate, (
                     LevelSystems::set_current_level.after(LevelSystems::handle_game_over),
@@ -33,6 +35,7 @@ impl Plugin for GamePlugin {
                     PlayerSystems::shoot.after(PlayerSystems::set_velocity),
                     EnemySystems::set_velocity.after(PlayerSystems::set_velocity),
                     EnemySystems::despawn_enemies,
+                    BulletSystems::shoot_player_bullet,
                     BulletSystems::despawn_bullets,
                     RigidBodySystems::rotate,
                     CollisionSystems::handle_player_enemy_collision,

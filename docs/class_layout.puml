@@ -9,6 +9,8 @@ package Generic {
     note "The generic classes should not use any crates" as N1
     class Dataclasses
     class DisplayHandler
+    class AssetComponents
+    class AssetSystems
 }
 
 package Systems {
@@ -44,7 +46,7 @@ GamePlugin <-- RigidBodySystems
 GamePlugin <-- ArenaSystems
 
 PlayerSystems <-- PlayerBundle
-PlayerSystems <-- BulletBundle
+BulletSystems <-- BulletBundle
 EnemySystems <-- ZombieBundle
 ArenaSystems <-- WallBundle
 LevelSystems <-- LevelBundle
