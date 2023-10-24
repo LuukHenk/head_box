@@ -3,7 +3,7 @@
 
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
-use crate::assets::asset_components::PlayerTexture;
+use crate::assets::asset_components::PlayerTextures;
 use crate::in_game::data_classes::bullet_events::PlayerShootEvent;
 
 use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
@@ -18,10 +18,10 @@ impl PlayerSystems {
 
     pub fn spawn(
         mut commands: Commands,
-        player_texture_query: Query<&PlayerTexture>,
+        player_texture_query: Query<&PlayerTextures>,
     ) {
         let texture = player_texture_query.single();
-        commands.spawn(PlayerBundle::new(texture.0.clone()));
+        commands.spawn(PlayerBundle::new(texture.back.clone()));
     }
 
     pub fn set_velocity(

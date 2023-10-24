@@ -2,7 +2,11 @@ use bevy::prelude::*;
 
 
 #[derive(Component)]
-pub struct PlayerTexture(pub Handle<Image>);
+pub struct PlayerTextures{
+    pub front: Handle<Image>,
+    pub side: Handle<Image>,
+    pub back: Handle<Image>,
+}
 
 #[derive(Component)]
 pub struct ZombieTexture(pub Handle<Image>);

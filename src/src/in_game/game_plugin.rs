@@ -37,7 +37,6 @@ impl Plugin for GamePlugin {
                     EnemySystems::despawn_enemies,
                     BulletSystems::spawn_player_bullet,
                     BulletSystems::despawn_bullets,
-                    // RigidBodySystems::rotate,
                     CollisionSystems::handle_player_enemy_collision,
                     CollisionSystems::handle_bullet_collision,
                 ).run_if(in_state(ScreenState::Game))
