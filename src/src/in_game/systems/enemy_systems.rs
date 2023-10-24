@@ -10,6 +10,7 @@ use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
 use crate::in_game::data_classes::generic_constants::SCREEN_CENTER;
 use crate::in_game::data_classes::player_components::PlayerMarker;
 use crate::in_game::data_classes::enemy_components::EnemyMarker;
+use crate::in_game::data_classes::player_constants::PLAYER_SIZE;
 
 use crate::in_game::data_layers::enemy_bundle::EnemyBundle;
 
@@ -67,6 +68,6 @@ impl EnemySystems {
 
     fn set_direction_to_target(velocity: f32, position: f32, target_position: f32) -> f32 {
         let target_distance =  target_position - position;
-        if target_distance > 0. {velocity} else if target_distance < - 0. {-velocity} else {0.}
+        if target_distance > PLAYER_SIZE*2. {velocity} else if target_distance < - PLAYER_SIZE*2. {-velocity} else {0.}
     }
 }
