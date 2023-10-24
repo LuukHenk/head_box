@@ -3,6 +3,7 @@
 
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
+use crate::assets::asset_components::{BulletTexture, PlayerTexture};
 
 use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
 use crate::in_game::data_classes::player_components::{CoolDownTimer, PlayerMarker};
@@ -18,9 +19,10 @@ impl PlayerSystems {
 
     pub fn spawn(
         mut commands: Commands,
-        asset_server: Res<AssetServer>,
+        player_texture_query: Query<&PlayerTexture>,
     ) {
-        commands.spawn(PlayerBundle::new(asset_server));
+        let texture = player_texture_query.single();
+        commands.spawn(PlayerBundle::new(texture.0.clone()));
     }
 
     pub fn set_velocity(
@@ -50,12 +52,18 @@ impl PlayerSystems {
         mut player_query: Query<(&mut Transform, &CollisionGroups, &mut CoolDownTimer), With<PlayerMarker>>,
         mut commands: Commands,
         time: Res<Time>,
-        asset_server: Res<AssetServer>
+        bullet_texture_query: Query<&BulletTexture>,
     ) {
         for (transform, collision_groups, mut cooldown_timer) in player_query.iter_mut() {
             cooldown_timer.0.tick(time.delta());
             if !keyboard_input.pressed(KeyCode::Space) || !cooldown_timer.0.finished() {continue};
-            let bullet_bundle = BulletBundle::new(transform, PLAYER_SIZE, *collision_groups, &asset_server);
+            let texture = bullet_texture_query.single();
+            let bullet_bundle = BulletBundle::new(
+                transform,
+                PLAYER_SIZE,
+                *collision_groups,
+                texture.0.clone(),
+            );
             commands.spawn(bullet_bundle);
             cooldown_timer.0.reset();
         }

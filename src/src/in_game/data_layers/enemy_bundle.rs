@@ -20,7 +20,7 @@ pub struct EnemyBundle {
     damage: Damage,
 }
 impl EnemyBundle {
-    pub fn new(x: f32, y: f32, asset_server: Res<AssetServer>) -> EnemyBundle {
+    pub fn new(x: f32, y: f32, texture: Handle<Image>) -> EnemyBundle {
 
         let zombie_rigid_body = RigidBodyBundle {
             rigid_body: RigidBody::Dynamic,
@@ -30,7 +30,7 @@ impl EnemyBundle {
             collider: Collider::cuboid(10., 10.),
             continuous_collision_detection: Ccd::enabled(),
             sprite_bundle: SpriteBundle {
-                texture: asset_server.load("textures/zombie.png"),
+                texture,
                 transform: Transform {
                     translation: Vec3::new(x, y, Z_VALUE),
                     ..default()

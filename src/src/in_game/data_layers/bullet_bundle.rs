@@ -25,11 +25,10 @@ impl BulletBundle {
         shooter_transform: Mut<Transform>,
         shooter_size: f32,
         collision_groups: CollisionGroups,
-        asset_server: &Res<AssetServer>
+        texture: Handle<Image>,
     ) -> BulletBundle {
 
         let shooter_front = (shooter_transform.rotation * Vec3::Y).truncate().normalize();
-        let bullet_texture = asset_server.load("textures/bullet.png");
         let transform = Transform {
             translation: Vec3::new(
                 shooter_transform.translation.x + (shooter_size/2. + BULLET_LENGTH + SHOOTER_DISTANCE_BUFFER)* shooter_front[0],
@@ -48,7 +47,7 @@ impl BulletBundle {
             collider: Collider::cuboid(BULLET_WIDTH, BULLET_LENGTH),
             continuous_collision_detection: Ccd::disabled(),
             sprite_bundle: SpriteBundle {
-                texture: bullet_texture,
+                texture,
                 transform,
                 ..default()
             },

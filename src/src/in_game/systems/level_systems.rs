@@ -1,5 +1,6 @@
 
 use bevy::prelude::*;
+use crate::assets::asset_components::ZombieTexture;
 
 use crate::display_handler::display_handler::ScreenState;
 
@@ -51,7 +52,7 @@ impl LevelSystems {
     pub fn spawn_enemies_for_current_level(
         time: Res<Time>,
         commands: Commands,
-        asset_server: Res<AssetServer>,
+        zombie_texture_query: Query<&ZombieTexture>,
         mut level_query: Query<(&mut LevelTimer, &EnemySpawnDelay, &mut SpawnedEnemies, &TotalEnemies), With<ActiveLevelMarker>>
     ) {
         let (mut level_timer, enemy_spawn_delay, mut spawned_enemies, total_enemies) = level_query.single_mut();
@@ -61,7 +62,7 @@ impl LevelSystems {
 
         if spawned_enemies.0 < expected_spawned_enemies as u32 {
             if spawned_enemies.0 < total_enemies.0 {
-                EnemySystems::spawn_zombie(commands, asset_server);
+                EnemySystems::spawn_zombie(commands, zombie_texture_query);
                 spawned_enemies.0 += 1;
             }
         }

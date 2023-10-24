@@ -24,7 +24,7 @@ pub struct PlayerBundle {
 
 
 impl PlayerBundle {
-    pub fn new(asset_server: Res<AssetServer>) -> PlayerBundle {
+    pub fn new(texture: Handle<Image>) -> PlayerBundle {
         let player_rigid_body = RigidBodyBundle {
             rigid_body: RigidBody::Dynamic,
             velocity: DEFAULT_VELOCITY,
@@ -33,7 +33,7 @@ impl PlayerBundle {
             collider: Collider::cuboid(PLAYER_SIZE, PLAYER_SIZE),
             continuous_collision_detection: Ccd::enabled(),
             sprite_bundle: SpriteBundle {
-                texture: asset_server.load("textures/player.png"),
+                texture,
                 transform: Transform {
                     translation: CENTER_COORDINATES,
                     ..default()
