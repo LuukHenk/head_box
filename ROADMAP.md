@@ -1,12 +1,17 @@
+# Bugs
 
+### Shooting
+- When a player is standing still, it always shoots up
+- When a player shoots, the bullet kind of spawns inside the player
 
 # User stories
 
-### Assets system
-- Add an assets system which is easy to access
+### Add sprites
+- Add player sprite
+- Add enemy sprite
 
-
-----------------------------------------------------
+### Create arena
+- Create the arena and add walls 
 
 ### Add sound effects
 - Shooting sound

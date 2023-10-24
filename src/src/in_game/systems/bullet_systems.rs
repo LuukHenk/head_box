@@ -14,6 +14,7 @@ use crate::in_game::data_classes::player_components::PlayerMarker;
 use crate::in_game::data_classes::player_constants::PLAYER_SIZE;
 
 use crate::in_game::data_layers::bullet_bundle::BulletBundle;
+use crate::in_game::systems::rigid_body_systems::RigidBodySystems;
 
 
 pub struct BulletSystems;
@@ -22,15 +23,15 @@ impl BulletSystems {
     pub fn spawn_player_bullet(
         mut commands: Commands,
         mut player_shoot_event: EventReader<PlayerShootEvent>,
-        mut player_query: Query<(Entity, &mut Transform, &CollisionGroups), With<PlayerMarker>>,
+        mut player_query: Query<(Entity, &mut Transform, &CollisionGroups, &Velocity), With<PlayerMarker>>,
         bullet_texture_query: Query<&BulletTexture>,
     ) {
         for shoot_event in player_shoot_event.iter() {
-            for (entity, player_transform, collision_groups) in player_query.iter_mut() {
+            for (entity, player_transform, collision_groups, velocity) in player_query.iter_mut() {
                 if shoot_event.0 != entity {continue}
 
                 let bullet_bundle = BulletBundle::new(
-                    Self::generate_bullet_transform(player_transform),
+                    Self::generate_bullet_transform(player_transform, velocity),
                     *collision_groups,
                     bullet_texture_query.single().0.clone(),
                 );
@@ -51,15 +52,17 @@ impl BulletSystems {
         }
     }
 
-    fn generate_bullet_transform(shooter_transform: Mut<Transform>) -> Transform {
-        let shooter_front = (shooter_transform.rotation * Vec3::Y).truncate().normalize();
+    fn generate_bullet_transform(shooter_transform: Mut<Transform>, shooter_velocity: &Velocity) -> Transform {
+        let mut shooter_transform_clone = shooter_transform.clone();
+        shooter_transform_clone = RigidBodySystems::rotate_single(shooter_transform_clone, shooter_velocity);
+        let shooter_front = (shooter_transform_clone.rotation * Vec3::Y).truncate().normalize();
         Transform {
             translation: Vec3::new(
-                Self::get_bullet_start_axis(shooter_transform.translation.x, shooter_front[0]),
-                Self::get_bullet_start_axis(shooter_transform.translation.y, shooter_front[1]),
+                Self::get_bullet_start_axis(shooter_transform_clone.translation.x, shooter_front[0]),
+                Self::get_bullet_start_axis(shooter_transform_clone.translation.y, shooter_front[1]),
                 Z_VALUE
             ),
-            rotation: shooter_transform.rotation,
+            rotation: shooter_transform_clone.rotation,
             ..default()
         }
     }
