@@ -35,7 +35,7 @@ impl Plugin for GamePlugin {
                     PlayerSystems::shoot.after(PlayerSystems::set_velocity),
                     EnemySystems::set_velocity.after(PlayerSystems::set_velocity),
                     EnemySystems::despawn_enemies,
-                    BulletSystems::shoot_player_bullet,
+                    BulletSystems::spawn_player_bullet,
                     BulletSystems::despawn_bullets,
                     RigidBodySystems::rotate,
                     CollisionSystems::handle_player_enemy_collision,

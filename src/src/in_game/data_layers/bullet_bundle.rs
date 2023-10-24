@@ -22,23 +22,10 @@ pub struct BulletBundle {
 
 impl BulletBundle {
     pub fn new(
-        shooter_transform: Mut<Transform>,
-        shooter_size: f32,
+        transform: Transform,
         collision_groups: CollisionGroups,
         texture: Handle<Image>,
     ) -> BulletBundle {
-
-        let shooter_front = (shooter_transform.rotation * Vec3::Y).truncate().normalize();
-        let transform = Transform {
-            translation: Vec3::new(
-                shooter_transform.translation.x + (shooter_size/2. + BULLET_LENGTH + SHOOTER_DISTANCE_BUFFER)* shooter_front[0],
-                shooter_transform.translation.y + (shooter_size/2. + BULLET_LENGTH + SHOOTER_DISTANCE_BUFFER)* shooter_front[1],
-                Z_VALUE
-            ),
-            rotation: shooter_transform.rotation,
-            ..default()
-        };
-
         let bullet_rigid_body = RigidBodyBundle {
             rigid_body: RigidBody::Fixed,
             velocity: DEFAULT_VELOCITY,
