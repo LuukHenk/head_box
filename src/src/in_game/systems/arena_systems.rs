@@ -1,6 +1,8 @@
 
 
 use bevy::prelude::*;
+use crate::in_game::data_classes::generic_components::GameScreenMarker;
+use crate::in_game::data_classes::generic_constants::Z_VALUE;
 
 use crate::in_game::data_layers::wall_bundle::WallBundle;
 pub struct ArenaSystems;
@@ -81,6 +83,14 @@ impl ArenaSystems {
             long_wall_height,
             long_wall_texture.clone()
         ));
+        commands.spawn((SpriteBundle{
+            texture: asset_server.load("textures/floor.png"),
+            transform: Transform{
+                scale: Vec3::new(0.3, 0.3, Z_VALUE),
+                ..default()
+            },
+            ..default()
+        }, GameScreenMarker));
     }
 
 

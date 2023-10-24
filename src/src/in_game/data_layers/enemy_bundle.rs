@@ -30,7 +30,7 @@ impl EnemyBundle {
             collider: Collider::cuboid(10., 10.),
             continuous_collision_detection: Ccd::enabled(),
             sprite_bundle: SpriteBundle {
-                texture: asset_server.load("textures/player.png"),
+                texture: asset_server.load("textures/zombie.png"),
                 transform: Transform {
                     translation: Vec3::new(x, y, Z_VALUE),
                     ..default()
