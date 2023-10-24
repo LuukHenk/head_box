@@ -7,7 +7,7 @@ pub struct AssetSystems;
 impl AssetSystems {
 
     pub fn setup_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
-        commands.spawn(PlayerTexture(asset_server.load("textures/player.png")));
+        commands.spawn(PlayerTexture(asset_server.load("textures/player/player_back.png")));
         commands.spawn(ZombieTexture(asset_server.load("textures/zombie.png")));
         commands.spawn(BulletTexture(asset_server.load("textures/bullet.png")));
     }

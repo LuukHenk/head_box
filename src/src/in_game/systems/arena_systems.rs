@@ -28,65 +28,64 @@ impl ArenaSystems {
         let long_wall_height: f32 = 360.;
 
         // Top
-        commands.spawn(WallBundle::new(
-            center,
-            wide_entry_y,
-            wide_wall_width,
-            wide_wall_height,
-            wide_wall_texture.clone()
-        ));
-        commands.spawn(WallBundle::new(
-            wide_wall_x,
-            wide_wall_y,
-            wide_wall_width, wide_wall_height,
-            wide_wall_texture.clone()
-        ));
-        commands.spawn(WallBundle::new(
-            -wide_wall_x,
-            wide_wall_y,
-            wide_wall_width, wide_wall_height,
-            wide_wall_texture.clone()
-        ));
-
-        // Bottom
-        commands.spawn(WallBundle::new(
-            center,
-            -wide_entry_y,
-            wide_wall_width, wide_wall_height,
-            wide_wall_texture.clone()
-        ));
-        commands.spawn(WallBundle::new(
-            wide_wall_x,
-            -wide_wall_y,
-            wide_wall_width, wide_wall_height,
-            wide_wall_texture.clone()
-        ));
-        commands.spawn(WallBundle::new(
-            -wide_wall_x,
-            -wide_wall_y,
-            wide_wall_width, wide_wall_height,
-            wide_wall_texture.clone()
-        ));
-        // Side right
-        commands.spawn(WallBundle::new(
-            long_wall_x,
-            center,
-            long_wall_width,
-            long_wall_height,
-            long_wall_texture.clone()
-        ));
-        // Side left
-        commands.spawn(WallBundle::new(
-            -long_wall_x,
-            center,
-            long_wall_width,
-            long_wall_height,
-            long_wall_texture.clone()
-        ));
+        // commands.spawn(WallBundle::new(
+        //     center,
+        //     wide_entry_y,
+        //     wide_wall_width,
+        //     wide_wall_height,
+        //     wide_wall_texture.clone()
+        // ));
+        // commands.spawn(WallBundle::new(
+        //     wide_wall_x,
+        //     wide_wall_y,
+        //     wide_wall_width, wide_wall_height,
+        //     wide_wall_texture.clone()
+        // ));
+        // commands.spawn(WallBundle::new(
+        //     -wide_wall_x,
+        //     wide_wall_y,
+        //     wide_wall_width, wide_wall_height,
+        //     wide_wall_texture.clone()
+        // ));
+        //
+        // // Bottom
+        // commands.spawn(WallBundle::new(
+        //     center,
+        //     -wide_entry_y,
+        //     wide_wall_width, wide_wall_height,
+        //     wide_wall_texture.clone()
+        // ));
+        // commands.spawn(WallBundle::new(
+        //     wide_wall_x,
+        //     -wide_wall_y,
+        //     wide_wall_width, wide_wall_height,
+        //     wide_wall_texture.clone()
+        // ));
+        // commands.spawn(WallBundle::new(
+        //     -wide_wall_x,
+        //     -wide_wall_y,
+        //     wide_wall_width, wide_wall_height,
+        //     wide_wall_texture.clone()
+        // ));
+        // // Side right
+        // commands.spawn(WallBundle::new(
+        //     long_wall_x,
+        //     center,
+        //     long_wall_width,
+        //     long_wall_height,
+        //     long_wall_texture.clone()
+        // ));
+        // // Side left
+        // commands.spawn(WallBundle::new(
+        //     -long_wall_x,
+        //     center,
+        //     long_wall_width,
+        //     long_wall_height,
+        //     long_wall_texture.clone()
+        // ));
         commands.spawn((SpriteBundle{
             texture: asset_server.load("textures/floor.png"),
             transform: Transform{
-                scale: Vec3::new(0.3, 0.3, Z_VALUE),
                 ..default()
             },
             ..default()
