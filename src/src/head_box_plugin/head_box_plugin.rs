@@ -20,8 +20,8 @@ impl Plugin for HeadBoxPlugin {
             .add_plugins((
                 GamePlugin,
                 MainMenuPlugin,
-                RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0),
-                RapierDebugRenderPlugin::default(),
+                RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(16.0),
+                // RapierDebugRenderPlugin::default(),
             ))
 
         ;

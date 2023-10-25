@@ -61,4 +61,23 @@ impl PlayerSystems {
             };
         }
     }
+
+    pub fn change_sprite(
+        mut player_query: Query<(&Velocity, &mut Handle<Image>, ), With<PlayerMarker>>,
+        player_sprites_query: Query<&PlayerTextures>,
+    ) {
+        let player_sprites = player_sprites_query.single();
+        for (velocity, mut player_texture) in player_query.iter_mut() {
+            if velocity.linvel.x > 0. {
+                *player_texture = player_sprites.side.clone();
+            } else if velocity.linvel.x < 0. {
+                *player_texture = player_sprites.side_flipped.clone();
+            } else if velocity.linvel.y < 0. {
+                *player_texture = player_sprites.front.clone();
+            } else {
+                *player_texture = player_sprites.back.clone();
+            }
+
+        }
+    }
 }

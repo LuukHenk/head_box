@@ -11,6 +11,7 @@ impl AssetSystems {
             back: asset_server.load("textures/player/player_back.png"),
             front: asset_server.load("textures/player/player_front.png"),
             side: asset_server.load("textures/player/player_side.png"),
+            side_flipped: asset_server.load("textures/player/player_side_flipped.png"),
         };
         commands.spawn(player_textures);
         commands.spawn(ZombieTexture(asset_server.load("textures/zombie.png")));

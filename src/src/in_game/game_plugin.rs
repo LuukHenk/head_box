@@ -33,6 +33,7 @@ impl Plugin for GamePlugin {
                     LevelSystems::handle_game_over,
                     PlayerSystems::set_velocity,
                     PlayerSystems::shoot.after(PlayerSystems::set_velocity),
+                    PlayerSystems::change_sprite.after(PlayerSystems::set_velocity),
                     EnemySystems::set_velocity.after(PlayerSystems::set_velocity),
                     EnemySystems::despawn_enemies,
                     BulletSystems::spawn_player_bullet,
