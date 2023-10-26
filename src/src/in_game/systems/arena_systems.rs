@@ -84,7 +84,7 @@ impl ArenaSystems {
         //     long_wall_texture.clone()
         // ));
         commands.spawn((SpriteBundle{
-            texture: asset_server.load("textures/floor.png"),
+            texture: asset_server.load("textures/arena/arena.png"),
             transform: Transform{
                 ..default()
             },
