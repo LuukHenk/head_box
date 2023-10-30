@@ -6,12 +6,16 @@
 
 # User stories
 
+
+### Add collision to the objects on the map
+- The newly created map does not have any collision yet, add collision
+
 ### Add sprites
-- Add player sprite
 - Add enemy sprite
 
-### Create arena
-- Create the arena and add walls 
+### Draw the other half of the arena
+- Draw the other half of the arena using the SVG file in src/assets/textures/arena
+- Create a new ticket for adding collision to the components on this part of the map, and for removing the walls on the first part of the map
 
 ### Add sound effects
 - Shooting sound
@@ -36,7 +40,3 @@
 
 ### Add score multiplier
 - The faster you kill enemies, the higher the multiplier
-
-### What path will we follow from here?
-- Stay with the original boxhead 2 rooms?
-- Create our own version of the game?
