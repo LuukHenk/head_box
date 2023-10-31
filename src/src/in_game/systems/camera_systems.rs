@@ -27,9 +27,6 @@ impl CameraSystems {
         let player_transform = player_query.single_mut();
         camera_transform.translation = player_transform.translation();
     }
-
-
-
 }
 
 

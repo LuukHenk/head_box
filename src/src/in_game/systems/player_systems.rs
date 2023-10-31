@@ -10,15 +10,14 @@ use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
 use crate::in_game::data_classes::rigid_body_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY, PLAYER_COLLISION_GROUPS};
 use crate::in_game::data_classes::generic_components::GameScreenMarker;
 use crate::in_game::data_classes::generic_components::Health;
-
 use crate::in_game::data_classes::player_components::{PlayerMarker, RotationDegrees, ShootingCoolDownTimer};
-use crate::in_game::data_classes::bullet_events::PlayerShootEvent;
+use crate::events::bullet_events::PlayerShootEvent;
 
 const INITIAL_PLAYER_HEALTH: f32 = 300.;
 const PLAYER_SIZE: f32 = 7.5;
 
 #[derive(Bundle)]
-pub(crate) struct Player {
+struct PlayerBundle {
     player_marker: PlayerMarker,
     game_screen_marker: GameScreenMarker,
     health: Health,
@@ -41,15 +40,40 @@ pub(crate) struct Player {
     active_events: ActiveEvents,
 }
 
+pub struct PlayerSystems;
 
-impl Player {
+impl PlayerSystems {
 
-    pub fn spawn(
+    pub fn spawn_player(
         mut commands: Commands,
         player_texture_query: Query<&PlayerTextures>,
     ) {
-        let texture = player_texture_query.single();
-        let player = Self::new(texture.back.clone());
+        let player = PlayerBundle {
+            player_marker: PlayerMarker,
+            game_screen_marker: GameScreenMarker,
+            health: Health(INITIAL_PLAYER_HEALTH),
+            shooting_cooldown_timer: ShootingCoolDownTimer(Timer::new(Duration::from_secs_f32(1.), TimerMode::Once)),
+            rotation_degrees: RotationDegrees(0_f32),
+            transform: Transform {
+                translation: CENTER_COORDINATES,
+                scale: Vec3::new(1.5, 1.5, 1.),
+                ..default()
+            },
+            global_transform: GlobalTransform::default(),
+            walking_velocity: WalkingVelocity(300.),
+            rigid_body: RigidBody::Dynamic,
+            collider: Collider::cuboid(PLAYER_SIZE, PLAYER_SIZE),
+            gravity: DEFAULT_GRAVITY,
+            velocity: DEFAULT_VELOCITY,
+            texture: player_texture_query.single().back.clone(),
+            sprite: Sprite::default(),
+            visibility: Default::default(),
+            computed_visibility: Default::default(),
+            continuous_collision_detection: Ccd::enabled(),
+            sleeping: Sleeping::disabled(),
+            collision_groups: PLAYER_COLLISION_GROUPS,
+            active_events: DEFAULT_ACTIVE_EVENTS,
+        };
         commands.spawn(player);
     }
 
@@ -118,34 +142,6 @@ impl Player {
                 *player_texture = player_sprites.back.clone();
             }
 
-        }
-    }
-    fn new(texture: Handle<Image>) -> Self {
-        Player {
-            player_marker: PlayerMarker,
-            game_screen_marker: GameScreenMarker,
-            health: Health(INITIAL_PLAYER_HEALTH),
-            shooting_cooldown_timer: ShootingCoolDownTimer(Timer::new(Duration::from_secs_f32(1.), TimerMode::Once)),
-            rotation_degrees: RotationDegrees(0_f32),
-            transform: Transform {
-                translation: CENTER_COORDINATES,
-                scale: Vec3::new(1.5, 1.5, 1.),
-                ..default()
-            },
-            global_transform: GlobalTransform::default(),
-            walking_velocity: WalkingVelocity(300.),
-            rigid_body: RigidBody::Dynamic,
-            collider: Collider::cuboid(PLAYER_SIZE, PLAYER_SIZE),
-            gravity: DEFAULT_GRAVITY,
-            velocity: DEFAULT_VELOCITY,
-            texture,
-            sprite: Sprite::default(),
-            visibility: Default::default(),
-            computed_visibility: Default::default(),
-            continuous_collision_detection: Ccd::enabled(),
-            sleeping: Sleeping::disabled(),
-            collision_groups: PLAYER_COLLISION_GROUPS,
-            active_events: DEFAULT_ACTIVE_EVENTS,
         }
     }
 }
