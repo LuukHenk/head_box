@@ -7,7 +7,7 @@ use crate::generic_constants::{CENTER_COORDINATES, SCALING};
 use crate::assets::asset_components::PlayerTextures;
 
 use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
-use crate::in_game::data_classes::rigid_body_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY, PLAYER_COLLISION_GROUPS};
+use crate::utils::physics_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY, PLAYER_COLLISION_GROUPS};
 use crate::in_game::data_classes::generic_components::GameScreenMarker;
 use crate::in_game::data_classes::generic_components::Health;
 use crate::in_game::data_classes::player_components::{PlayerMarker, RotationDegrees, ShootingCoolDownTimer};

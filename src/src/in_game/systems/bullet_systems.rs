@@ -4,7 +4,7 @@ use bevy_rapier2d::prelude::*;
 use crate::assets::asset_components::BulletTexture;
 use crate::generic_constants::{SCALING, Z_VALUE};
 
-use crate::in_game::data_classes::rigid_body_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY};
+use crate::utils::physics_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY};
 use crate::in_game::data_classes::bullet_components::{BulletMarker, Damage, LifeTime};
 use crate::events::bullet_events::PlayerShootEvent;
 use crate::in_game::data_classes::generic_components::GameScreenMarker;

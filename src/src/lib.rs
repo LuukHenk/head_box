@@ -8,6 +8,7 @@ mod proof_of_concepts;
 mod assets;
 pub mod generic_constants;
 mod events;
+mod utils;
 
 pub use head_box_plugin::head_box_plugin::HeadBoxPlugin;
 

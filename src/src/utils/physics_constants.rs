@@ -1,7 +1,6 @@
 
 use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
-use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
 
 pub const DEFAULT_COLLISION_GROUPS: CollisionGroups = CollisionGroups::new(
     Group::from_bits(0b0001).unwrap(),
@@ -18,5 +17,4 @@ pub const DEFAULT_VELOCITY: Velocity = Velocity {
     linvel: Vec2::new(0.0, 0.0),
     angvel: 0.0,
 };
-pub const DEFAULT_WALING_VELOCITY: WalkingVelocity = WalkingVelocity(0.);
 pub const DEFAULT_ACTIVE_EVENTS: ActiveEvents = ActiveEvents::COLLISION_EVENTS;

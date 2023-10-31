@@ -12,13 +12,12 @@ use crate::in_game::data_classes::level_components::{ActiveLevelMarker, KilledEn
 use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
 use crate::in_game::data_classes::player_components::PlayerMarker;
 use crate::in_game::data_classes::enemy_components::EnemyMarker;
-use crate::in_game::data_classes::player_constants::PLAYER_SIZE;
 
 
 
 use crate::in_game::data_classes::bullet_components::Damage;
 use crate::in_game::data_classes::generic_components::{GameScreenMarker, Health};
-use crate::in_game::data_classes::rigid_body_constants::{DEFAULT_COLLISION_GROUPS, DEFAULT_GRAVITY, DEFAULT_VELOCITY};
+use crate::utils::physics_constants::{DEFAULT_COLLISION_GROUPS, DEFAULT_GRAVITY, DEFAULT_VELOCITY};
 use crate::generic_constants::Z_VALUE;
 
 const ZOMBIE_SIZE: f32 = 4.;
@@ -83,29 +82,32 @@ impl EnemySystems {
 
     pub fn set_velocity(
         mut enemy_query: Query<(&mut Velocity, &Transform, &WalkingVelocity), With<EnemyMarker>>,
-        player_query: Query<&Transform, With<PlayerMarker>>
+        player_query: Query<(&Transform, &Collider), With<PlayerMarker>>,
     ) {
-        for player_transform in player_query.iter() {
+        for (player_transform, player_collider) in player_query.iter() {
             let player_position = player_transform.translation;
+            let player_size = player_collider.as_cuboid().unwrap().half_extents();
             for (mut enemy_velocity, enemy_transform, walking_velocity) in enemy_query.iter_mut() {
                 let enemy_position = enemy_transform.translation;
                 enemy_velocity.linvel[0] = Self::set_direction_to_target(
                     walking_velocity.0,
                     enemy_position[0],
                     player_position[0],
+                    player_size[0],
                 );
                 enemy_velocity.linvel[1] = Self::set_direction_to_target(
                     walking_velocity.0,
                     enemy_position[1],
                     player_position[1],
+                    player_size[1],
                 );
             }
         }
     }
 
-    fn set_direction_to_target(velocity: f32, position: f32, target_position: f32) -> f32 {
+    fn set_direction_to_target(velocity: f32, position: f32, target_position: f32, target_size: f32) -> f32 {
         let target_distance =  target_position - position;
-        if target_distance > PLAYER_SIZE*2. {velocity} else if target_distance < - PLAYER_SIZE*2. {-velocity} else {0.}
+        if target_distance > target_size*2. {velocity} else if target_distance < - target_size*2. {-velocity} else {0.}
     }
 
     fn new_enemy(x: f32, y: f32, texture: Handle<Image>) -> EnemyBundle {
