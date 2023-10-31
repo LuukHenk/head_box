@@ -5,4 +5,4 @@ use bevy::prelude::{Component, Timer};
 pub struct PlayerMarker;
 
 #[derive(Component)]
-pub struct CoolDownTimer(pub Timer);
+pub struct ShootingCoolDownTimer(pub Timer);

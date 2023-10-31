@@ -1,5 +1,5 @@
 
-
+use std::time::Duration;
 
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
@@ -7,7 +7,7 @@ use crate::assets::asset_components::PlayerTextures;
 use crate::in_game::data_classes::bullet_events::PlayerShootEvent;
 
 use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
-use crate::in_game::data_classes::player_components::{CoolDownTimer, PlayerMarker};
+use crate::in_game::data_classes::player_components::{ShootingCoolDownTimer, PlayerMarker};
 
 use crate::in_game::data_layers::player_bundle::PlayerBundle;
 
@@ -48,7 +48,7 @@ impl PlayerSystems {
 
     pub fn shoot(
         keyboard_input: Res<Input<KeyCode>>,
-        mut player_query: Query<(Entity, &mut CoolDownTimer), With<PlayerMarker>>,
+        mut player_query: Query<(Entity, &mut ShootingCoolDownTimer), With<PlayerMarker>>,
         mut player_shoot_event: EventWriter<PlayerShootEvent>,
         time: Res<Time>,
 
