@@ -65,5 +65,4 @@ impl PlayerBundle {
         };
         player
     }
-
 }
