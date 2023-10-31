@@ -7,7 +7,6 @@ use crate::in_game::data_classes::generic_components::GameScreenMarker;
 use crate::in_game::data_classes::player_components::PlayerMarker;
 
 use crate::in_game::systems::player_systems::PlayerSystems;
-use crate::in_game::systems::rigid_body_systems::RigidBodySystems;
 use crate::in_game::systems::arena_systems::ArenaSystems;
 use crate::in_game::systems::collision_systems::CollisionSystems;
 use crate::in_game::systems::enemy_systems::EnemySystems;
