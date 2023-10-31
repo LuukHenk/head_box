@@ -28,7 +28,7 @@ impl Plugin for GamePlugin {
                 OnEnter(ScreenState::Game), (
 
                     PlayerSystems::spawn_player,
-                    ArenaSystems::spawn_boxy_arena,
+                    ArenaSystems::spawn_arena,
                     LevelSystems::spawn_levels,
                     CameraSystems::zoom_camera,
                 )
