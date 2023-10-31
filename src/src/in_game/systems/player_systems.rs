@@ -1,6 +1,3 @@
-use std::f32::consts::PI;
-use std::time::Duration;
-
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use crate::assets::asset_components::PlayerTextures;
@@ -74,18 +71,18 @@ impl PlayerSystems {
     }
 
     pub fn change_sprite(
-        mut player_query: Query<(&Velocity, &mut Handle<Image>, ), With<PlayerMarker>>,
+        mut player_query: Query<(&RotationDegrees, &mut Handle<Image>, ), With<PlayerMarker>>,
         player_sprites_query: Query<&PlayerTextures>,
     ) {
         let player_sprites = player_sprites_query.single();
-        for (velocity, mut player_texture) in player_query.iter_mut() {
-            if velocity.linvel.x > 0. {
-                *player_texture = player_sprites.side.clone();
-            } else if velocity.linvel.x < 0. {
+        for (rotation_degrees, mut player_texture) in player_query.iter_mut() {
+            if rotation_degrees.0 > 0. && rotation_degrees.0 < 180. {
                 *player_texture = player_sprites.side_flipped.clone();
-            } else if velocity.linvel.y < 0. {
+            } else if rotation_degrees.0 > 180.  {
+                *player_texture = player_sprites.side.clone();
+            } else if rotation_degrees.0 == 180. {
                 *player_texture = player_sprites.front.clone();
-            } else if velocity.linvel.y > 0. {
+            } else if rotation_degrees.0 == 0.  {
                 *player_texture = player_sprites.back.clone();
             }
 
