@@ -1,4 +1,4 @@
-
+use std::f32::consts::PI;
 use std::time::Duration;
 
 use bevy::prelude::*;
@@ -45,7 +45,7 @@ impl PlayerSystems {
             }
         }
     }
-
+    
     pub fn shoot(
         keyboard_input: Res<Input<KeyCode>>,
         mut player_query: Query<(Entity, &mut ShootingCoolDownTimer), With<PlayerMarker>>,
@@ -74,7 +74,7 @@ impl PlayerSystems {
                 *player_texture = player_sprites.side_flipped.clone();
             } else if velocity.linvel.y < 0. {
                 *player_texture = player_sprites.front.clone();
-            } else {
+            } else if velocity.linvel.y > 0. {
                 *player_texture = player_sprites.back.clone();
             }
 
