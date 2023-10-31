@@ -2,7 +2,7 @@ use std::time::Duration;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::generic_constants::CENTER_COORDINATES;
+use crate::generic_constants::{CENTER_COORDINATES, SCALING};
 
 use crate::assets::asset_components::PlayerTextures;
 
@@ -56,7 +56,7 @@ impl PlayerSystems {
             rotation_degrees: RotationDegrees(0_f32),
             transform: Transform {
                 translation: CENTER_COORDINATES,
-                scale: Vec3::new(1.5, 1.5, 1.),
+                scale: SCALING,
                 ..default()
             },
             global_transform: GlobalTransform::default(),

@@ -2,7 +2,7 @@ use std::time::Duration;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use crate::assets::asset_components::BulletTexture;
-use crate::generic_constants::Z_VALUE;
+use crate::generic_constants::{SCALING, Z_VALUE};
 
 use crate::in_game::data_classes::rigid_body_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY};
 use crate::in_game::data_classes::bullet_components::{BulletMarker, Damage, LifeTime};
@@ -103,7 +103,7 @@ impl BulletSystems {
         Transform {
             translation: Vec3::new(shooter_transform_x, shooter_transform_y, Z_VALUE),
             rotation: shooter_rotation,
-            ..default()
+            scale: SCALING,
         }
     }
     fn get_bullet_start_axis(shooter_axis: f32, shooter_direction: f32, shooter_radius: f32) -> f32 {

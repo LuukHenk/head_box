@@ -1,1 +1,0 @@
-pub const CAMERA_SCALE: f32 = 1_f32;

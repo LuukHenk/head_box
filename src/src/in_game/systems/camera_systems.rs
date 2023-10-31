@@ -1,12 +1,11 @@
 
 use bevy::prelude::*;
 use crate::display_handler::display_handler::InGameCamera;
-use crate::in_game::data_classes::camera_constants::CAMERA_SCALE;
 use crate::in_game::data_classes::player_components::PlayerMarker;
 
+
+pub const CAMERA_SCALE: f32 = 1_f32;
 pub struct CameraSystems;
-
-
 impl CameraSystems {
     pub fn zoom_camera(mut q: Query<&mut OrthographicProjection, With<InGameCamera>>,) {
         let mut projection = q.single_mut();
