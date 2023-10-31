@@ -28,7 +28,7 @@ impl PlayerBundle {
         let player_rigid_body = RigidBodyBundle {
             rigid_body: RigidBody::Dynamic,
             velocity: DEFAULT_VELOCITY,
-            walking_velocity: WalkingVelocity(200.),
+            walking_velocity: WalkingVelocity(300.),
             gravity: DEFAULT_GRAVITY,
             collider: Collider::cuboid(PLAYER_SIZE, PLAYER_SIZE),
             continuous_collision_detection: Ccd::enabled(),
@@ -36,8 +36,10 @@ impl PlayerBundle {
                 texture,
                 transform: Transform {
                     translation: CENTER_COORDINATES,
+                    scale: Vec3::new(1.5, 1.5, 1.),
                     ..default()
                 },
+
                 ..default()
             },
             sleeping: Sleeping::disabled(),
