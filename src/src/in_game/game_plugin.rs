@@ -6,11 +6,12 @@ use crate::in_game::data_classes::bullet_events::PlayerShootEvent;
 use crate::in_game::data_classes::generic_components::GameScreenMarker;
 
 use crate::in_game::player::Player;
+use crate::in_game::bullet::Bullet;
 use crate::in_game::systems::arena_systems::ArenaSystems;
 use crate::in_game::systems::collision_systems::CollisionSystems;
 use crate::in_game::systems::enemy_systems::EnemySystems;
 use crate::in_game::systems::level_systems::LevelSystems;
-use crate::in_game::systems::bullet_systems::BulletSystems;
+// use crate::in_game::systems::bullet_systems::BulletSystems;
 use crate::in_game::systems::camera_systems::CameraSystems;
 
 pub struct GamePlugin;
@@ -45,8 +46,8 @@ impl Plugin for GamePlugin {
                     Player::set_rotation_degrees.after(Player::set_velocity),
                     EnemySystems::set_velocity.after(Player::set_velocity),
                     EnemySystems::despawn_enemies,
-                    BulletSystems::spawn_player_bullet,
-                    BulletSystems::despawn_bullets,
+                    Bullet::spawn_player_bullet,
+                    Bullet::despawn_bullets,
                     CollisionSystems::handle_player_enemy_collision,
                     CollisionSystems::handle_bullet_collision,
                 ).run_if(in_state(ScreenState::Game))

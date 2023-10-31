@@ -14,11 +14,11 @@ use crate::in_game::data_classes::generic_components::Health;
 use crate::in_game::data_classes::player_components::{PlayerMarker, RotationDegrees, ShootingCoolDownTimer};
 use crate::in_game::data_classes::bullet_events::PlayerShootEvent;
 
-pub const INITIAL_PLAYER_HEALTH: f32 = 300.;
-pub const PLAYER_SIZE: f32 = 7.5;
+const INITIAL_PLAYER_HEALTH: f32 = 300.;
+const PLAYER_SIZE: f32 = 7.5;
 
 #[derive(Bundle)]
-pub struct Player {
+pub(crate) struct Player {
     player_marker: PlayerMarker,
     game_screen_marker: GameScreenMarker,
     health: Health,
@@ -49,7 +49,8 @@ impl Player {
         player_texture_query: Query<&PlayerTextures>,
     ) {
         let texture = player_texture_query.single();
-        commands.spawn(Self::new(texture.back.clone()));
+        let player = Self::new(texture.back.clone());
+        commands.spawn(player);
     }
 
     pub fn set_velocity(
