@@ -29,7 +29,6 @@ impl BulletSystems {
         for shoot_event in player_shoot_event.iter() {
             for (entity, player_transform, collision_groups, velocity) in player_query.iter_mut() {
                 if shoot_event.0 != entity {continue}
-
                 let bullet_bundle = BulletBundle::new(
                     Self::generate_bullet_transform(player_transform, velocity),
                     *collision_groups,

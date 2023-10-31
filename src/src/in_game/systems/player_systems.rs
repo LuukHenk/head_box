@@ -45,7 +45,7 @@ impl PlayerSystems {
             }
         }
     }
-    
+
     pub fn shoot(
         keyboard_input: Res<Input<KeyCode>>,
         mut player_query: Query<(Entity, &mut ShootingCoolDownTimer), With<PlayerMarker>>,

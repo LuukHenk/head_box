@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
-use crate::in_game::data_classes::rigid_body_constants::{DEFAULT_GRAVITY, DEFAULT_VELOCITY};
+use crate::in_game::data_classes::rigid_body_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY, PLAYER_COLLISION_GROUPS};
 use crate::in_game::data_classes::generic_components::GameScreenMarker;
 use crate::in_game::data_classes::player_constants::{PLAYER_SIZE, INITIAL_PLAYER_HEALTH};
 use crate::in_game::data_classes::generic_components::Health;
@@ -27,6 +27,10 @@ pub struct PlayerBundle {
     sprite: Sprite,
     visibility: Visibility,
     computed_visibility: ComputedVisibility,
+    continuous_collision_detection: Ccd,
+    sleeping: Sleeping,
+    collision_groups: CollisionGroups,
+    active_events: ActiveEvents,
 }
 
 
@@ -52,6 +56,10 @@ impl PlayerBundle {
             sprite: Sprite::default(),
             visibility: Default::default(),
             computed_visibility: Default::default(),
+            continuous_collision_detection: Ccd::enabled(),
+            sleeping: Sleeping::disabled(),
+            collision_groups: PLAYER_COLLISION_GROUPS,
+            active_events: DEFAULT_ACTIVE_EVENTS,
         };
         player
     }
