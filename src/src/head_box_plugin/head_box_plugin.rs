@@ -4,7 +4,7 @@ use bevy_rapier2d::prelude::*;
 use crate::assets::asset_systems::AssetSystems;
 use super::GamePlugin;
 use super::MainMenuPlugin;
-use super::ScreenState;
+use super::display_handler::{ScreenState, setup_camera};
 
 pub struct HeadBoxPlugin;
 impl Plugin for HeadBoxPlugin {
@@ -21,14 +21,10 @@ impl Plugin for HeadBoxPlugin {
                 GamePlugin,
                 MainMenuPlugin,
                 RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(16.0),
-                // RapierDebugRenderPlugin::default(),
+                RapierDebugRenderPlugin::default(),
             ))
 
         ;
     }
 
-}
-
-fn setup_camera(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
 }

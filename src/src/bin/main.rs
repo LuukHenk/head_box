@@ -7,7 +7,7 @@ fn main() {
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 title: "HeadBox".into(),
-                resolution: (960., 540.).into(),
+                resolution: (1920., 1080.).into(),
                 ..default()
             }),
             ..default()
