@@ -1,8 +1,10 @@
 
 use bevy::prelude::*;
-use crate::assets::asset_components::ZombieTexture;
+use bevy::time::Stopwatch;
+
 
 use crate::display_handler::display_handler::ScreenState;
+use crate::events::enemy_spawn_events::SpawnZombieEvent;
 
 use crate::in_game::data_classes::level_components::{
     LevelMarker,
@@ -15,19 +17,29 @@ use crate::in_game::data_classes::level_components::{
     ActiveLevelMarker,
 };
 use crate::in_game::data_classes::player_components::PlayerMarker;
-use crate::in_game::data_classes::generic_components::Health;
+use crate::in_game::data_classes::generic_components::{GameScreenMarker, Health};
 
-use crate::in_game::data_layers::level_bundle::Level;
 
-use crate::in_game::systems::enemy_systems::EnemySystems;
-
+#[derive(Bundle)]
+pub struct LevelBundle {
+    id: LevelId,
+    total_enemies: TotalEnemies,
+    spawned_enemies: SpawnedEnemies,
+    killed_enemies: KilledEnemies,
+    enemy_spawn_delay: EnemySpawnDelay,
+    level_timer: LevelTimer,
+    level_marker: LevelMarker,
+    game_screen_marker: GameScreenMarker,
+}
 
 pub struct LevelSystems;
 
 impl LevelSystems {
     pub fn spawn_levels(mut commands: Commands) {
-        commands.spawn((Level::level_1(), ActiveLevelMarker));
-        commands.spawn(Level::level_2());
+        let level_1 = Self::new_level(1, 10, 3.);
+        let level_2 = Self::new_level(2, 12, 2.);
+        commands.spawn((level_1, ActiveLevelMarker));
+        commands.spawn(level_2);
     }
 
     pub fn set_current_level(
@@ -51,9 +63,8 @@ impl LevelSystems {
 
     pub fn spawn_enemies_for_current_level(
         time: Res<Time>,
-        commands: Commands,
-        zombie_texture_query: Query<&ZombieTexture>,
-        mut level_query: Query<(&mut LevelTimer, &EnemySpawnDelay, &mut SpawnedEnemies, &TotalEnemies), With<ActiveLevelMarker>>
+        mut level_query: Query<(&mut LevelTimer, &EnemySpawnDelay, &mut SpawnedEnemies, &TotalEnemies), With<ActiveLevelMarker>>,
+        mut spawn_zombie_event: EventWriter<SpawnZombieEvent>,
     ) {
         let (mut level_timer, enemy_spawn_delay, mut spawned_enemies, total_enemies) = level_query.single_mut();
 
@@ -62,7 +73,7 @@ impl LevelSystems {
 
         if spawned_enemies.0 < expected_spawned_enemies as u32 {
             if spawned_enemies.0 < total_enemies.0 {
-                EnemySystems::spawn_zombie(commands, zombie_texture_query);
+                spawn_zombie_event.send(SpawnZombieEvent);
                 spawned_enemies.0 += 1;
             }
         }
@@ -79,6 +90,19 @@ impl LevelSystems {
             }
         }
 
+    }
+
+    fn new_level(id: u32, total_enemies: u32, enemy_spawn_delay: f32) -> LevelBundle {
+        LevelBundle {
+            id: LevelId(id),
+            total_enemies: TotalEnemies(total_enemies),
+            spawned_enemies: SpawnedEnemies(0),
+            killed_enemies: KilledEnemies(0),
+            enemy_spawn_delay: EnemySpawnDelay(enemy_spawn_delay),
+            level_timer: LevelTimer(Stopwatch::new()),
+            level_marker: LevelMarker,
+            game_screen_marker: GameScreenMarker,
+        }
     }
 }
 

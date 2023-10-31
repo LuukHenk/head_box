@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use crate::display_handler::display_handler::{ScreenState, despawn_screen};
 use crate::events::bullet_events::PlayerShootEvent;
+use crate::events::enemy_spawn_events::SpawnZombieEvent;
 
 use crate::in_game::data_classes::generic_components::GameScreenMarker;
 
@@ -33,6 +34,7 @@ impl Plugin for GamePlugin {
                 )
             )
             .add_event::<PlayerShootEvent>()
+            .add_event::<SpawnZombieEvent>()
             .add_systems(
                 FixedUpdate, (
                     CameraSystems::follow_player,
@@ -44,6 +46,7 @@ impl Plugin for GamePlugin {
                     PlayerSystems::change_sprite.after(PlayerSystems::set_velocity),
                     PlayerSystems::set_rotation_degrees.after(PlayerSystems::set_velocity),
                     EnemySystems::set_velocity.after(PlayerSystems::set_velocity),
+                    EnemySystems::spawn_zombies,
                     EnemySystems::despawn_enemies,
                     BulletSystems::spawn_player_bullet,
                     BulletSystems::despawn_bullets,

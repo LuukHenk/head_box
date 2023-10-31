@@ -4,6 +4,7 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use crate::assets::asset_components::ZombieTexture;
+use crate::events::enemy_spawn_events::SpawnZombieEvent;
 use crate::in_game::data_classes::generic_components::Health;
 use crate::in_game::data_classes::level_components::{ActiveLevelMarker, KilledEnemies};
 use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
@@ -20,12 +21,18 @@ pub struct EnemySystems;
 impl EnemySystems {
 
 
-    pub fn spawn_zombie(mut commands: Commands, zombie_texture_query: Query<&ZombieTexture>,) {
-        let y = if rand::random::<bool>() { 1. } else { -1. };
-        let x = if rand::random::<bool>() { 1. } else { -1. };
+    pub fn spawn_zombies(
+        mut spawn_zombie_event: EventReader<SpawnZombieEvent>,
+        mut commands: Commands,
+        zombie_texture_query: Query<&ZombieTexture>,
+    ) {
         let texture = zombie_texture_query.single();
-        let zombie = EnemyBundle::new(SCREEN_CENTER * x, 350. * y, texture.0.clone());
-        commands.spawn(zombie);
+        for _ in spawn_zombie_event.iter() {
+            let y = if rand::random::<bool>() { 1. } else { -1. };
+            let x = if rand::random::<bool>() { 1. } else { -1. };
+            let zombie = EnemyBundle::new(SCREEN_CENTER * x, 350. * y, texture.0.clone());
+            commands.spawn(zombie);
+        }
     }
 
 
