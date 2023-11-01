@@ -21,7 +21,7 @@ impl Plugin for HeadBoxPlugin {
                 GamePlugin,
                 MainMenuPlugin,
                 RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(16.0),
-                // RapierDebugRenderPlugin::default(),
+                RapierDebugRenderPlugin::default(),
             ));
     }
 }
