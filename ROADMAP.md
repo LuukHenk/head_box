@@ -1,8 +1,5 @@
 # Bugs
 
-### Rotation bug
-- On collision of player and enemies, or enemies and enemies, both start rotating. This should not happen. Keep object rotation stable on collision
-
 # User stories
 
 ### Add collision to the objects on the map

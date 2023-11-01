@@ -39,6 +39,7 @@ pub struct EnemyBundle {
     sprite: Sprite,
     visibility: Visibility,
     computed_visibility: ComputedVisibility,
+    locked_axis: LockedAxes,
 }
 
 pub struct EnemySystems;
@@ -135,6 +136,7 @@ impl EnemySystems {
             sleeping: Sleeping::disabled(),
             collision_groups: DEFAULT_COLLISION_GROUPS,
             active_events: ActiveEvents::COLLISION_EVENTS,
+            locked_axis: LockedAxes::ROTATION_LOCKED,
             texture,
             transform: Transform {
                 translation: Vec3::new(x, y, Z_VALUE),

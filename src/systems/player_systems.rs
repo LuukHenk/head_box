@@ -43,6 +43,7 @@ struct PlayerBundle {
     sleeping: Sleeping,
     collision_groups: CollisionGroups,
     active_events: ActiveEvents,
+    locked_axis: LockedAxes,
 }
 
 pub struct PlayerSystems;
@@ -77,6 +78,7 @@ impl PlayerSystems {
             sleeping: Sleeping::disabled(),
             collision_groups: PLAYER_COLLISION_GROUPS,
             active_events: DEFAULT_ACTIVE_EVENTS,
+            locked_axis: LockedAxes::ROTATION_LOCKED,
         };
         commands.spawn(player);
     }
