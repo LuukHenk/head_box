@@ -9,7 +9,7 @@ use crate::utils::physics_constants::{
 
 use crate::events::bullet_events::PlayerShootEvent;
 
-use crate::components::asset_components::{PistolSound, PlayerTextures};
+use crate::components::asset_components::{PistolSoundHandle, PlayerTextureHandles};
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::generic_components::Health;
 use crate::components::player_components::{
@@ -49,7 +49,7 @@ struct PlayerBundle {
 pub struct PlayerSystems;
 
 impl PlayerSystems {
-    pub fn spawn_player(mut commands: Commands, player_texture_query: Query<&PlayerTextures>) {
+    pub fn spawn_player(mut commands: Commands, player_texture_query: Query<&PlayerTextureHandles>) {
         let player = PlayerBundle {
             player_marker: PlayerMarker,
             game_screen_marker: GameScreenMarker,
@@ -132,19 +132,13 @@ impl PlayerSystems {
     pub fn shoot(
         keyboard_input: Res<Input<KeyCode>>,
         time: Res<Time>,
-        sound_query: Query<&PistolSound>,
-        mut commands: Commands,
+        sound_query: Query<&PistolSoundHandle>,
         mut player_shoot_event: EventWriter<PlayerShootEvent>,
         mut player_query: Query<(Entity, &mut ShootingCoolDownTimer), With<PlayerMarker>>,
     ) {
-        let sound = sound_query.single();
         for (entity, mut cooldown_timer) in player_query.iter_mut() {
             cooldown_timer.0.tick(time.delta());
             if keyboard_input.pressed(KeyCode::Space) && cooldown_timer.0.finished() {
-                commands.spawn(AudioBundle {
-                    source: sound.0.clone(),
-                    settings: PlaybackSettings::DESPAWN,
-                });
                 player_shoot_event.send(PlayerShootEvent(entity));
                 cooldown_timer.0.reset();
             };
@@ -153,7 +147,7 @@ impl PlayerSystems {
 
     pub fn change_sprite(
         mut player_query: Query<(&RotationDegrees, &mut Handle<Image>), With<PlayerMarker>>,
-        player_sprites_query: Query<&PlayerTextures>,
+        player_sprites_query: Query<&PlayerTextureHandles>,
     ) {
         let player_sprites = player_sprites_query.single();
         for (rotation_degrees, mut player_texture) in player_query.iter_mut() {

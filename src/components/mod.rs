@@ -8,3 +8,4 @@ pub mod wall_components;
 pub mod asset_components;
 pub mod camera_components;
 pub mod arena_components;
+pub mod sound_components;

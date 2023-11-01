@@ -16,6 +16,7 @@ use crate::systems::player_systems::PlayerSystems;
 use crate::systems::generic_systems::despawn_screen;
 
 use crate::states::screen_state::ScreenState;
+use crate::systems::sound_systems::SoundSystems;
 
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
@@ -34,6 +35,7 @@ impl Plugin for GamePlugin {
                 ArenaSystems::spawn_arena,
                 ArenaSystems::set_enemy_spawn_locations,
                 LevelSystems::spawn_levels,
+                SoundSystems::play_zombie_tense_sounds,
                 CameraSystems::zoom_camera,
             ),
         )
@@ -42,20 +44,30 @@ impl Plugin for GamePlugin {
         .add_systems(
             FixedUpdate,
             (
-                CameraSystems::follow_player,
+
+                LevelSystems::handle_game_over,
                 LevelSystems::set_current_level.after(LevelSystems::handle_game_over),
                 LevelSystems::spawn_enemies_for_current_level
                     .after(LevelSystems::set_current_level),
-                LevelSystems::handle_game_over,
+
                 PlayerSystems::set_velocity,
-                PlayerSystems::shoot.after(PlayerSystems::set_velocity),
-                PlayerSystems::change_sprite.after(PlayerSystems::set_velocity),
                 PlayerSystems::set_rotation_degrees.after(PlayerSystems::set_velocity),
                 EnemySystems::set_velocity.after(PlayerSystems::set_velocity),
+
                 EnemySystems::spawn_zombies,
                 EnemySystems::despawn_enemies,
-                BulletSystems::spawn_player_bullet,
+
+                SoundSystems::adjust_zombie_sounds,
+
+                CameraSystems::follow_player.after(PlayerSystems::set_velocity),
+
+                PlayerSystems::shoot.after(PlayerSystems::set_velocity),
+                BulletSystems::spawn_player_bullet.after(PlayerSystems::shoot),
+                SoundSystems::play_pistol_sound.after(PlayerSystems::shoot),
                 BulletSystems::despawn_bullets,
+
+                PlayerSystems::change_sprite.after(PlayerSystems::set_velocity),
+
                 CollisionSystems::handle_player_enemy_collision,
                 CollisionSystems::handle_bullet_collision,
             )

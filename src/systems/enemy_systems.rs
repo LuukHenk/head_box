@@ -5,11 +5,11 @@ use crate::components::arena_components::EnemySpawnLocation;
 
 use crate::events::enemy_spawn_events::SpawnZombieEvent;
 
-use crate::components::enemy_components::EnemyMarker;
+use crate::components::enemy_components::{EnemyMarker, ZombieMarker};
 use crate::components::level_components::{ActiveLevelMarker, KilledEnemies};
 use crate::components::player_components::PlayerMarker;
 use crate::components::physics_components::WalkingVelocity;
-use crate::components::asset_components::ZombieTexture;
+use crate::components::asset_components::ZombieTextureHandle;
 use crate::components::bullet_components::Damage;
 use crate::components::generic_components::{GameScreenMarker, Health};
 
@@ -49,7 +49,7 @@ impl EnemySystems {
         mut spawn_zombie_event: EventReader<SpawnZombieEvent>,
         mut commands: Commands,
         enemy_spawn_location_query: Query<&EnemySpawnLocation>,
-        zombie_texture_query: Query<&ZombieTexture>,
+        zombie_texture_query: Query<&ZombieTextureHandle>,
     ) {
         let texture = zombie_texture_query.single();
 
@@ -62,7 +62,7 @@ impl EnemySystems {
             let random_position = rand::thread_rng().gen_range(0..enemy_spawn_locations.len());
             let spawn_position = enemy_spawn_locations[random_position];
             let zombie = Self::new_enemy(spawn_position.x, spawn_position.y, texture.0.clone());
-            commands.spawn(zombie);
+            commands.spawn((zombie, ZombieMarker));
         }
     }
 

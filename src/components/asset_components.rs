@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct PlayerTextures {
+pub struct PlayerTextureHandles {
     pub front: Handle<Image>,
     pub side: Handle<Image>,
     pub back: Handle<Image>,
@@ -9,10 +9,13 @@ pub struct PlayerTextures {
 }
 
 #[derive(Component)]
-pub struct ZombieTexture(pub Handle<Image>);
+pub struct ZombieTextureHandle(pub Handle<Image>);
 
 #[derive(Component)]
-pub struct BulletTexture(pub Handle<Image>);
+pub struct BulletTextureHandle(pub Handle<Image>);
 
 #[derive(Component)]
-pub struct PistolSound(pub Handle<AudioSource>);
+pub struct PistolSoundHandle(pub Handle<AudioSource>);
+
+#[derive(Component)]
+pub struct ZombieTenseSoundHandle(pub Handle<AudioSource>);
