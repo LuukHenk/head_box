@@ -1,4 +1,4 @@
 .idea
-src/Cargo.lock
-src/target
-src/assets/private_assets
+Cargo.lock
+target
+assets/private_assets
