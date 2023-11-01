@@ -2,17 +2,17 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use std::time::Duration;
 
-use crate::generic_constants::{CENTER_COORDINATES, SCALING};
+use crate::utils::generic_constants::{CENTER_COORDINATES, SCALING};
 
 use crate::assets::asset_components::PlayerTextures;
 
 use crate::events::bullet_events::PlayerShootEvent;
-use crate::in_game::data_classes::generic_components::GameScreenMarker;
-use crate::in_game::data_classes::generic_components::Health;
-use crate::in_game::data_classes::player_components::{
+use crate::components::generic_components::GameScreenMarker;
+use crate::components::generic_components::Health;
+use crate::components::player_components::{
     PlayerMarker, RotationDegrees, ShootingCoolDownTimer,
 };
-use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
+use crate::components::rigid_body_components::WalkingVelocity;
 use crate::utils::physics_constants::{
     DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY, PLAYER_COLLISION_GROUPS,
 };

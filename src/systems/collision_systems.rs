@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::in_game::data_classes::bullet_components::BulletMarker;
-use crate::in_game::data_classes::enemy_components::EnemyMarker;
-use crate::in_game::data_classes::generic_components::Health;
-use crate::in_game::data_classes::player_components::PlayerMarker;
+use crate::components::bullet_components::BulletMarker;
+use crate::components::enemy_components::EnemyMarker;
+use crate::components::generic_components::Health;
+use crate::components::player_components::PlayerMarker;
 
 pub struct CollisionSystems;
 impl CollisionSystems {

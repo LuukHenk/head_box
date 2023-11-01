@@ -4,15 +4,15 @@ use crate::display_handler::display_handler::{despawn_screen, ScreenState};
 use crate::events::bullet_events::PlayerShootEvent;
 use crate::events::enemy_spawn_events::SpawnZombieEvent;
 
-use crate::in_game::data_classes::generic_components::GameScreenMarker;
+use crate::components::generic_components::GameScreenMarker;
 
-use crate::in_game::systems::arena_systems::ArenaSystems;
-use crate::in_game::systems::bullet_systems::BulletSystems;
-use crate::in_game::systems::camera_systems::CameraSystems;
-use crate::in_game::systems::collision_systems::CollisionSystems;
-use crate::in_game::systems::enemy_systems::EnemySystems;
-use crate::in_game::systems::level_systems::LevelSystems;
-use crate::in_game::systems::player_systems::PlayerSystems;
+use crate::systems::arena_systems::ArenaSystems;
+use crate::systems::bullet_systems::BulletSystems;
+use crate::systems::camera_systems::CameraSystems;
+use crate::systems::collision_systems::CollisionSystems;
+use crate::systems::enemy_systems::EnemySystems;
+use crate::systems::level_systems::LevelSystems;
+use crate::systems::player_systems::PlayerSystems;
 
 pub struct GamePlugin;
 impl Plugin for GamePlugin {

@@ -1,61 +1,62 @@
 @startuml
+
 class Main
-class HeadBoxPlugin
-class MainMenuPlugin
-class GamePlugin
 
-
-package Generic {
-    note "The generic classes should not use any crates" as N1
-    class Dataclasses
-    class DisplayHandler
-    class AssetComponents
-    class AssetSystems
-}
-
-package Systems {
-    class PlayerSystems
-    class BulletSystems
-    class EnemySystems
-    class CollisionSystems
-    class LevelSystems
-    class RigidBodySystems
-    class ArenaSystems
-}
-
-package DataLayer {
-    class PlayerBundle
-    class BulletBundle
-    class ZombieBundle
-    class WallBundle
-    class LevelBundle
-    class RigidBodyBundle
-
+package Plugins {
+    class HeadBoxPlugin
+    class MainMenuPlugin
+    class GamePlugin
 }
 Main <-- HeadBoxPlugin
-
 HeadBoxPlugin <-- MainMenuPlugin
 HeadBoxPlugin <-- GamePlugin
 
-GamePlugin <-- PlayerSystems
-GamePlugin <-- BulletSystems
-GamePlugin <-- EnemySystems
-GamePlugin <-- CollisionSystems
-GamePlugin <-- LevelSystems
-GamePlugin <-- RigidBodySystems
-GamePlugin <-- ArenaSystems
+package Systems {
+    note "Systems are not allowed to have hard dependencies on each other." as N1
+    class ArenaSystems
+    class BulletSystems
+    class CameraSystems
+    class CollisionSystems
+    class EnemySystems
+    class LevelSystems
+    class PlayerSystems
+}
+Plugins <---- Systems
 
-PlayerSystems <-- PlayerBundle
-BulletSystems <-- BulletBundle
-EnemySystems <-- ZombieBundle
-ArenaSystems <-- WallBundle
-LevelSystems <-- LevelBundle
-LevelSystems <-- EnemySystems
+package Components {
+    note "Components are not allowed to have any dependencies." as N2
+    class BulletComponents
+    class EnemyComponents
+    class GenericComponents
+    class LevelComponents
+    class PlayerComponents
+    class RigidBodyComponents
+    class WallComponents
+}
+Systems <- Components
 
+package Events {
+    note "Events are not allowed to have any dependencies." as N3
+    class BulletEvents
+    class EnemySpawnEvents
+}
 
-WallBundle <|-- RigidBodyBundle
-ZombieBundle <|-- RigidBodyBundle
-BulletBundle <|-- RigidBodyBundle
-PlayerBundle <|-- RigidBodyBundle
+Plugins <- Events
+Systems <- Events
+
+package Utils {
+    note "Utils are not allowed to have any dependencies." as N4
+}
+
+Plugins <- Utils
+Systems <- Utils
+
+package States {
+    note "States are not allowed to have any dependencies." as N5
+}
+
+Plugins <- States
+Systems <- States
+
 
 @enduml

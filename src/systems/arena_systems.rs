@@ -1,4 +1,4 @@
-use crate::in_game::data_classes::generic_components::GameScreenMarker;
+use crate::components::generic_components::GameScreenMarker;
 use bevy::prelude::*;
 
 #[derive(Bundle)]

@@ -2,17 +2,17 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 use crate::assets::asset_components::ZombieTexture;
-use crate::generic_constants::{SCALING, SCREEN_CENTER};
+use crate::utils::generic_constants::{SCALING, SCREEN_CENTER};
 
 use crate::events::enemy_spawn_events::SpawnZombieEvent;
-use crate::in_game::data_classes::enemy_components::EnemyMarker;
-use crate::in_game::data_classes::level_components::{ActiveLevelMarker, KilledEnemies};
-use crate::in_game::data_classes::player_components::PlayerMarker;
-use crate::in_game::data_classes::rigid_body_components::WalkingVelocity;
+use crate::components::enemy_components::EnemyMarker;
+use crate::components::level_components::{ActiveLevelMarker, KilledEnemies};
+use crate::components::player_components::PlayerMarker;
+use crate::components::rigid_body_components::WalkingVelocity;
 
-use crate::generic_constants::Z_VALUE;
-use crate::in_game::data_classes::bullet_components::Damage;
-use crate::in_game::data_classes::generic_components::{GameScreenMarker, Health};
+use crate::utils::generic_constants::Z_VALUE;
+use crate::components::bullet_components::Damage;
+use crate::components::generic_components::{GameScreenMarker, Health};
 use crate::utils::physics_constants::{
     DEFAULT_COLLISION_GROUPS, DEFAULT_GRAVITY, DEFAULT_VELOCITY,
 };

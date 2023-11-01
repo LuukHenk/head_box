@@ -4,12 +4,12 @@ use bevy::time::Stopwatch;
 use crate::display_handler::display_handler::ScreenState;
 use crate::events::enemy_spawn_events::SpawnZombieEvent;
 
-use crate::in_game::data_classes::generic_components::{GameScreenMarker, Health};
-use crate::in_game::data_classes::level_components::{
+use crate::components::generic_components::{GameScreenMarker, Health};
+use crate::components::level_components::{
     ActiveLevelMarker, EnemySpawnDelay, KilledEnemies, LevelId, LevelMarker, LevelTimer,
     SpawnedEnemies, TotalEnemies,
 };
-use crate::in_game::data_classes::player_components::PlayerMarker;
+use crate::components::player_components::PlayerMarker;
 
 #[derive(Bundle)]
 pub struct LevelBundle {

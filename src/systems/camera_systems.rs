@@ -1,5 +1,5 @@
 use crate::display_handler::display_handler::InGameCamera;
-use crate::in_game::data_classes::player_components::PlayerMarker;
+use crate::components::player_components::PlayerMarker;
 use bevy::prelude::*;
 
 pub const CAMERA_SCALE: f32 = 1_f32;
