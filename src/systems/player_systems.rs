@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use std::time::Duration;
 
-use crate::utils::generic_constants::{CENTER_COORDINATES, SCALING};
+use crate::utils::generic_constants::{CENTER_COORDINATES, SCALING, Z_VALUE};
 use crate::utils::physics_constants::{
     DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY, PLAYER_COLLISION_GROUPS,
 };
@@ -57,9 +57,9 @@ impl PlayerSystems {
                 Duration::from_secs_f32(1.),
                 TimerMode::Once,
             )),
-            rotation_degrees: RotationDegrees(0_f32),
+            rotation_degrees: RotationDegrees(180_f32),
             transform: Transform {
-                translation: CENTER_COORDINATES,
+                translation: Vec3::new(-20_f32, 730_f32, Z_VALUE),
                 scale: SCALING,
                 ..default()
             },
@@ -69,7 +69,7 @@ impl PlayerSystems {
             collider: Collider::cuboid(PLAYER_SIZE, PLAYER_SIZE),
             gravity: DEFAULT_GRAVITY,
             velocity: DEFAULT_VELOCITY,
-            texture: player_texture_query.single().back.clone(),
+            texture: player_texture_query.single().front.clone(),
             sprite: Sprite::default(),
             visibility: Default::default(),
             computed_visibility: Default::default(),
@@ -84,7 +84,9 @@ impl PlayerSystems {
     pub fn set_velocity(
         keyboard_input: Res<Input<KeyCode>>,
         mut velocity_query: Query<(&mut Velocity, &WalkingVelocity), With<PlayerMarker>>,
+        test_query: Query<&Transform, With<PlayerMarker>>
     ) {
+        println!("{:#?}", test_query.single().translation);
         for (mut velocity, walking_velocity) in velocity_query.iter_mut() {
             velocity.angvel = 0.;
             velocity.linvel = Vec2::new(0., 0.);
