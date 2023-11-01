@@ -2,8 +2,9 @@
 
 class Main
 '##########################################
+
 package Components {
-    note "Components are not allowed to have any dependencies." as N2
+    note "Components are not allowed to have any dependencies." as ComponentsNote
     class AssetComponents
     class BulletComponents
     class CameraComponents
@@ -14,16 +15,16 @@ package Components {
     class PhysicsComponents
     class WallComponents
 }
-Systems <-- Components
+
 '##########################################
+
 package Events {
-    note "Events are not allowed to have any dependencies." as N3
+    note "Events are not allowed to have any dependencies." as EventsNote
     class BulletEvents
     class EnemySpawnEvents
 }
 
-Plugins <- Events
-Systems <- Events
+
 '##########################################
 package Plugins {
     class HeadBoxPlugin
@@ -33,16 +34,15 @@ package Plugins {
 Main <-- HeadBoxPlugin
 HeadBoxPlugin <-- MainMenuPlugin
 HeadBoxPlugin <-- GamePlugin
+
 '##########################################
+note "States are not allowed to have any dependencies." as StatesNote
 package States {
-    note "States are not allowed to have any dependencies." as N5
     class ScreenState
 }
-Plugins <- States
-Systems <- States
 '##########################################
 package Systems {
-    note "Systems are not allowed to have hard dependencies on each other." as N1
+    note "Systems are not allowed to have hard dependencies on each other." as SystemsNote
     class ArenaSystems
     class AssetSystems
     class BulletSystems
@@ -53,16 +53,21 @@ package Systems {
     class LevelSystems
     class PlayerSystems
 }
-Plugins <---- Systems
 '##########################################
 package Utils {
-    note "Utils are not allowed to have any dependencies." as N4
+    note "Utils are not allowed to have any dependencies." as UtilsNote
     class GenericConstants
     class PhysicsConstants
 }
-Plugins <- Utils
-Systems <- Utils
 '##########################################
 
+Plugins <-- Systems
+Systems <-- Components
+Events -> Systems
+Events -> Plugins
+Utils -> Systems
+Utils -> Plugins
+States -> Systems
+States -> Plugins
 
 @enduml
