@@ -5,7 +5,6 @@
 
 # User stories
 
-
 ### Add collision to the objects on the map
 - The newly created map does not have any collision yet, add collision
 
