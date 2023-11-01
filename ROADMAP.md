@@ -5,9 +5,6 @@
 
 # User stories
 
-### Spawn locations
-- The user spawns in the middle of the map; let the user spawn at the house
-- The enemies spawn at weird locations; make a system to have more control over the enemy spawning locations
 
 ### Add collision to the objects on the map
 - The newly created map does not have any collision yet, add collision

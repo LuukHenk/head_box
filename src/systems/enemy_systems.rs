@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
+use rand::Rng;
+use crate::components::arena_components::EnemySpawnLocation;
 
 use crate::events::enemy_spawn_events::SpawnZombieEvent;
 
@@ -45,13 +47,20 @@ impl EnemySystems {
     pub fn spawn_zombies(
         mut spawn_zombie_event: EventReader<SpawnZombieEvent>,
         mut commands: Commands,
+        enemy_spawn_location_query: Query<&EnemySpawnLocation>,
         zombie_texture_query: Query<&ZombieTexture>,
     ) {
         let texture = zombie_texture_query.single();
+
+        let mut enemy_spawn_locations: Vec<Vec3> = Vec::new();
+        for enemy_spawn_location in enemy_spawn_location_query.iter() {
+            enemy_spawn_locations.push(enemy_spawn_location.0);
+        }
+
         for _ in spawn_zombie_event.iter() {
-            let y = if rand::random::<bool>() { 1. } else { -1. };
-            let x = if rand::random::<bool>() { 1. } else { -1. };
-            let zombie = Self::new_enemy(SCREEN_CENTER * x, 350. * y, texture.0.clone());
+            let random_position = rand::thread_rng().gen_range(0..enemy_spawn_locations.len());
+            let spawn_position = enemy_spawn_locations[random_position];
+            let zombie = Self::new_enemy(spawn_position.x, spawn_position.y, texture.0.clone());
             commands.spawn(zombie);
         }
     }

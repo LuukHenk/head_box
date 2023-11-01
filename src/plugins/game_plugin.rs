@@ -32,6 +32,7 @@ impl Plugin for GamePlugin {
             (
                 PlayerSystems::spawn_player,
                 ArenaSystems::spawn_arena,
+                ArenaSystems::set_enemy_spawn_locations,
                 LevelSystems::spawn_levels,
                 CameraSystems::zoom_camera,
             ),

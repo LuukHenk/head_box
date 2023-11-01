@@ -27,8 +27,8 @@ pub struct LevelSystems;
 
 impl LevelSystems {
     pub fn spawn_levels(mut commands: Commands) {
-        let level_1 = Self::new_level(1, 10, 3.);
-        let level_2 = Self::new_level(2, 12, 2.);
+        let level_1 = Self::new_level(1, 10, 1.);
+        let level_2 = Self::new_level(2, 15, 0.8);
         commands.spawn((level_1, ActiveLevelMarker));
         commands.spawn(level_2);
     }

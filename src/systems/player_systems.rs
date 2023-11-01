@@ -86,7 +86,7 @@ impl PlayerSystems {
         mut velocity_query: Query<(&mut Velocity, &WalkingVelocity), With<PlayerMarker>>,
         test_query: Query<&Transform, With<PlayerMarker>>
     ) {
-        println!("{:#?}", test_query.single().translation);
+        // println!("{:#?}", test_query.single().translation);
         for (mut velocity, walking_velocity) in velocity_query.iter_mut() {
             velocity.angvel = 0.;
             velocity.linvel = Vec2::new(0., 0.);

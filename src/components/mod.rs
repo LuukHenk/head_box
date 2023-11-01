@@ -7,3 +7,4 @@ pub mod physics_components;
 pub mod wall_components;
 pub mod asset_components;
 pub mod camera_components;
+pub mod arena_components;
