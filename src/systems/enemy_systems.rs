@@ -13,7 +13,7 @@ use crate::components::asset_components::ZombieTexture;
 use crate::components::bullet_components::Damage;
 use crate::components::generic_components::{GameScreenMarker, Health};
 
-use crate::utils::generic_constants::{SCALING, SCREEN_CENTER, Z_VALUE,};
+use crate::utils::generic_constants::{SCALING, Z_VALUE,};
 use crate::utils::physics_constants::{DEFAULT_COLLISION_GROUPS, DEFAULT_GRAVITY, DEFAULT_VELOCITY,};
 
 const ZOMBIE_SIZE: f32 = 4.;

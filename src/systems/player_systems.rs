@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use std::time::Duration;
 
-use crate::utils::generic_constants::{CENTER_COORDINATES, SCALING, Z_VALUE};
+use crate::utils::generic_constants::{SCALING, Z_VALUE};
 use crate::utils::physics_constants::{
     DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY, PLAYER_COLLISION_GROUPS,
 };
