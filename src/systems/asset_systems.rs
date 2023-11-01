@@ -1,6 +1,9 @@
+use bevy::audio::Volume;
 use bevy::prelude::*;
 
 use crate::components::asset_components::{BulletTextureHandle, PistolSoundHandle, PlayerTextureHandles, ZombieTenseSoundHandle, ZombieTextureHandle};
+use crate::components::sound_components::ZombieTenseSound;
+
 pub struct AssetSystems;
 
 impl AssetSystems {

@@ -57,7 +57,7 @@ impl Plugin for GamePlugin {
                 EnemySystems::spawn_zombies,
                 EnemySystems::despawn_enemies,
 
-                SoundSystems::adjust_zombie_sounds,
+                // SoundSystems::adjust_zombie_sounds,
 
                 CameraSystems::follow_player.after(PlayerSystems::set_velocity),
 
