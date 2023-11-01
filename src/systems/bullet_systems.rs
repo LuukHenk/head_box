@@ -101,11 +101,13 @@ impl BulletSystems {
             shooter_transform.translation.x,
             shooter_front[0],
             shooter_size.x,
+            SCALING.x,
         );
         let shooter_transform_y = Self::get_bullet_start_axis(
             shooter_transform.translation.y,
             shooter_front[1],
             shooter_size.y,
+            SCALING.y,
         );
         Transform {
             translation: Vec3::new(shooter_transform_x, shooter_transform_y, Z_VALUE),
@@ -117,9 +119,10 @@ impl BulletSystems {
         shooter_axis: f32,
         shooter_direction: f32,
         shooter_radius: f32,
+        scaling: f32,
     ) -> f32 {
         shooter_axis
-            + (shooter_radius + BULLET_LENGTH + SHOOTER_DISTANCE_BUFFER) * shooter_direction
+            + (shooter_radius + BULLET_LENGTH * scaling + SHOOTER_DISTANCE_BUFFER) * shooter_direction
     }
 
     fn new_bullet(
