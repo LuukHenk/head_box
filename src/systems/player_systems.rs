@@ -132,7 +132,6 @@ impl PlayerSystems {
     pub fn shoot(
         keyboard_input: Res<Input<KeyCode>>,
         time: Res<Time>,
-        sound_query: Query<&PistolSoundHandle>,
         mut player_shoot_event: EventWriter<PlayerShootEvent>,
         mut player_query: Query<(Entity, &mut ShootingCoolDownTimer), With<PlayerMarker>>,
     ) {
