@@ -4,7 +4,7 @@ use bevy_rapier2d::prelude::*;
 
 use crate::display_handler::display_handler::{setup_camera, ScreenState};
 use crate::plugins::game_plugin::GamePlugin;
-use crate::menus::main_menu_plugin::MainMenuPlugin;
+use super::main_menu_plugin::MainMenuPlugin;
 use crate::assets::asset_systems::AssetSystems;
 
 

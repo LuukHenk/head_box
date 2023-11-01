@@ -1,2 +1,3 @@
 pub mod head_box_plugin;
-pub mod game_plugin;
+mod game_plugin;
+mod main_menu_plugin;

@@ -3,7 +3,6 @@
 mod assets;
 mod display_handler;
 mod events;
-mod menus;
 mod utils;
 mod components;
 mod systems;

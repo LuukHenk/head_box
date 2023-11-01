@@ -1,8 +1,7 @@
 // https://bevyengine.org/examples/Games/game-menu/
 
-use super::despawn_screen;
-use super::ScreenState;
 use bevy::{app::AppExit, prelude::*};
+use crate::display_handler::display_handler::{despawn_screen, ScreenState};
 
 const TEXT_COLOR: Color = Color::rgb(0.9, 0.9, 0.9);
 const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
