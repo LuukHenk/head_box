@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::components::asset_components::{BulletTexture, PlayerTextures, ZombieTexture};
+use crate::components::asset_components::{BulletTexture, PistolSound, PlayerTextures, ZombieTexture};
 pub struct AssetSystems;
 
 impl AssetSystems {
@@ -16,5 +16,6 @@ impl AssetSystems {
             asset_server.load("textures/zombie/zombie_front.png"),
         ));
         commands.spawn(BulletTexture(asset_server.load("textures/bullet.png")));
+        commands.spawn(PistolSound(asset_server.load("sounds/pistol.ogg")));
     }
 }

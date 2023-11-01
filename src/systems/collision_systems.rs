@@ -8,6 +8,7 @@ use crate::components::player_components::PlayerMarker;
 
 pub struct CollisionSystems;
 impl CollisionSystems {
+
     fn detect_collision(
         entity1: Entity,
         entity2: Entity,
@@ -48,4 +49,5 @@ impl CollisionSystems {
             }
         }
     }
+
 }

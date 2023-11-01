@@ -13,3 +13,6 @@ pub struct ZombieTexture(pub Handle<Image>);
 
 #[derive(Component)]
 pub struct BulletTexture(pub Handle<Image>);
+
+#[derive(Component)]
+pub struct PistolSound(pub Handle<AudioSource>);

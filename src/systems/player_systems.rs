@@ -9,7 +9,7 @@ use crate::utils::physics_constants::{
 
 use crate::events::bullet_events::PlayerShootEvent;
 
-use crate::components::asset_components::PlayerTextures;
+use crate::components::asset_components::{PistolSound, PlayerTextures};
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::generic_components::Health;
 use crate::components::player_components::{
@@ -88,7 +88,7 @@ impl PlayerSystems {
         mut velocity_query: Query<(&mut Velocity, &WalkingVelocity), With<PlayerMarker>>,
         test_query: Query<&Transform, With<PlayerMarker>>
     ) {
-        println!("{:#?}", test_query.single().translation);
+        // println!("{:#?}", test_query.single().translation);
         for (mut velocity, walking_velocity) in velocity_query.iter_mut() {
             velocity.angvel = 0.;
             velocity.linvel = Vec2::new(0., 0.);
@@ -131,13 +131,20 @@ impl PlayerSystems {
     }
     pub fn shoot(
         keyboard_input: Res<Input<KeyCode>>,
-        mut player_query: Query<(Entity, &mut ShootingCoolDownTimer), With<PlayerMarker>>,
-        mut player_shoot_event: EventWriter<PlayerShootEvent>,
         time: Res<Time>,
+        sound_query: Query<&PistolSound>,
+        mut commands: Commands,
+        mut player_shoot_event: EventWriter<PlayerShootEvent>,
+        mut player_query: Query<(Entity, &mut ShootingCoolDownTimer), With<PlayerMarker>>,
     ) {
+        let sound = sound_query.single();
         for (entity, mut cooldown_timer) in player_query.iter_mut() {
             cooldown_timer.0.tick(time.delta());
             if keyboard_input.pressed(KeyCode::Space) && cooldown_timer.0.finished() {
+                commands.spawn(AudioBundle {
+                    source: sound.0.clone(),
+                    settings: PlaybackSettings::DESPAWN,
+                });
                 player_shoot_event.send(PlayerShootEvent(entity));
                 cooldown_timer.0.reset();
             };
