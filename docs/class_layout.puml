@@ -1,73 +1,69 @@
 @startuml
 
-class Main
-'##########################################
+object Systems {
+    - Arena systems
+    - Asset systems
+    - Bullet systems
+    - Camera systems
+    - Collision systems
+    - Enemy systems
+    - Generic systems
+    - Level systems
+    - Player systems
+}
+note "Systems are not allowed to have hard dependencies on each other." as SystemsNote
+SystemsNote --> Systems
 
-package Components {
-    note "Components are not allowed to have any dependencies." as ComponentsNote
-    class AssetComponents
-    class BulletComponents
-    class CameraComponents
-    class EnemyComponents
-    class GenericComponents
-    class LevelComponents
-    class PlayerComponents
-    class PhysicsComponents
-    class WallComponents
+' ################################################
+object Components {
+    - Asset components
+    - Bullet components
+    - Camera components
+    - Enemy components
+    - Generic components
+    - Level components
+    - Player components
+    - Physics components
+    - Wall components
+}
+note "Components are not allowed to have any dependencies." as ComponentsNote
+ComponentsNote --> Components
+
+' ################################################
+object Plugins {
+    - HeadBox plugin
+    - MainMenu plugin
+    - Game plugin
 }
 
-'##########################################
-
-package Events {
-    note "Events are not allowed to have any dependencies." as EventsNote
-    class BulletEvents
-    class EnemySpawnEvents
+' ################################################
+object Utils {
+    - Generic constants
+    - Physics constants
 }
 
-
-'##########################################
-package Plugins {
-    class HeadBoxPlugin
-    class MainMenuPlugin
-    class GamePlugin
-}
-Main <-- HeadBoxPlugin
-HeadBoxPlugin <-- MainMenuPlugin
-HeadBoxPlugin <-- GamePlugin
-
-'##########################################
-note "States are not allowed to have any dependencies." as StatesNote
-package States {
-    class ScreenState
-}
-'##########################################
-package Systems {
-    note "Systems are not allowed to have hard dependencies on each other." as SystemsNote
-    class ArenaSystems
-    class AssetSystems
-    class BulletSystems
-    class CameraSystems
-    class CollisionSystems
-    class EnemySystems
-    class GenericSystems
-    class LevelSystems
-    class PlayerSystems
-}
-'##########################################
-package Utils {
-    note "Utils are not allowed to have any dependencies." as UtilsNote
-    class GenericConstants
-    class PhysicsConstants
+' ################################################
+object Events {
+    - Bullet events
+    - Enemy spawn events
 }
 '##########################################
 
-Plugins <-- Systems
-Systems <-- Components
-Events -> Systems
-Events -> Plugins
-Utils -> Systems
-Utils -> Plugins
-States -> Systems
-States -> Plugins
+object States {
+    - Screen state
+}
+note "States, events, and utils are not allowed to have any dependencies." as DependenciesNote
+DependenciesNote -up-> States
+DependenciesNote -up-> Events
+DependenciesNote -up-> Utils
+
+Components -> Systems
+Systems -> Plugins
+Utils -up-> Systems
+Utils -up-> Plugins
+States -up-> Systems
+States -up-> Plugins
+Events -up-> Systems
+Events -up-> Plugins
 
 @enduml
