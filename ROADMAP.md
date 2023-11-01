@@ -1,17 +1,14 @@
 # Bugs
 
-### Shooting
-- When a player is standing still, it always shoots up
-- When a player shoots, the bullet kind of spawns inside the player
-
 # User stories
 
+### Spawn locations
+- The user spawns in the middle of the map; let the user spawn at the house
+- The enemies spawn at weird locations; make a system to have more control over the enemy spawning locations
 
 ### Add collision to the objects on the map
 - The newly created map does not have any collision yet, add collision
 
-### Add sprites
-- Add enemy sprite
 
 ### Draw the other half of the arena
 - Draw the other half of the arena using the SVG file in src/assets/textures/arena
