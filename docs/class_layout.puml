@@ -1,40 +1,21 @@
 @startuml
 
 class Main
-
-package Plugins {
-    class HeadBoxPlugin
-    class MainMenuPlugin
-    class GamePlugin
-}
-Main <-- HeadBoxPlugin
-HeadBoxPlugin <-- MainMenuPlugin
-HeadBoxPlugin <-- GamePlugin
-
-package Systems {
-    note "Systems are not allowed to have hard dependencies on each other." as N1
-    class ArenaSystems
-    class BulletSystems
-    class CameraSystems
-    class CollisionSystems
-    class EnemySystems
-    class LevelSystems
-    class PlayerSystems
-}
-Plugins <---- Systems
-
+'##########################################
 package Components {
     note "Components are not allowed to have any dependencies." as N2
+    class AssetComponents
     class BulletComponents
+    class CameraComponents
     class EnemyComponents
     class GenericComponents
     class LevelComponents
     class PlayerComponents
-    class RigidBodyComponents
+    class PhysicsComponents
     class WallComponents
 }
-Systems <- Components
-
+Systems <-- Components
+'##########################################
 package Events {
     note "Events are not allowed to have any dependencies." as N3
     class BulletEvents
@@ -43,20 +24,45 @@ package Events {
 
 Plugins <- Events
 Systems <- Events
-
-package Utils {
-    note "Utils are not allowed to have any dependencies." as N4
+'##########################################
+package Plugins {
+    class HeadBoxPlugin
+    class MainMenuPlugin
+    class GamePlugin
 }
-
-Plugins <- Utils
-Systems <- Utils
-
+Main <-- HeadBoxPlugin
+HeadBoxPlugin <-- MainMenuPlugin
+HeadBoxPlugin <-- GamePlugin
+'##########################################
 package States {
     note "States are not allowed to have any dependencies." as N5
+    class ScreenState
 }
-
 Plugins <- States
 Systems <- States
+'##########################################
+package Systems {
+    note "Systems are not allowed to have hard dependencies on each other." as N1
+    class ArenaSystems
+    class AssetSystems
+    class BulletSystems
+    class CameraSystems
+    class CollisionSystems
+    class EnemySystems
+    class GenericSystems
+    class LevelSystems
+    class PlayerSystems
+}
+Plugins <---- Systems
+'##########################################
+package Utils {
+    note "Utils are not allowed to have any dependencies." as N4
+    class GenericConstants
+    class PhysicsConstants
+}
+Plugins <- Utils
+Systems <- Utils
+'##########################################
 
 
 @enduml

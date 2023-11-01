@@ -1,6 +1,6 @@
-use crate::components::generic_components::GameScreenMarker;
 use bevy::prelude::*;
 
+use crate::components::generic_components::GameScreenMarker;
 #[derive(Bundle)]
 struct ArenaBundle {
     game_screen_marker: GameScreenMarker,

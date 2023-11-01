@@ -5,3 +5,5 @@ pub mod collision_systems;
 pub mod enemy_systems;
 pub mod level_systems;
 pub mod player_systems;
+pub mod asset_systems;
+pub mod generic_systems;

@@ -1,6 +1,6 @@
-use crate::components::asset_components::{BulletTexture, PlayerTextures, ZombieTexture};
 use bevy::prelude::*;
 
+use crate::components::asset_components::{BulletTexture, PlayerTextures, ZombieTexture};
 pub struct AssetSystems;
 
 impl AssetSystems {

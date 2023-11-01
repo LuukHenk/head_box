@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy::time::Stopwatch;
 
-use crate::display_handler::display_handler::ScreenState;
+use crate::states::screen_state::ScreenState;
 use crate::events::enemy_spawn_events::SpawnZombieEvent;
 
 use crate::components::generic_components::{GameScreenMarker, Health};

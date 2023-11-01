@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::display_handler::display_handler::{despawn_screen, ScreenState};
+
 use crate::events::bullet_events::PlayerShootEvent;
 use crate::events::enemy_spawn_events::SpawnZombieEvent;
 
@@ -13,6 +13,9 @@ use crate::systems::collision_systems::CollisionSystems;
 use crate::systems::enemy_systems::EnemySystems;
 use crate::systems::level_systems::LevelSystems;
 use crate::systems::player_systems::PlayerSystems;
+use crate::systems::generic_systems::despawn_screen;
+
+use crate::states::screen_state::ScreenState;
 
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
