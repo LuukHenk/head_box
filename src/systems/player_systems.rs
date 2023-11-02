@@ -13,8 +13,9 @@ use crate::components::asset_components::{PistolSoundHandle, PlayerTextureHandle
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::generic_components::Health;
 use crate::components::player_components::{
-    PlayerMarker, RotationDegrees, ShootingCoolDownTimer,
+    PlayerMarker, RotationDegrees,
 };
+use crate::components::shooting_components::ShootingCoolDownTimer; 
 use crate::components::physics_components::WalkingVelocity;
 
 
@@ -55,7 +56,7 @@ impl PlayerSystems {
             game_screen_marker: GameScreenMarker,
             health: Health(INITIAL_PLAYER_HEALTH),
             shooting_cooldown_timer: ShootingCoolDownTimer(Timer::new(
-                Duration::from_secs_f32(1.),
+                Duration::from_secs_f32(0.1),
                 TimerMode::Once,
             )),
             rotation_degrees: RotationDegrees(180_f32),

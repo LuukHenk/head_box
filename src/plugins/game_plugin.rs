@@ -14,6 +14,7 @@ use crate::systems::enemy_systems::EnemySystems;
 use crate::systems::level_systems::LevelSystems;
 use crate::systems::player_systems::PlayerSystems;
 use crate::systems::generic_systems::despawn_screen;
+use crate::systems::shooting_systems::ShootingSystems;
 
 use crate::states::screen_state::ScreenState;
 use crate::systems::sound_systems::SoundSystems;
@@ -37,6 +38,7 @@ impl Plugin for GamePlugin {
                 LevelSystems::spawn_levels,
                 SoundSystems::play_zombie_tense_sounds,
                 CameraSystems::zoom_camera,
+                ShootingSystems::spawn_guns,
             ),
         )
         .add_event::<PlayerShootEvent>()
