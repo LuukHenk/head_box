@@ -54,10 +54,9 @@ impl Plugin for GamePlugin {
                 PlayerSystems::set_rotation_degrees.after(PlayerSystems::set_velocity),
                 EnemySystems::set_velocity.after(PlayerSystems::set_velocity),
 
-                EnemySystems::spawn_zombies,
+                EnemySystems::spawn_zombies.after(LevelSystems::spawn_enemies_for_current_level),
                 EnemySystems::despawn_enemies,
 
-                // SoundSystems::adjust_zombie_sounds,
 
                 CameraSystems::follow_player.after(PlayerSystems::set_velocity),
 
