@@ -3,12 +3,13 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use std::time::Duration;
 
-use crate::events::bullet_events::PlayerShootEvent;
+use crate::events::shooting_events::BulletSpawnEvent;
 
 use crate::components::bullet_components::{BulletMarker, Damage, LifeTime};
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::player_components::{PlayerMarker, RotationDegrees};
 use crate::components::asset_components::BulletTextureHandle;
+use crate::components::shooting_components::{ActiveGun, DamagePerHit};
 
 use crate::utils::generic_constants::{SCALING, Z_VALUE};
 use crate::utils::physics_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY};
@@ -43,10 +44,9 @@ pub struct BulletSystems;
 impl BulletSystems {
     pub fn spawn_player_bullet(
         mut commands: Commands,
-        mut player_shoot_event: EventReader<PlayerShootEvent>,
+        mut bullet_spawn_events: EventReader<BulletSpawnEvent>,
         player_query: Query<
             (
-                Entity,
                 &RotationDegrees,
                 &CollisionGroups,
                 &Transform,
@@ -54,21 +54,18 @@ impl BulletSystems {
             ),
             With<PlayerMarker>,
         >,
+        gun_query: Query<&DamagePerHit, With<ActiveGun>>,
         bullet_texture_query: Query<&BulletTextureHandle>,
     ) {
-        for shoot_event in player_shoot_event.iter() {
-            for (entity, rotation_degrees, collision_groups, transform, collider) in
-                player_query.iter()
-            {
-                if shoot_event.0 != entity {
-                    continue;
-                }
-                let bullet_transform =
-                    Self::generate_bullet_transform(rotation_degrees, transform, collider);
+        let damage_per_hit = gun_query.single();
+        for _bullet_spawn_event in bullet_spawn_events.iter() {
+            for (rotation_degrees, collision_groups, transform, collider) in player_query.iter() {
+                let bullet_transform = Self::generate_bullet_transform(rotation_degrees, transform, collider);
                 let bullet_bundle = Self::new_bullet(
                     bullet_transform,
                     *collision_groups,
                     bullet_texture_query.single().0.clone(),
+                    damage_per_hit.0,
                 );
                 commands.spawn(bullet_bundle);
             }
@@ -129,11 +126,12 @@ impl BulletSystems {
         transform: Transform,
         collision_groups: CollisionGroups,
         texture: Handle<Image>,
+        damage_per_hit: f32,
     ) -> BulletBundle {
         let bullet_timer = Timer::new(Duration::from_secs_f32(0.1), TimerMode::Once);
 
         BulletBundle {
-            damage: Damage(0.5),
+            damage: Damage(damage_per_hit),
             life_time: LifeTime(bullet_timer),
             bullet_marker: BulletMarker,
             game_screen_marker: GameScreenMarker,

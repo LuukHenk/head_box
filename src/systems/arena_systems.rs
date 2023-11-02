@@ -4,7 +4,7 @@ use bevy_rapier2d::prelude::*;
 use crate::components::arena_components::EnemySpawnLocation;
 use crate::components::generic_components::GameScreenMarker;
 use crate::utils::generic_constants::{SCALING, Z_VALUE};
-use crate::utils::physics_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_COLLISION_GROUPS, DEFAULT_GRAVITY, WALL_COLLISION_GROUPS};
+use crate::utils::physics_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, WALL_COLLISION_GROUPS};
 
 #[derive(Bundle)]
 struct ArenaBundle {

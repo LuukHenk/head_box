@@ -1,6 +1,7 @@
 # Head Box
 
 Remake of the [Boxhead](http://www.boxheadx.com/) games using the [Bevy game engine](https://bevyengine.org/).
+The game will be single player for now.
 
 # Credits
 

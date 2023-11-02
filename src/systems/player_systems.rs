@@ -7,15 +7,15 @@ use crate::utils::physics_constants::{
     DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY, PLAYER_COLLISION_GROUPS,
 };
 
-use crate::events::bullet_events::PlayerShootEvent;
+use crate::events::shooting_events::ShootRequestEvent;
 
-use crate::components::asset_components::{PistolSoundHandle, PlayerTextureHandles};
+use crate::components::asset_components::PlayerTextureHandles;
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::generic_components::Health;
 use crate::components::player_components::{
     PlayerMarker, RotationDegrees,
 };
-use crate::components::shooting_components::ShootingCoolDownTimer; 
+use crate::components::shooting_components::ShootingCoolDownTimer;
 use crate::components::physics_components::WalkingVelocity;
 
 
@@ -87,9 +87,7 @@ impl PlayerSystems {
     pub fn set_velocity(
         keyboard_input: Res<Input<KeyCode>>,
         mut velocity_query: Query<(&mut Velocity, &WalkingVelocity), With<PlayerMarker>>,
-        test_query: Query<&Transform, With<PlayerMarker>>
     ) {
-        // println!("{:#?}", test_query.single().translation);
         for (mut velocity, walking_velocity) in velocity_query.iter_mut() {
             velocity.angvel = 0.;
             velocity.linvel = Vec2::new(0., 0.);
@@ -132,17 +130,11 @@ impl PlayerSystems {
     }
     pub fn shoot(
         keyboard_input: Res<Input<KeyCode>>,
-        time: Res<Time>,
-        mut player_shoot_event: EventWriter<PlayerShootEvent>,
-        mut player_query: Query<(Entity, &mut ShootingCoolDownTimer), With<PlayerMarker>>,
+        mut player_shoot_event: EventWriter<ShootRequestEvent>,
     ) {
-        for (entity, mut cooldown_timer) in player_query.iter_mut() {
-            cooldown_timer.0.tick(time.delta());
-            if keyboard_input.pressed(KeyCode::Space) && cooldown_timer.0.finished() {
-                player_shoot_event.send(PlayerShootEvent(entity));
-                cooldown_timer.0.reset();
-            };
-        }
+        if keyboard_input.pressed(KeyCode::Space) {
+            player_shoot_event.send(ShootRequestEvent);
+        };
     }
 
     pub fn change_sprite(

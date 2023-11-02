@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 
 
-use crate::events::bullet_events::PlayerShootEvent;
 use crate::events::enemy_spawn_events::SpawnZombieEvent;
 
 use crate::components::generic_components::GameScreenMarker;
+use crate::events::shooting_events::{BulletSpawnEvent, ShootRequestEvent};
 
 use crate::systems::arena_systems::ArenaSystems;
 use crate::systems::bullet_systems::BulletSystems;
@@ -41,7 +41,8 @@ impl Plugin for GamePlugin {
                 ShootingSystems::spawn_guns,
             ),
         )
-        .add_event::<PlayerShootEvent>()
+        .add_event::<ShootRequestEvent>()
+        .add_event::<BulletSpawnEvent>()
         .add_event::<SpawnZombieEvent>()
         .add_systems(
             FixedUpdate,
@@ -63,8 +64,9 @@ impl Plugin for GamePlugin {
                 CameraSystems::follow_player.after(PlayerSystems::set_velocity),
 
                 PlayerSystems::shoot.after(PlayerSystems::set_velocity),
-                BulletSystems::spawn_player_bullet.after(PlayerSystems::shoot),
-                SoundSystems::play_pistol_sound.after(PlayerSystems::shoot),
+                ShootingSystems::shoot.after(PlayerSystems::shoot),
+                BulletSystems::spawn_player_bullet.after(ShootingSystems::shoot),
+                SoundSystems::play_shooting_sound.after(ShootingSystems::shoot),
                 BulletSystems::despawn_bullets,
 
                 PlayerSystems::change_sprite.after(PlayerSystems::set_velocity),

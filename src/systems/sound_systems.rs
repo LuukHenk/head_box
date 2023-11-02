@@ -1,18 +1,15 @@
-use bevy::audio::{Volume, VolumeLevel};
-use bevy::audio::PlaybackMode::Loop;
+use bevy::audio::Volume;
 use bevy::prelude::*;
 use crate::components::asset_components::{PistolSoundHandle, ZombieTenseSoundHandle};
-use crate::components::enemy_components::ZombieMarker;
 use crate::components::generic_components::GameScreenMarker;
-use crate::components::player_components::PlayerMarker;
 use crate::components::sound_components::ZombieTenseSound;
-use crate::events::bullet_events::PlayerShootEvent;
+use crate::events::shooting_events::BulletSpawnEvent;
 
 
-const MAX_ZOMBIE_SOUND_DISTANCE: f32 = 300.;
-const MIN_ZOMBIE_SOUND_DISTANCE: f32 = 60.;
-const ZOMBIE_SOUND_RANGE: f32 = MAX_ZOMBIE_SOUND_DISTANCE - MIN_ZOMBIE_SOUND_DISTANCE;
-const MAX_ZOMBIE_VOLUME_LEVEL: f32 = 1.;
+// const MAX_ZOMBIE_SOUND_DISTANCE: f32 = 300.;
+// const MIN_ZOMBIE_SOUND_DISTANCE: f32 = 60.;
+// const ZOMBIE_SOUND_RANGE: f32 = MAX_ZOMBIE_SOUND_DISTANCE - MIN_ZOMBIE_SOUND_DISTANCE;
+// const MAX_ZOMBIE_VOLUME_LEVEL: f32 = 1.;
 
 pub struct SoundSystems;
 
@@ -55,13 +52,13 @@ impl SoundSystems {
     //     sink.set_volume(volume_level);
     // }
 
-    pub fn play_pistol_sound(
+    pub fn play_shooting_sound(
         mut commands: Commands,
-        mut player_shoot_event: EventReader<PlayerShootEvent>,
+        mut bullet_spawn_event: EventReader<BulletSpawnEvent>,
         sound_query: Query<&PistolSoundHandle>
     ) {
         let sound = sound_query.single();
-        for _shoot_event in player_shoot_event.iter() {
+        for _shoot_event in bullet_spawn_event.iter() {
             commands.spawn(AudioBundle {
                 source: sound.0.clone(),
                 settings: PlaybackSettings::DESPAWN,
