@@ -5,7 +5,7 @@ use crate::components::shooting_components::GunType;
 pub struct ShootRequestEvent;
 
 #[derive(Event)]
-pub struct BulletSpawnEvent;
+pub struct BulletSpawnEvent(pub f32);
 
 #[derive(Event)]
 pub struct WeaponSelectionEvent(pub GunType);

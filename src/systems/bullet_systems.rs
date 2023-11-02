@@ -58,9 +58,9 @@ impl BulletSystems {
         bullet_texture_query: Query<&BulletTextureHandle>,
     ) {
         let damage_per_hit = gun_query.single();
-        for _bullet_spawn_event in bullet_spawn_events.iter() {
+        for bullet_rotation_offset in bullet_spawn_events.iter() {
             for (rotation_degrees, collision_groups, transform, collider) in player_query.iter() {
-                let bullet_transform = Self::generate_bullet_transform(rotation_degrees, transform, collider);
+                let bullet_transform = Self::generate_bullet_transform(rotation_degrees, transform, collider, bullet_rotation_offset.0);
                 let bullet_bundle = Self::new_bullet(
                     bullet_transform,
                     *collision_groups,
@@ -89,9 +89,11 @@ impl BulletSystems {
         shooter_rotation_degrees: &RotationDegrees,
         shooter_transform: &Transform,
         shooter_collider: &Collider,
+        bullet_rotation_offset: f32,
     ) -> Transform {
         let shooter_size = shooter_collider.as_cuboid().unwrap().half_extents();
-        let shooter_rotation = Quat::from_rotation_z(shooter_rotation_degrees.0.to_radians());
+        let shooter_rotation_degrees = shooter_rotation_degrees.0 + bullet_rotation_offset;
+        let shooter_rotation = Quat::from_rotation_z(shooter_rotation_degrees.to_radians());
         let shooter_front = (shooter_rotation * Vec3::Y).truncate().normalize();
 
         let shooter_transform_x = Self::get_bullet_start_axis(

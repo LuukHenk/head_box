@@ -1,6 +1,6 @@
 use bevy::audio::Volume;
 use bevy::prelude::*;
-use crate::components::asset_components::{PistolSoundHandle, ZombieTenseSoundHandle};
+use crate::components::asset_components::ZombieTenseSoundHandle;
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::shooting_components::ActiveGun;
 use crate::components::sound_components::ZombieTenseSound;

@@ -145,6 +145,8 @@ impl PlayerSystems {
             weapon_selection_event.send(WeaponSelectionEvent(GunType::Pistol));
         } else if keyboard_input.pressed(KeyCode::Key2){
             weapon_selection_event.send(WeaponSelectionEvent(GunType::Uzi));
+        } else if keyboard_input.pressed(KeyCode::Key3){
+            weapon_selection_event.send(WeaponSelectionEvent(GunType::Shotgun));
         }
     }
     pub fn change_sprite(
