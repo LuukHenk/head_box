@@ -72,7 +72,7 @@ impl ShootingSystems {
                 TimerMode::Once,
             )),
             gun_marker: GunMarker,
-            damage_per_hit: DamagePerHit(2.),
+            damage_per_hit: DamagePerHit(1.),
             gun_type: GunType::Shotgun,
             bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![-5_f32, 0_f32, 5_f32]),
             shooting_sound: shotgun_sound.single().0.clone(),

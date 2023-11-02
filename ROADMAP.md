@@ -11,7 +11,6 @@
 - Create a new ticket for adding collision to the components on this part of the map, and for removing the walls on the first part of the map
 
 ### Add sound effects
-- Shooting sound
 - Taking damage sound (player and enemies)
 - Dying sound (player and enemies)
 - Starting the game sound
