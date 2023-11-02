@@ -17,3 +17,4 @@ https://creativecommons.org/licenses/by/3.0/
 - https://bevy-cheatbook.github.io
 - https://docs.rs/bevy/latest/bevy/index.html
 - https://github.com/Jafie/street_of_zombies/tree/main/src
+- https://quicksounds.com/library/sounds/pistol

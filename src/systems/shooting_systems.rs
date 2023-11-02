@@ -1,6 +1,7 @@
 use std::time::Duration;
 
 use bevy::prelude::*;
+use crate::components::asset_components::{PistolSoundHandle, UziSoundHandle};
 
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::shooting_components::{ActiveGun, DamagePerHit, GunMarker, GunType, ShootingCoolDownTimer};
@@ -15,14 +16,19 @@ struct Gun {
     shooting_cooldown_timer: ShootingCoolDownTimer,
     damage_per_hit: DamagePerHit,
     gun_marker: GunMarker,
-    gun_type: GunType
+    gun_type: GunType,
+    shooting_sound: Handle<AudioSource>
 }
 
 
 pub struct ShootingSystems;
 
 impl ShootingSystems {
-    pub fn spawn_guns(mut commands: Commands) {
+    pub fn spawn_guns(
+        mut commands: Commands,
+        pistol_sound: Query<&PistolSoundHandle>,
+        uzi_sound: Query<&UziSoundHandle>
+    ) {
         let pistol = Gun {
             // Game screen components
             game_screen_marker: GameScreenMarker,
@@ -33,8 +39,9 @@ impl ShootingSystems {
                 TimerMode::Once,
             )),
             gun_marker: GunMarker,
-            damage_per_hit: DamagePerHit(0.5),
+            damage_per_hit: DamagePerHit(2.),
             gun_type: GunType::Pistol,
+            shooting_sound: pistol_sound.single().0.clone(),
         };
         let uzi = Gun {
             // Game screen components
@@ -48,10 +55,11 @@ impl ShootingSystems {
             gun_marker: GunMarker,
             damage_per_hit: DamagePerHit(0.05),
             gun_type: GunType::Uzi,
+            shooting_sound: uzi_sound.single().0.clone(),
         };
 
-        commands.spawn((pistol));
-        commands.spawn((uzi, ActiveGun));
+        commands.spawn((pistol, ActiveGun));
+        commands.spawn((uzi));
 
     }
 

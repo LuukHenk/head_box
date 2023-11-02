@@ -18,4 +18,7 @@ pub struct BulletTextureHandle(pub Handle<Image>);
 pub struct PistolSoundHandle(pub Handle<AudioSource>);
 
 #[derive(Component)]
+pub struct UziSoundHandle(pub Handle<AudioSource>);
+
+#[derive(Component)]
 pub struct ZombieTenseSoundHandle(pub Handle<AudioSource>);

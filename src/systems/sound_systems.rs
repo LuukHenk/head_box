@@ -2,6 +2,7 @@ use bevy::audio::Volume;
 use bevy::prelude::*;
 use crate::components::asset_components::{PistolSoundHandle, ZombieTenseSoundHandle};
 use crate::components::generic_components::GameScreenMarker;
+use crate::components::shooting_components::ActiveGun;
 use crate::components::sound_components::ZombieTenseSound;
 use crate::events::shooting_events::BulletSpawnEvent;
 
@@ -55,12 +56,12 @@ impl SoundSystems {
     pub fn play_shooting_sound(
         mut commands: Commands,
         mut bullet_spawn_event: EventReader<BulletSpawnEvent>,
-        sound_query: Query<&PistolSoundHandle>
+        sound_query: Query<&Handle<AudioSource>, With<ActiveGun>>,
     ) {
         let sound = sound_query.single();
         for _shoot_event in bullet_spawn_event.iter() {
             commands.spawn(AudioBundle {
-                source: sound.0.clone(),
+                source: sound.clone(),
                 settings: PlaybackSettings::DESPAWN,
             });
         }
