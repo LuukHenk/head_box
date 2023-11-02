@@ -131,7 +131,7 @@ impl EnemySystems {
             velocity: DEFAULT_VELOCITY,
             walking_velocity: WalkingVelocity(100.),
             gravity: DEFAULT_GRAVITY,
-            collider: Collider::cuboid(ZOMBIE_SIZE, ZOMBIE_SIZE),
+            collider: Collider::cuboid(4., 8.),
             continuous_collision_detection: Ccd::enabled(),
             sleeping: Sleeping::disabled(),
             collision_groups: DEFAULT_COLLISION_GROUPS,
