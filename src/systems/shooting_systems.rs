@@ -35,7 +35,7 @@ impl ShootingSystems {
 
             // Gun specific components
             shooting_cooldown_timer: ShootingCoolDownTimer(Timer::new(
-                Duration::from_secs_f32(0.8),
+                Duration::from_secs_f32(1.),
                 TimerMode::Once,
             )),
             gun_marker: GunMarker,
@@ -53,7 +53,7 @@ impl ShootingSystems {
                 TimerMode::Once,
             )),
             gun_marker: GunMarker,
-            damage_per_hit: DamagePerHit(0.05),
+            damage_per_hit: DamagePerHit(0.1),
             gun_type: GunType::Uzi,
             shooting_sound: uzi_sound.single().0.clone(),
         };

@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::components::bullet_components::BulletMarker;
+use crate::components::bullet_components::{BulletMarker, Damage};
 use crate::components::enemy_components::EnemyMarker;
 use crate::components::generic_components::Health;
 use crate::components::player_components::PlayerMarker;
@@ -38,12 +38,12 @@ impl CollisionSystems {
     pub fn handle_bullet_collision(
         rapier_context: Res<RapierContext>,
         mut target_query: Query<(Entity, &mut Health), With<Health>>,
-        bullet_query: Query<Entity, With<BulletMarker>>,
+        bullet_query: Query<(Entity, &Damage), With<BulletMarker>>,
     ) {
         for (target_entity, mut target_health) in target_query.iter_mut() {
-            for enemy_entity in bullet_query.iter() {
+            for (enemy_entity, damage) in bullet_query.iter() {
                 if Self::detect_collision(target_entity, enemy_entity, &rapier_context) {
-                    target_health.0 -= 1.;
+                    target_health.0 -= damage.0;
                     println!("Auch! HP: {:#?}", target_health.0)
                 }
             }
