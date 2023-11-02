@@ -1,3 +1,4 @@
+use std::process::Command;
 use std::time::Duration;
 
 use bevy::prelude::*;
@@ -5,7 +6,7 @@ use crate::components::asset_components::{PistolSoundHandle, UziSoundHandle};
 
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::shooting_components::{ActiveGun, DamagePerHit, GunMarker, GunType, ShootingCoolDownTimer};
-use crate::events::shooting_events::{BulletSpawnEvent, ShootRequestEvent};
+use crate::events::shooting_events::{BulletSpawnEvent, ShootRequestEvent, WeaponSelectionEvent};
 
 #[derive(Bundle)]
 struct Gun {
@@ -80,4 +81,20 @@ impl ShootingSystems {
         }
     }
 
+    pub fn set_active_gun(
+        mut commands: Commands,
+        mut weapon_selection_events: EventReader<WeaponSelectionEvent>,
+        active_gun_query: Query<Entity, With<ActiveGun>>,
+        gun_query: Query<(Entity, &GunType), With<GunMarker>>
+    ) {
+        for weapon_selection_event in weapon_selection_events.iter() {
+            for (gun_entity, gun_type) in gun_query.iter() {
+                if &weapon_selection_event.0 == gun_type {
+                    let active_gun_entity = active_gun_query.single();
+                    commands.entity(active_gun_entity).remove::<ActiveGun>();
+                    commands.entity(gun_entity).insert(ActiveGun);
+                }
+            }
+        }
+    }
 }

@@ -12,7 +12,7 @@ pub struct DamagePerHit(pub f32);
 #[derive(Component)]
 pub struct GunMarker;
 
-#[derive(Component)]
+#[derive(Component, PartialEq)]
 pub enum GunType {
     Pistol,
     Uzi

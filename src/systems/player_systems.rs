@@ -7,7 +7,7 @@ use crate::utils::physics_constants::{
     DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY, PLAYER_COLLISION_GROUPS,
 };
 
-use crate::events::shooting_events::ShootRequestEvent;
+use crate::events::shooting_events::{ShootRequestEvent, WeaponSelectionEvent};
 
 use crate::components::asset_components::PlayerTextureHandles;
 use crate::components::generic_components::GameScreenMarker;
@@ -15,7 +15,7 @@ use crate::components::generic_components::Health;
 use crate::components::player_components::{
     PlayerMarker, RotationDegrees,
 };
-use crate::components::shooting_components::ShootingCoolDownTimer;
+use crate::components::shooting_components::{GunType, ShootingCoolDownTimer};
 use crate::components::physics_components::WalkingVelocity;
 
 
@@ -137,6 +137,16 @@ impl PlayerSystems {
         };
     }
 
+    pub fn weapon_selection(
+        keyboard_input: Res<Input<KeyCode>>,
+        mut weapon_selection_event: EventWriter<WeaponSelectionEvent>,
+    ) {
+        if keyboard_input.pressed(KeyCode::Key1) {
+            weapon_selection_event.send(WeaponSelectionEvent(GunType::Pistol));
+        } else if keyboard_input.pressed(KeyCode::Key2){
+            weapon_selection_event.send(WeaponSelectionEvent(GunType::Uzi));
+        }
+    }
     pub fn change_sprite(
         mut player_query: Query<(&RotationDegrees, &mut Handle<Image>), With<PlayerMarker>>,
         player_sprites_query: Query<&PlayerTextureHandles>,
