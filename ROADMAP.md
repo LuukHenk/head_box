@@ -32,3 +32,7 @@
 
 ### Add score multiplier
 - The faster you kill enemies, the higher the multiplier
+
+### Add menu bar
+- The spritesheet has a nice inventory bar which shows the active weapon, ammo and the gun; 
+- However, this would require an extra camera in Bevy which currently seems broken... So lets wait.

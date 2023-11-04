@@ -1,9 +1,9 @@
 use bevy::audio::Volume;
 use bevy::prelude::*;
-use crate::components::asset_components::ZombieTenseSoundHandle;
+use crate::components::asset_components::{BackgroundMusicHandle, ZombieTenseSoundHandle};
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::shooting_components::ActiveGun;
-use crate::components::sound_components::ZombieTenseSound;
+use crate::components::sound_components::{BackgroundMusic, BackgroundSound, ZombieTenseSound};
 use crate::events::shooting_events::BulletSpawnEvent;
 
 
@@ -16,9 +16,9 @@ pub struct SoundSystems;
 
 
 impl SoundSystems {
-    pub fn play_zombie_tense_sounds(mut commands: Commands, sound_query: Query<&ZombieTenseSoundHandle>) {
+    pub fn spawn_zombie_tense_sounds(mut commands: Commands, sound_query: Query<&ZombieTenseSoundHandle>) {
         let mut playback_settings = PlaybackSettings::LOOP;
-        playback_settings = playback_settings.with_volume(Volume::new_relative(0.2));
+        playback_settings = playback_settings.with_volume(Volume::new_relative(0.3));
         commands.spawn(
             (
                 AudioBundle {
@@ -27,6 +27,7 @@ impl SoundSystems {
             },
                 ZombieTenseSound,
                 GameScreenMarker,
+                BackgroundSound,
             )
         );
     }
@@ -53,16 +54,39 @@ impl SoundSystems {
     //     sink.set_volume(volume_level);
     // }
 
+    pub fn spawn_background_music(mut commands: Commands, sound_query: Query<&BackgroundMusicHandle>) {
+        let mut playback_settings = PlaybackSettings::LOOP;
+        playback_settings = playback_settings.with_volume(Volume::new_relative(0.3));
+        commands.spawn(
+            (
+                AudioBundle {
+                    source: sound_query.single().0.clone(),
+                    settings: playback_settings,
+                },
+                BackgroundMusic,
+                GameScreenMarker,
+                BackgroundSound,
+            )
+        );
+    }
+
+    pub fn toggle_background_sounds(music_controller: Query<&AudioSink, With<BackgroundSound>>) {
+        for sink in music_controller.iter() {
+            sink.toggle();
+        }
+    }
     pub fn play_shooting_sound(
         mut commands: Commands,
         mut bullet_spawn_event: EventReader<BulletSpawnEvent>,
         sound_query: Query<&Handle<AudioSource>, With<ActiveGun>>,
     ) {
         let sound = sound_query.single();
+        let mut playback_settings = PlaybackSettings::DESPAWN;
+        playback_settings = playback_settings.with_volume(Volume::new_relative(0.3));
         for _shoot_event in bullet_spawn_event.iter() {
             commands.spawn(AudioBundle {
                 source: sound.clone(),
-                settings: PlaybackSettings::DESPAWN,
+                settings: playback_settings,
             });
         }
     }

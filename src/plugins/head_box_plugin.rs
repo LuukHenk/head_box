@@ -9,6 +9,7 @@ use crate::systems::asset_systems::AssetSystems;
 use crate::systems::camera_systems::CameraSystems;
 
 use crate::states::screen_state::ScreenState;
+use crate::systems::sound_systems::SoundSystems;
 
 
 pub struct HeadBoxPlugin;
@@ -16,7 +17,10 @@ impl Plugin for HeadBoxPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(FixedTime::new_from_secs(1.0 / 60.0))
             .add_state::<ScreenState>()
-            .add_systems(Startup, (CameraSystems::setup_camera, AssetSystems::setup_assets))
+            .add_systems(Startup, (
+                CameraSystems::setup_camera,
+                AssetSystems::setup_assets,
+            ))
             .add_plugins((
                 GamePlugin,
                 MainMenuPlugin,

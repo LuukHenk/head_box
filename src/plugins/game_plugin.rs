@@ -27,6 +27,8 @@ impl Plugin for GamePlugin {
             (
                 despawn_screen::<GameScreenMarker>,
                 CameraSystems::reset_zoom,
+                SoundSystems::toggle_background_sounds,
+
             ),
         )
         .add_systems(
@@ -36,9 +38,10 @@ impl Plugin for GamePlugin {
                 ArenaSystems::spawn_arena,
                 ArenaSystems::set_enemy_spawn_locations,
                 LevelSystems::spawn_levels,
-                SoundSystems::play_zombie_tense_sounds,
                 CameraSystems::zoom_camera,
                 ShootingSystems::spawn_guns,
+                SoundSystems::spawn_zombie_tense_sounds,
+                SoundSystems::spawn_background_music,
             ),
         )
         .add_event::<ShootRequestEvent>()

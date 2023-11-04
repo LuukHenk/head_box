@@ -1,7 +1,16 @@
 
 use bevy::prelude::*;
 
-use crate::components::asset_components::{BulletTextureHandle, PistolSoundHandle, PlayerTextureHandles, ShotgunSoundHandle, UziSoundHandle, ZombieTenseSoundHandle, ZombieTextureHandle};
+use crate::components::asset_components::{
+    BackgroundMusicHandle,
+    BulletTextureHandle,
+    PistolSoundHandle,
+    PlayerTextureHandles,
+    ShotgunSoundHandle,
+    UziSoundHandle,
+    ZombieTenseSoundHandle,
+    ZombieTextureHandle
+};
 
 pub struct AssetSystems;
 
@@ -18,9 +27,13 @@ impl AssetSystems {
             asset_server.load("textures/zombie/zombie_front.png"),
         ));
         commands.spawn(BulletTextureHandle(asset_server.load("textures/bullet.png")));
+
         commands.spawn(PistolSoundHandle(asset_server.load("sounds/pistol.ogg")));
         commands.spawn(UziSoundHandle(asset_server.load("sounds/uzi.ogg")));
         commands.spawn(ShotgunSoundHandle(asset_server.load("sounds/shotgun.ogg")));
+
         commands.spawn(ZombieTenseSoundHandle(asset_server.load("sounds/zombie_tense.ogg")));
+        commands.spawn(BackgroundMusicHandle(asset_server.load("sounds/background_music.ogg")));
+
     }
 }
