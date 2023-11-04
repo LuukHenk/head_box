@@ -20,6 +20,7 @@ impl Plugin for HeadBoxPlugin {
             .add_systems(Startup, (
                 CameraSystems::setup_camera,
                 AssetSystems::setup_assets,
+                AssetSystems::setup_player_assets,
             ))
             .add_plugins((
                 GamePlugin,

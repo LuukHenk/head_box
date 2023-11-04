@@ -1,12 +1,29 @@
 use bevy::prelude::*;
 
+
 #[derive(Component)]
 pub struct PlayerTextureHandles {
-    pub front: Handle<Image>,
-    pub side: Handle<Image>,
-    pub back: Handle<Image>,
-    pub side_flipped: Handle<Image>,
+    pub front: Vec<Handle<Image>>,
+    pub right: Vec<Handle<Image>>,
+    pub back: Vec<Handle<Image>>,
 }
+
+#[derive(Component)]
+pub enum CurrentAnimationAction {
+    WalkingLeft,
+    WalkingRight,
+    WalkingDown,
+    WalkingUp,
+    StandingLeft,
+    StandingRight,
+    StandingDown,
+    StandingUp,
+    // Hurting,
+}
+
+#[derive(Component)]
+pub struct CurrentAnimationFrame(pub usize);
+
 
 #[derive(Component)]
 pub struct ZombieTextureHandle(pub Handle<Image>);

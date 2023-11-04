@@ -9,7 +9,7 @@ use crate::utils::physics_constants::{
 
 use crate::events::shooting_events::{ShootRequestEvent, WeaponSelectionEvent};
 
-use crate::components::asset_components::PlayerTextureHandles;
+use crate::components::asset_components::{CurrentAnimationAction, CurrentAnimationFrame, PlayerTextureHandles};
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::generic_components::Health;
 use crate::components::player_components::{
@@ -17,6 +17,7 @@ use crate::components::player_components::{
 };
 use crate::components::shooting_components::{GunType, ShootingCoolDownTimer};
 use crate::components::physics_components::WalkingVelocity;
+use crate::utils::asset_constants::TOTAL_ANIMATION_FRAMES;
 
 
 const INITIAL_PLAYER_HEALTH: f32 = 300.;
@@ -24,33 +25,48 @@ const PLAYER_SIZE: f32 = 7.5;
 
 #[derive(Bundle)]
 struct PlayerBundle {
+    // Markers
     player_marker: PlayerMarker,
     game_screen_marker: GameScreenMarker,
-    health: Health,
-    shooting_cooldown_timer: ShootingCoolDownTimer,
-    transform: Transform,
-    global_transform: GlobalTransform,
+
+    // Physics
     rotation_degrees: RotationDegrees,
     walking_velocity: WalkingVelocity,
     rigid_body: RigidBody,
     collider: Collider,
     gravity: GravityScale,
     velocity: Velocity,
-    texture: Handle<Image>,
-    sprite: Sprite,
-    visibility: Visibility,
-    computed_visibility: ComputedVisibility,
     continuous_collision_detection: Ccd,
     sleeping: Sleeping,
     collision_groups: CollisionGroups,
     active_events: ActiveEvents,
     locked_axis: LockedAxes,
+    transform: Transform,
+    global_transform: GlobalTransform,
+
+    // Visibility
+    current_animation_action: CurrentAnimationAction,
+    current_animation_frame: CurrentAnimationFrame,
+    texture: Handle<Image>,
+    sprite: Sprite,
+    visibility: Visibility,
+    computed_visibility: ComputedVisibility,
+
+    // Other
+    health: Health,
+    shooting_cooldown_timer: ShootingCoolDownTimer,
 }
 
 pub struct PlayerSystems;
 
 impl PlayerSystems {
-    pub fn spawn_player(mut commands: Commands, player_texture_query: Query<&PlayerTextureHandles>) {
+    pub fn spawn_player(
+        mut commands: Commands,
+        player_texture_query: Query<&PlayerTextureHandles>,
+    ) {
+        let player_texture = player_texture_query.single().front[0].clone();
+
+
         let player = PlayerBundle {
             player_marker: PlayerMarker,
             game_screen_marker: GameScreenMarker,
@@ -68,10 +84,12 @@ impl PlayerSystems {
             global_transform: GlobalTransform::default(),
             walking_velocity: WalkingVelocity(300.),
             rigid_body: RigidBody::Dynamic,
-            collider: Collider::cuboid(PLAYER_SIZE, PLAYER_SIZE),
+            collider: Collider::cuboid(5., 6.),
             gravity: DEFAULT_GRAVITY,
             velocity: DEFAULT_VELOCITY,
-            texture: player_texture_query.single().front.clone(),
+            current_animation_action: CurrentAnimationAction::StandingDown,
+            current_animation_frame: CurrentAnimationFrame(0),
+            texture: player_texture,
             sprite: Sprite::default(),
             visibility: Default::default(),
             computed_visibility: Default::default(),
@@ -150,20 +168,34 @@ impl PlayerSystems {
         }
     }
     pub fn change_sprite(
-        mut player_query: Query<(&RotationDegrees, &mut Handle<Image>), With<PlayerMarker>>,
+        mut player_query: Query<(
+            &RotationDegrees,
+            &Velocity,
+            &mut CurrentAnimationFrame,
+            &mut Sprite,
+            &mut Handle<Image>,
+        ), With<PlayerMarker>>,
         player_sprites_query: Query<&PlayerTextureHandles>,
     ) {
         let player_sprites = player_sprites_query.single();
-        for (rotation_degrees, mut player_texture) in player_query.iter_mut() {
-            if rotation_degrees.0 > 0. && rotation_degrees.0 < 180. {
-                *player_texture = player_sprites.side_flipped.clone();
-            } else if rotation_degrees.0 > 180. {
-                *player_texture = player_sprites.side.clone();
-            } else if rotation_degrees.0 == 180. {
-                *player_texture = player_sprites.front.clone();
-            } else if rotation_degrees.0 == 0. {
-                *player_texture = player_sprites.back.clone();
-            }
+        let (rotation_degrees, velocity, mut current_animation_frame, mut sprite, mut player_texture) = player_query.single_mut();
+
+        let mut texture_set = player_sprites.back.clone();
+        sprite.flip_x = false;
+        if rotation_degrees.0 > 0. && rotation_degrees.0 < 180. {
+            sprite.flip_x = true;
+            texture_set = player_sprites.right.clone();
+        } else if rotation_degrees.0 > 180. {
+            texture_set = player_sprites.right.clone();
+        } else if rotation_degrees.0 == 180. {
+            texture_set = player_sprites.front.clone();
+        };
+
+        if velocity.linvel.x == 0. && velocity.linvel.y == 0. || current_animation_frame.0 == TOTAL_ANIMATION_FRAMES {
+            current_animation_frame.0 = 0;
+        } else  {
+            current_animation_frame.0 += 1;
         }
+        *player_texture = texture_set[current_animation_frame.0].clone();
     }
 }
