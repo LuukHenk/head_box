@@ -18,6 +18,9 @@
 
 
 
+
+
+
 # User stories for more and better enemies (v0.0.2?)
 
 ### Add demon
@@ -36,6 +39,10 @@
 
 ### Styling
 - The main menu needs some styling
+
+
+
+
 
 
 
@@ -67,6 +74,9 @@
 
 
 
+
+
+
 # User stories for the map (v0.1.0?)
 
 ### Add collision to the objects on the map
@@ -78,6 +88,10 @@
 
 ### Enemy pathfinding
 - When there is more collisions on the map, the enemies will get stuck. We need some way to prevent this
+
+
+
+
 
 
 
