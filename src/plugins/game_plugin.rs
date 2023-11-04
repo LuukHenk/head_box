@@ -23,15 +23,6 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
-            OnExit(ScreenState::Game),
-            (
-                despawn_screen::<GameScreenMarker>,
-                CameraSystems::reset_zoom,
-                SoundSystems::toggle_background_sounds,
-
-            ),
-        )
-        .add_systems(
             OnEnter(ScreenState::Game),
             (
                 PlayerSystems::spawn_player,
@@ -41,7 +32,16 @@ impl Plugin for GamePlugin {
                 CameraSystems::zoom_camera,
                 ShootingSystems::spawn_guns,
                 SoundSystems::spawn_zombie_tense_sounds,
-                SoundSystems::spawn_background_music,
+                SoundSystems::spawn_in_game_background_sounds,
+            ),
+        )
+        .add_systems(
+            OnExit(ScreenState::Game),
+            (
+                despawn_screen::<GameScreenMarker>,
+                CameraSystems::reset_zoom,
+                SoundSystems::toggle_in_game_background_sounds,
+
             ),
         )
         .add_event::<ShootRequestEvent>()

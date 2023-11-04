@@ -1,9 +1,9 @@
 use bevy::audio::Volume;
 use bevy::prelude::*;
-use crate::components::asset_components::{BackgroundMusicHandle, ZombieTenseSoundHandle};
+use crate::components::asset_components::{InGameMusicHandle, MenuMusicHandle, ZombieTenseSoundHandle};
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::shooting_components::ActiveGun;
-use crate::components::sound_components::{BackgroundMusic, BackgroundSound, ZombieTenseSound};
+use crate::components::sound_components::{BackgroundMusic, InGameBackgroundSound, MenuBackgroundMusic, ZombieTenseSound};
 use crate::events::shooting_events::BulletSpawnEvent;
 
 
@@ -27,7 +27,7 @@ impl SoundSystems {
             },
                 ZombieTenseSound,
                 GameScreenMarker,
-                BackgroundSound,
+                InGameBackgroundSound,
             )
         );
     }
@@ -54,7 +54,28 @@ impl SoundSystems {
     //     sink.set_volume(volume_level);
     // }
 
-    pub fn spawn_background_music(mut commands: Commands, sound_query: Query<&BackgroundMusicHandle>) {
+    pub fn spawn_menu_music(mut commands: Commands, sound_query: Query<&MenuMusicHandle>) {
+        let mut playback_settings = PlaybackSettings::LOOP;
+        playback_settings = playback_settings.with_volume(Volume::new_relative(0.5));
+        commands.spawn(
+            (
+                AudioBundle {
+                    source: sound_query.single().0.clone(),
+                    settings: playback_settings,
+                },
+                BackgroundMusic,
+                GameScreenMarker,
+                MenuBackgroundMusic,
+            )
+        );
+    }
+    pub fn toggle_menu_music(music_controller: Query<&AudioSink, With<MenuBackgroundMusic>>) {
+        for sink in music_controller.iter() {
+            sink.toggle();
+        }
+    }
+
+    pub fn spawn_in_game_background_sounds(mut commands: Commands, sound_query: Query<&InGameMusicHandle>) {
         let mut playback_settings = PlaybackSettings::LOOP;
         playback_settings = playback_settings.with_volume(Volume::new_relative(0.3));
         commands.spawn(
@@ -65,12 +86,12 @@ impl SoundSystems {
                 },
                 BackgroundMusic,
                 GameScreenMarker,
-                BackgroundSound,
+                InGameBackgroundSound,
             )
         );
     }
 
-    pub fn toggle_background_sounds(music_controller: Query<&AudioSink, With<BackgroundSound>>) {
+    pub fn toggle_in_game_background_sounds(music_controller: Query<&AudioSink, With<InGameBackgroundSound>>) {
         for sink in music_controller.iter() {
             sink.toggle();
         }

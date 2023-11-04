@@ -27,4 +27,7 @@ pub struct ShotgunSoundHandle(pub Handle<AudioSource>);
 pub struct ZombieTenseSoundHandle(pub Handle<AudioSource>);
 
 #[derive(Component)]
-pub struct BackgroundMusicHandle(pub Handle<AudioSource>);
+pub struct InGameMusicHandle(pub Handle<AudioSource>);
+
+#[derive(Component)]
+pub struct MenuMusicHandle(pub Handle<AudioSource>);

@@ -2,9 +2,12 @@ use bevy::prelude::Component;
 
 
 #[derive(Component)]
-pub struct BackgroundSound;
+pub struct InGameBackgroundSound;
 #[derive(Component)]
 pub struct ZombieTenseSound;
 
 #[derive(Component)]
 pub struct BackgroundMusic;
+
+#[derive(Component)]
+pub struct MenuBackgroundMusic;

@@ -4,6 +4,7 @@ use bevy::{app::AppExit, prelude::*};
 
 use crate::systems::generic_systems::despawn_screen;
 use crate::states::screen_state::ScreenState;
+use crate::systems::sound_systems::SoundSystems;
 
 const TEXT_COLOR: Color = Color::rgb(0.9, 0.9, 0.9);
 const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
@@ -15,10 +16,17 @@ pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(ScreenState::MainMenu), main_menu_setup)
+        app.add_systems(
+            OnEnter(ScreenState::MainMenu), (
+                main_menu_setup,
+                SoundSystems::spawn_menu_music,
+            )
+        )
             .add_systems(
-                OnExit(ScreenState::MainMenu),
-                despawn_screen::<OnMainMenuScreen>,
+                OnExit(ScreenState::MainMenu), (
+                    despawn_screen::<OnMainMenuScreen>,
+                    SoundSystems::toggle_menu_music,
+                )
             )
             .add_systems(
                 Update,
