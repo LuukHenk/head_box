@@ -9,19 +9,6 @@ pub struct PlayerTextureHandles {
 }
 
 #[derive(Component)]
-pub enum CurrentAnimationAction {
-    WalkingLeft,
-    WalkingRight,
-    WalkingDown,
-    WalkingUp,
-    StandingLeft,
-    StandingRight,
-    StandingDown,
-    StandingUp,
-    // Hurting,
-}
-
-#[derive(Component)]
 pub struct CurrentAnimationFrame(pub usize);
 
 

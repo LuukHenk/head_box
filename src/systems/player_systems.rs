@@ -9,7 +9,7 @@ use crate::utils::physics_constants::{
 
 use crate::events::shooting_events::{ShootRequestEvent, WeaponSelectionEvent};
 
-use crate::components::asset_components::{CurrentAnimationAction, CurrentAnimationFrame, PlayerTextureHandles};
+use crate::components::asset_components::{CurrentAnimationFrame, PlayerTextureHandles};
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::generic_components::Health;
 use crate::components::player_components::{
@@ -17,11 +17,10 @@ use crate::components::player_components::{
 };
 use crate::components::shooting_components::{GunType, ShootingCoolDownTimer};
 use crate::components::physics_components::WalkingVelocity;
-use crate::utils::asset_constants::TOTAL_ANIMATION_FRAMES;
+use crate::utils::asset_constants::{FRAMES_PER_TEXTURE, TOTAL_FRAMES};
 
 
 const INITIAL_PLAYER_HEALTH: f32 = 300.;
-const PLAYER_SIZE: f32 = 7.5;
 
 #[derive(Bundle)]
 struct PlayerBundle {
@@ -45,7 +44,6 @@ struct PlayerBundle {
     global_transform: GlobalTransform,
 
     // Visibility
-    current_animation_action: CurrentAnimationAction,
     current_animation_frame: CurrentAnimationFrame,
     texture: Handle<Image>,
     sprite: Sprite,
@@ -87,8 +85,7 @@ impl PlayerSystems {
             collider: Collider::cuboid(5., 6.),
             gravity: DEFAULT_GRAVITY,
             velocity: DEFAULT_VELOCITY,
-            current_animation_action: CurrentAnimationAction::StandingDown,
-            current_animation_frame: CurrentAnimationFrame(0),
+            current_animation_frame: CurrentAnimationFrame(1),
             texture: player_texture,
             sprite: Sprite::default(),
             visibility: Default::default(),
@@ -175,27 +172,39 @@ impl PlayerSystems {
             &mut Sprite,
             &mut Handle<Image>,
         ), With<PlayerMarker>>,
-        player_sprites_query: Query<&PlayerTextureHandles>,
+        player_textures_query: Query<&PlayerTextureHandles>,
     ) {
-        let player_sprites = player_sprites_query.single();
-        let (rotation_degrees, velocity, mut current_animation_frame, mut sprite, mut player_texture) = player_query.single_mut();
+        let player_textures = player_textures_query.single();
+        let (rotation_degrees, velocity, current_animation_frame, sprite, mut player_texture) = player_query.single_mut();
 
-        let mut texture_set = player_sprites.back.clone();
+        let texture_set = Self::select_texture_set(player_textures, sprite, rotation_degrees);
+        *player_texture = Self::select_texture(texture_set, current_animation_frame, velocity);
+    }
+
+    fn select_texture_set(texture_sets: &PlayerTextureHandles, mut sprite: Mut<Sprite>, rotation_degrees: &RotationDegrees) -> Vec<Handle<Image>> {
+        let mut texture_set = texture_sets.back.clone();
         sprite.flip_x = false;
         if rotation_degrees.0 > 0. && rotation_degrees.0 < 180. {
             sprite.flip_x = true;
-            texture_set = player_sprites.right.clone();
+            texture_set = texture_sets.right.clone();
         } else if rotation_degrees.0 > 180. {
-            texture_set = player_sprites.right.clone();
+            texture_set = texture_sets.right.clone();
         } else if rotation_degrees.0 == 180. {
-            texture_set = player_sprites.front.clone();
+            texture_set = texture_sets.front.clone();
         };
 
-        if velocity.linvel.x == 0. && velocity.linvel.y == 0. || current_animation_frame.0 == TOTAL_ANIMATION_FRAMES {
-            current_animation_frame.0 = 0;
+        texture_set
+    }
+
+    fn select_texture(texture_set: Vec<Handle<Image>>, mut current_animation_frame: Mut<CurrentAnimationFrame>, velocity: &Velocity) -> Handle<Image> {
+        if velocity.linvel.x == 0. && velocity.linvel.y == 0. || current_animation_frame.0 >= TOTAL_FRAMES {
+            current_animation_frame.0 = 1;
         } else  {
             current_animation_frame.0 += 1;
         }
-        *player_texture = texture_set[current_animation_frame.0].clone();
+
+        let current_texture_index = (current_animation_frame.0 -1) / FRAMES_PER_TEXTURE;
+        texture_set[current_texture_index].clone()
+
     }
 }
