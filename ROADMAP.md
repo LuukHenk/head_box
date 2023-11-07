@@ -14,11 +14,6 @@
 - Make the shotgun bullets shorter
 - Add a different bullet texture
 
-### make a physics system
-- Add all velocity related functions 
-- Add all rotation related functions
-- Add all collision related functions
-
 
 # User stories for more and better enemies (v0.0.2?)
 
@@ -32,7 +27,15 @@
 
 ### Add more life to the enemies and player
 - Blood spawns when damaged
-- Zombies stay on the ground when dying (should despawn after a minute or so)
+- Zombies stay on the ground when dying (should de-spawn after a minute or so)
+
+### Attack
+- Let enemies hold a weapon, instead of damaging you by touching you
+
+
+
+
+
 
 # User stories for main menu
 
