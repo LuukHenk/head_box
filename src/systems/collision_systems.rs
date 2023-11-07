@@ -21,6 +21,7 @@ impl CollisionSystems {
     }
 
     // TODO: could we combine these two functions into a single one?
+    // TODO: or maybe add an attack for the enemies, instead of using collision
     pub fn handle_player_enemy_collision(
         rapier_context: Res<RapierContext>,
         mut player_query: Query<(Entity, &mut Health), With<PlayerMarker>>,

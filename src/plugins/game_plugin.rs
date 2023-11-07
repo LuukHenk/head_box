@@ -17,6 +17,7 @@ use crate::systems::enemy_systems::EnemySystems;
 use crate::systems::level_systems::LevelSystems;
 use crate::systems::player_systems::PlayerSystems;
 use crate::systems::generic_systems::despawn_screen;
+use crate::systems::physics_systems::PhysicsSystems;
 use crate::systems::shooting_systems::ShootingSystems;
 use crate::systems::sound_systems::SoundSystems;
 use crate::systems::sprite_systems::SpriteSystems;
@@ -60,7 +61,7 @@ impl Plugin for GamePlugin {
                     .after(LevelSystems::set_current_level),
 
                 PlayerSystems::set_velocity,
-                PlayerSystems::set_rotation_degrees.after(PlayerSystems::set_velocity),
+                PhysicsSystems::set_rotation_degrees.after(PlayerSystems::set_velocity),
                 EnemySystems::set_velocity.after(PlayerSystems::set_velocity),
 
                 EnemySystems::spawn_zombies.after(LevelSystems::spawn_enemies_for_current_level),

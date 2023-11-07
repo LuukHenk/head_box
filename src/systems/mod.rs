@@ -10,4 +10,5 @@ pub mod generic_systems;
 pub mod sound_systems;
 pub mod shooting_systems;
 pub mod sprite_systems;
+pub mod physics_systems;
 

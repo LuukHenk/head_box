@@ -7,9 +7,10 @@ use crate::events::shooting_events::BulletSpawnEvent;
 
 use crate::components::bullet_components::{BulletMarker, Damage, LifeTime};
 use crate::components::generic_components::GameScreenMarker;
-use crate::components::player_components::{PlayerMarker, RotationDegrees};
+use crate::components::player_components::PlayerMarker;
 use crate::components::asset_components::BulletTextureHandle;
 use crate::components::shooting_components::{ActiveGun, DamagePerHit};
+use crate::components::physics_components::RotationDegrees;
 
 use crate::utils::generic_constants::{SCALING, Z_VALUE};
 use crate::utils::physics_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY};

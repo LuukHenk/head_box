@@ -3,7 +3,7 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::Velocity;
 use crate::components::asset_components::{CurrentAnimationFrame, PlayerTextureHandles};
-use crate::components::player_components::{PlayerMarker, RotationDegrees};
+use crate::components::physics_components::RotationDegrees;
 
 pub const TOTAL_TEXTURES: usize = 3;
 pub const FRAMES_PER_TEXTURE: usize = 8;
@@ -19,7 +19,7 @@ impl SpriteSystems {
             &mut CurrentAnimationFrame,
             &mut Sprite,
             &mut Handle<Image>,
-        ), With<PlayerMarker>>, // TODO: Make this not player specific
+        )>,
         player_textures_query: Query<&PlayerTextureHandles>, // TODO: Make this not player specific
     ) {
         let player_textures = player_textures_query.single();

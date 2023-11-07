@@ -14,11 +14,10 @@
 - Make the shotgun bullets shorter
 - Add a different bullet texture
 
-
-
-
-
-
+### make a physics system
+- Add all velocity related functions 
+- Add all rotation related functions
+- Add all collision related functions
 
 
 # User stories for more and better enemies (v0.0.2?)
