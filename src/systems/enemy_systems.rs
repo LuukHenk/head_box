@@ -60,7 +60,6 @@ impl EnemySystems {
         enemy_spawn_location_query: Query<&EnemySpawnLocation>,
         zombie_texture_handles_query: Query<&CharacterTextureHandles, With<ZombieTextureMarker>>,
     ) {
-        println!("Zombie spawn");
         let zombie_texture_handles = zombie_texture_handles_query.single();
 
         let mut enemy_spawn_locations: Vec<Vec3> = Vec::new();

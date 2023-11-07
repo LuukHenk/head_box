@@ -1,9 +1,18 @@
 
 use bevy::prelude::*;
 
-use crate::components::asset_components::{InGameMusicHandle, BulletTextureHandle, PistolSoundHandle, CharacterTextureHandles, ShotgunSoundHandle, UziSoundHandle, ZombieTenseSoundHandle, ZombieTextureHandle, MenuMusicHandle, PlayerTextureMarker, ZombieTextureMarker};
-use crate::components::enemy_components::ZombieMarker;
-use crate::components::player_components::PlayerMarker;
+use crate::components::asset_components::{
+    InGameMusicHandle,
+    BulletTextureHandle,
+    PistolSoundHandle,
+    CharacterTextureHandles,
+    ShotgunSoundHandle,
+    UziSoundHandle,
+    ZombieTenseSoundHandle,
+    MenuMusicHandle,
+    PlayerTextureMarker,
+    ZombieTextureMarker
+};
 
 pub struct AssetSystems;
 
