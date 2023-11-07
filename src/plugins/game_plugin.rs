@@ -1,9 +1,12 @@
 use bevy::prelude::*;
 
 
-use crate::events::enemy_spawn_events::SpawnZombieEvent;
+
+use crate::states::screen_state::ScreenState;
 
 use crate::components::generic_components::GameScreenMarker;
+
+use crate::events::enemy_spawn_events::SpawnZombieEvent;
 use crate::events::shooting_events::{BulletSpawnEvent, ShootRequestEvent, WeaponSelectionEvent};
 
 use crate::systems::arena_systems::ArenaSystems;
@@ -15,9 +18,8 @@ use crate::systems::level_systems::LevelSystems;
 use crate::systems::player_systems::PlayerSystems;
 use crate::systems::generic_systems::despawn_screen;
 use crate::systems::shooting_systems::ShootingSystems;
-
-use crate::states::screen_state::ScreenState;
 use crate::systems::sound_systems::SoundSystems;
+use crate::systems::sprite_systems::SpriteSystems;
 
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
@@ -75,7 +77,7 @@ impl Plugin for GamePlugin {
                 SoundSystems::play_shooting_sound.after(ShootingSystems::shoot),
                 BulletSystems::despawn_bullets,
 
-                PlayerSystems::change_sprite.after(PlayerSystems::set_velocity),
+                SpriteSystems::change_sprite.after(PlayerSystems::set_velocity),
 
                 CollisionSystems::handle_player_enemy_collision,
                 CollisionSystems::handle_bullet_collision,

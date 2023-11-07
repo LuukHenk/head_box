@@ -9,4 +9,5 @@ pub mod asset_systems;
 pub mod generic_systems;
 pub mod sound_systems;
 pub mod shooting_systems;
+pub mod sprite_systems;
 
