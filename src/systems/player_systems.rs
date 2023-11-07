@@ -9,7 +9,7 @@ use crate::utils::physics_constants::{
 
 use crate::events::shooting_events::{ShootRequestEvent, WeaponSelectionEvent};
 
-use crate::components::asset_components::{CurrentAnimationFrame, PlayerTextureHandles};
+use crate::components::asset_components::{CurrentAnimationFrame, CharacterTextureHandles};
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::generic_components::Health;
 use crate::components::player_components::PlayerMarker;
@@ -43,6 +43,7 @@ struct PlayerBundle {
 
     // Visibility
     current_animation_frame: CurrentAnimationFrame,
+    character_texture_handles: CharacterTextureHandles,
     texture: Handle<Image>,
     sprite: Sprite,
     visibility: Visibility,
@@ -58,41 +59,52 @@ pub struct PlayerSystems;
 impl PlayerSystems {
     pub fn spawn_player(
         mut commands: Commands,
-        player_texture_query: Query<&PlayerTextureHandles>,
+        player_texture_handles_query: Query<&CharacterTextureHandles, With<PlayerMarker>>,
     ) {
-        let player_texture = player_texture_query.single().front[0].clone();
+        let player_texture_handles = player_texture_handles_query.single();
+        let current_texture = player_texture_handles.front[0].clone();
 
 
         let player = PlayerBundle {
+            // Markers
             player_marker: PlayerMarker,
             game_screen_marker: GameScreenMarker,
-            health: Health(INITIAL_PLAYER_HEALTH),
-            shooting_cooldown_timer: ShootingCoolDownTimer(Timer::new(
-                Duration::from_secs_f32(0.1),
-                TimerMode::Once,
-            )),
+
+            // Physics
             rotation_degrees: RotationDegrees(180_f32),
+            walking_velocity: WalkingVelocity(300.),
+            rigid_body: RigidBody::Dynamic,
+            collider: Collider::cuboid(5., 6.),
+            gravity: DEFAULT_GRAVITY,
+            velocity: DEFAULT_VELOCITY,
+            continuous_collision_detection: Ccd::enabled(),
+            sleeping: Sleeping::disabled(),
+            collision_groups: PLAYER_COLLISION_GROUPS,
+            active_events: DEFAULT_ACTIVE_EVENTS,
+            locked_axis: LockedAxes::ROTATION_LOCKED,
             transform: Transform {
                 translation: Vec3::new(-20_f32, 730_f32, Z_VALUE),
                 scale: SCALING,
                 ..default()
             },
             global_transform: GlobalTransform::default(),
-            walking_velocity: WalkingVelocity(300.),
-            rigid_body: RigidBody::Dynamic,
-            collider: Collider::cuboid(5., 6.),
-            gravity: DEFAULT_GRAVITY,
-            velocity: DEFAULT_VELOCITY,
+
+            // Visibility
             current_animation_frame: CurrentAnimationFrame(1),
-            texture: player_texture,
+            character_texture_handles: player_texture_handles.clone(),
+            texture: current_texture,
             sprite: Sprite::default(),
             visibility: Default::default(),
             computed_visibility: Default::default(),
-            continuous_collision_detection: Ccd::enabled(),
-            sleeping: Sleeping::disabled(),
-            collision_groups: PLAYER_COLLISION_GROUPS,
-            active_events: DEFAULT_ACTIVE_EVENTS,
-            locked_axis: LockedAxes::ROTATION_LOCKED,
+
+
+            // Others
+            health: Health(INITIAL_PLAYER_HEALTH),
+            shooting_cooldown_timer: ShootingCoolDownTimer(Timer::new(
+                Duration::from_secs_f32(0.1),
+                TimerMode::Once,
+            )),
+
         };
         commands.spawn(player);
     }

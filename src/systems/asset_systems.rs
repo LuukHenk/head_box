@@ -1,7 +1,8 @@
 
 use bevy::prelude::*;
 
-use crate::components::asset_components::{InGameMusicHandle, BulletTextureHandle, PistolSoundHandle, PlayerTextureHandles, ShotgunSoundHandle, UziSoundHandle, ZombieTenseSoundHandle, ZombieTextureHandle, MenuMusicHandle};
+use crate::components::asset_components::{InGameMusicHandle, BulletTextureHandle, PistolSoundHandle, CharacterTextureHandles, ShotgunSoundHandle, UziSoundHandle, ZombieTenseSoundHandle, ZombieTextureHandle, MenuMusicHandle};
+use crate::components::player_components::PlayerMarker;
 
 pub struct AssetSystems;
 
@@ -24,13 +25,14 @@ impl AssetSystems {
             asset_server.load("textures/player/player_back_1.png"),
             asset_server.load("textures/player/player_back_2.png"),
         ];
-        let player_textures = PlayerTextureHandles {
+        let player_textures = CharacterTextureHandles {
             front: player_front_textures,
             right: player_right_textures,
             back: player_back_textures,
         };
-        commands.spawn(player_textures);
+        commands.spawn((player_textures, PlayerMarker));
     }
+
     pub fn setup_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
         commands.spawn(ZombieTextureHandle(
             asset_server.load("textures/zombie/zombie_front.png"),

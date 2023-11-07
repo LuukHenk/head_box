@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 
 
-#[derive(Component)]
-pub struct PlayerTextureHandles {
+#[derive(Component, Clone)]
+pub struct CharacterTextureHandles {
     pub front: Vec<Handle<Image>>,
     pub right: Vec<Handle<Image>>,
     pub back: Vec<Handle<Image>>,

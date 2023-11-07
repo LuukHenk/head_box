@@ -78,7 +78,7 @@ impl Plugin for GamePlugin {
                 SoundSystems::play_shooting_sound.after(ShootingSystems::shoot),
                 BulletSystems::despawn_bullets,
 
-                SpriteSystems::change_sprite.after(PlayerSystems::set_velocity),
+                SpriteSystems::change_character_sprite.after(PlayerSystems::set_velocity),
 
                 CollisionSystems::handle_player_enemy_collision,
                 CollisionSystems::handle_bullet_collision,
