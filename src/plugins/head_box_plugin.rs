@@ -20,6 +20,7 @@ impl Plugin for HeadBoxPlugin {
                 CameraSystems::setup_camera,
                 AssetSystems::setup_assets,
                 AssetSystems::setup_player_assets,
+                AssetSystems::setup_zombie_assets,
             ))
             .add_plugins((
                 GamePlugin,

@@ -35,3 +35,9 @@ pub struct InGameMusicHandle(pub Handle<AudioSource>);
 
 #[derive(Component)]
 pub struct MenuMusicHandle(pub Handle<AudioSource>);
+
+#[derive(Component)]
+pub struct PlayerTextureMarker;
+
+#[derive(Component)]
+pub struct ZombieTextureMarker;

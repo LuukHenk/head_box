@@ -1,7 +1,8 @@
 
 use bevy::prelude::*;
 
-use crate::components::asset_components::{InGameMusicHandle, BulletTextureHandle, PistolSoundHandle, CharacterTextureHandles, ShotgunSoundHandle, UziSoundHandle, ZombieTenseSoundHandle, ZombieTextureHandle, MenuMusicHandle};
+use crate::components::asset_components::{InGameMusicHandle, BulletTextureHandle, PistolSoundHandle, CharacterTextureHandles, ShotgunSoundHandle, UziSoundHandle, ZombieTenseSoundHandle, ZombieTextureHandle, MenuMusicHandle, PlayerTextureMarker, ZombieTextureMarker};
+use crate::components::enemy_components::ZombieMarker;
 use crate::components::player_components::PlayerMarker;
 
 pub struct AssetSystems;
@@ -30,13 +31,33 @@ impl AssetSystems {
             right: player_right_textures,
             back: player_back_textures,
         };
-        commands.spawn((player_textures, PlayerMarker));
+        commands.spawn((player_textures, PlayerTextureMarker));
     }
 
+    pub fn setup_zombie_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
+        let zombie_front_textures: Vec<Handle<Image>> = vec![
+            asset_server.load("textures/zombie/zombie_front_1.png"),
+            asset_server.load("textures/zombie/zombie_front_0.png"),
+            asset_server.load("textures/zombie/zombie_front_2.png"),
+        ];
+        let zombie_right_textures: Vec<Handle<Image>> = vec![
+            asset_server.load("textures/zombie/zombie_right_0.png"),
+            asset_server.load("textures/zombie/zombie_right_1.png"),
+            asset_server.load("textures/zombie/zombie_right_2.png"),
+        ];
+        let zombie_back_textures: Vec<Handle<Image>> = vec![
+            asset_server.load("textures/zombie/zombie_back_0.png"),
+            asset_server.load("textures/zombie/zombie_back_1.png"),
+            asset_server.load("textures/zombie/zombie_back_2.png"),
+        ];
+        let zombie_textures = CharacterTextureHandles {
+            front: zombie_front_textures,
+            right: zombie_right_textures,
+            back: zombie_back_textures,
+        };
+        commands.spawn((zombie_textures, ZombieTextureMarker));
+    }
     pub fn setup_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
-        commands.spawn(ZombieTextureHandle(
-            asset_server.load("textures/zombie/zombie_front.png"),
-        ));
         commands.spawn(BulletTextureHandle(asset_server.load("textures/bullet.png")));
 
         commands.spawn(PistolSoundHandle(asset_server.load("sounds/pistol.ogg")));

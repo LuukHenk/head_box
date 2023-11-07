@@ -9,7 +9,7 @@ use crate::components::enemy_components::{EnemyMarker, ZombieMarker};
 use crate::components::level_components::{ActiveLevelMarker, KilledEnemies};
 use crate::components::player_components::PlayerMarker;
 use crate::components::physics_components::{RotationDegrees, WalkingVelocity};
-use crate::components::asset_components::ZombieTextureHandle;
+use crate::components::asset_components::{CharacterTextureHandles, CurrentAnimationFrame, ZombieTextureMarker};
 use crate::components::bullet_components::Damage;
 use crate::components::generic_components::{GameScreenMarker, Health};
 
@@ -39,6 +39,8 @@ pub struct EnemyBundle {
     global_transform: GlobalTransform,
 
     // Visibility
+    current_animation_frame: CurrentAnimationFrame,
+    character_texture_handles: CharacterTextureHandles,
     texture: Handle<Image>,
     sprite: Sprite,
     visibility: Visibility,
@@ -56,9 +58,10 @@ impl EnemySystems {
         mut spawn_zombie_event: EventReader<SpawnZombieEvent>,
         mut commands: Commands,
         enemy_spawn_location_query: Query<&EnemySpawnLocation>,
-        zombie_texture_query: Query<&ZombieTextureHandle>,
+        zombie_texture_handles_query: Query<&CharacterTextureHandles, With<ZombieTextureMarker>>,
     ) {
-        let texture = zombie_texture_query.single();
+        println!("Zombie spawn");
+        let zombie_texture_handles = zombie_texture_handles_query.single();
 
         let mut enemy_spawn_locations: Vec<Vec3> = Vec::new();
         for enemy_spawn_location in enemy_spawn_location_query.iter() {
@@ -68,7 +71,7 @@ impl EnemySystems {
         for _ in spawn_zombie_event.iter() {
             let random_position = rand::thread_rng().gen_range(0..enemy_spawn_locations.len());
             let spawn_position = enemy_spawn_locations[random_position];
-            let zombie = Self::new_enemy(spawn_position.x, spawn_position.y, texture.0.clone());
+            let zombie = Self::new_enemy(spawn_position.x, spawn_position.y, zombie_texture_handles);
             commands.spawn((zombie, ZombieMarker));
         }
     }
@@ -128,7 +131,9 @@ impl EnemySystems {
         }
     }
 
-    fn new_enemy(x: f32, y: f32, texture: Handle<Image>) -> EnemyBundle {
+    fn new_enemy(x: f32, y: f32, enemy_texture_handles: &CharacterTextureHandles) -> EnemyBundle {
+        let current_texture = enemy_texture_handles.front[0].clone();
+
         EnemyBundle {
             // Markers
             game_screen_marker: GameScreenMarker,
@@ -155,7 +160,9 @@ impl EnemySystems {
 
 
             // Visibility
-            texture,
+            current_animation_frame: CurrentAnimationFrame(1),
+            character_texture_handles: enemy_texture_handles.clone(),
+            texture: current_texture,
             sprite: Sprite::default(),
             visibility: Default::default(),
             computed_visibility: Default::default(),

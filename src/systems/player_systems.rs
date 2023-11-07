@@ -9,7 +9,7 @@ use crate::utils::physics_constants::{
 
 use crate::events::shooting_events::{ShootRequestEvent, WeaponSelectionEvent};
 
-use crate::components::asset_components::{CurrentAnimationFrame, CharacterTextureHandles};
+use crate::components::asset_components::{CurrentAnimationFrame, CharacterTextureHandles, PlayerTextureMarker};
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::generic_components::Health;
 use crate::components::player_components::PlayerMarker;
@@ -59,7 +59,7 @@ pub struct PlayerSystems;
 impl PlayerSystems {
     pub fn spawn_player(
         mut commands: Commands,
-        player_texture_handles_query: Query<&CharacterTextureHandles, With<PlayerMarker>>,
+        player_texture_handles_query: Query<&CharacterTextureHandles, With<PlayerTextureMarker>>,
     ) {
         let player_texture_handles = player_texture_handles_query.single();
         let current_texture = player_texture_handles.front[0].clone();
