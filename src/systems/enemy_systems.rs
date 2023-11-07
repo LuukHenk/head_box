@@ -8,7 +8,7 @@ use crate::events::enemy_spawn_events::SpawnZombieEvent;
 use crate::components::enemy_components::{EnemyMarker, ZombieMarker};
 use crate::components::level_components::{ActiveLevelMarker, KilledEnemies};
 use crate::components::player_components::PlayerMarker;
-use crate::components::physics_components::WalkingVelocity;
+use crate::components::physics_components::{RotationDegrees, WalkingVelocity};
 use crate::components::asset_components::ZombieTextureHandle;
 use crate::components::bullet_components::Damage;
 use crate::components::generic_components::{GameScreenMarker, Health};
@@ -19,26 +19,34 @@ use crate::utils::physics_constants::{DEFAULT_COLLISION_GROUPS, DEFAULT_GRAVITY,
 
 #[derive(Bundle)]
 pub struct EnemyBundle {
-    enemy_marker: EnemyMarker,
+    // Markers
     game_screen_marker: GameScreenMarker,
-    health: Health,
-    damage: Damage,
-    rigid_body: RigidBody,
-    velocity: Velocity,
+    enemy_marker: EnemyMarker,
+
+    // Physics
+    rotation_degrees: RotationDegrees,
     walking_velocity: WalkingVelocity,
-    gravity: GravityScale,
+    rigid_body: RigidBody,
     collider: Collider,
+    gravity: GravityScale,
+    velocity: Velocity,
     continuous_collision_detection: Ccd,
     sleeping: Sleeping,
     collision_groups: CollisionGroups,
     active_events: ActiveEvents,
+    locked_axis: LockedAxes,
     transform: Transform,
     global_transform: GlobalTransform,
+
+    // Visibility
     texture: Handle<Image>,
     sprite: Sprite,
     visibility: Visibility,
     computed_visibility: ComputedVisibility,
-    locked_axis: LockedAxes,
+
+    // Other
+    health: Health,
+    damage: Damage,
 }
 
 pub struct EnemySystems;
@@ -122,30 +130,39 @@ impl EnemySystems {
 
     fn new_enemy(x: f32, y: f32, texture: Handle<Image>) -> EnemyBundle {
         EnemyBundle {
+            // Markers
             game_screen_marker: GameScreenMarker,
             enemy_marker: EnemyMarker,
-            health: Health(10.),
-            damage: Damage(1.),
-            rigid_body: RigidBody::Dynamic,
-            velocity: DEFAULT_VELOCITY,
+
+            // Physics
+            rotation_degrees: RotationDegrees(180.),
             walking_velocity: WalkingVelocity(100.),
-            gravity: DEFAULT_GRAVITY,
+            rigid_body: RigidBody::Dynamic,
             collider: Collider::cuboid(4., 8.),
+            gravity: DEFAULT_GRAVITY,
+            velocity: DEFAULT_VELOCITY,
             continuous_collision_detection: Ccd::enabled(),
             sleeping: Sleeping::disabled(),
             collision_groups: DEFAULT_COLLISION_GROUPS,
             active_events: ActiveEvents::COLLISION_EVENTS,
             locked_axis: LockedAxes::ROTATION_LOCKED,
-            texture,
             transform: Transform {
                 translation: Vec3::new(x, y, Z_VALUE),
                 scale: SCALING,
                 ..default()
             },
             global_transform: GlobalTransform::default(),
+
+
+            // Visibility
+            texture,
             sprite: Sprite::default(),
             visibility: Default::default(),
             computed_visibility: Default::default(),
+
+            // Others
+            health: Health(10.),
+            damage: Damage(1.),
         }
     }
 }
