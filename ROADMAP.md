@@ -8,11 +8,11 @@
 
 ### Add proper sprite movement
 - Hurt animation when a player or zombie is hurt
-- Walking animation when a player or zombie is walking
 
 ### Update weapons
 - Make the shotgun bullets shorter
-- Add a different bullet texture
+- Add a different bullet texture per weapon
+- Add a weapon for the zombie (instead of just touching you)
 
 
 # User stories for more and better enemies (v0.0.2?)
@@ -29,8 +29,6 @@
 - Blood spawns when damaged
 - Zombies stay on the ground when dying (should de-spawn after a minute or so)
 
-### Attack
-- Let enemies hold a weapon, instead of damaging you by touching you
 
 
 
