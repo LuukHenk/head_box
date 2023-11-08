@@ -1,6 +1,5 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
-use std::time::Duration;
 
 use crate::utils::generic_constants::{SCALING, Z_VALUE};
 use crate::utils::physics_constants::{
@@ -14,7 +13,7 @@ use crate::components::generic_components::GameScreenMarker;
 use crate::components::generic_components::Health;
 use crate::components::player_components::PlayerMarker;
 use crate::components::physics_components::RotationDegrees;
-use crate::components::shooting_components::{GunType, ShootingCoolDownTimer};
+use crate::components::shooting_components::GunType;
 use crate::components::physics_components::WalkingVelocity;
 
 
@@ -51,7 +50,6 @@ struct PlayerBundle {
 
     // Other
     health: Health,
-    shooting_cooldown_timer: ShootingCoolDownTimer,
 }
 
 pub struct PlayerSystems;
@@ -100,10 +98,6 @@ impl PlayerSystems {
 
             // Others
             health: Health(INITIAL_PLAYER_HEALTH),
-            shooting_cooldown_timer: ShootingCoolDownTimer(Timer::new(
-                Duration::from_secs_f32(0.1),
-                TimerMode::Once,
-            )),
 
         };
         commands.spawn(player);

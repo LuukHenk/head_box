@@ -21,24 +21,31 @@ const BULLET_WIDTH: f32 = 0.5;
 
 #[derive(Bundle)]
 struct BulletBundle {
+    // Markers
     bullet_marker: BulletMarker,
-    damage: Damage,
-    life_time: LifeTime,
     game_screen_marker: GameScreenMarker,
+
+    // Physics
     rigid_body: RigidBody,
-    velocity: Velocity,
-    gravity: GravityScale,
     collider: Collider,
+    gravity: GravityScale,
+    velocity: Velocity,
     continuous_collision_detection: Ccd,
     sleeping: Sleeping,
     collision_groups: CollisionGroups,
     active_events: ActiveEvents,
-    texture: Handle<Image>,
     transform: Transform,
     global_transform: GlobalTransform,
+
+    // Visibility
+    texture: Handle<Image>,
     sprite: Sprite,
     visibility: Visibility,
     computed_visibility: ComputedVisibility,
+
+    // Other
+    damage: Damage,
+    life_time: LifeTime,
 }
 
 pub struct BulletSystems;
