@@ -49,7 +49,7 @@ struct Weapon {
     view_visibility: ViewVisibility,
 }
 
-
+const BULLET_TO_WEAPON_OFFSET: f32 = 2.;
 pub struct WeaponSystems;
 
 impl WeaponSystems {
@@ -262,7 +262,7 @@ impl WeaponSystems {
             bullet_length,
         );
         Transform {
-            translation: Vec3::new(translation_x, translation_y, weapon_transform.translation.z - 0.1),
+            translation: Vec3::new(translation_x, translation_y + BULLET_TO_WEAPON_OFFSET, weapon_transform.translation.z - 0.1),
             rotation: bullet_rotation,
             scale: SCALING,
         }
