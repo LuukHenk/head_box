@@ -62,47 +62,19 @@ impl WeaponSystems {
     ) {
         let (player_entity_id, player_transform, player_rotation, player_collision_groups) = player_query.single();
         let pistol_texture_handles = pistol_texture_handles_query.single();
-        let current_texture = pistol_texture_handles.front[0].clone();
+
 
         let mut pistol_transform = player_transform.clone();
         pistol_transform.translation = Self::set_translation_relative_to_owner(player_transform.translation, player_rotation.0);
-        let pistol = Weapon {
-            // Marker components
-            game_screen_marker: GameScreenMarker,
-            weapon_marker: WeaponMarker,
 
-            // Weapon specific components
-            attack_cooldown_timer: AttackCoolDownTimer(Timer::new(
-                Duration::from_secs_f32(1.),
-                TimerMode::Once,
-            )),
-            damage: Damage(2.),
-            weapon_type: WeaponType::Pistol,
-            attacking_sound: pistol_sound.single().0.clone(),
-            owner: Owner(Option::Some(player_entity_id)),
-
-            // Bullet components
-            bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![0_f32]),
-            bullet_collision_groups: BulletCollisionGroups(*player_collision_groups),
-            bullet_texture: BulletTexture(bullet_texture_query.single().0.clone()),
-            bullet_length: BulletLength(100.),
-
-            // Physics
-            velocity: Velocity::default(),
-            rotation_degrees: RotationDegrees(180.),
-            transform: pistol_transform,
-            global_transform: GlobalTransform::default(),
-
-            // Visibility
-            current_animation_frame: CurrentAnimationFrame(1),
-            character_texture_handles: pistol_texture_handles.clone(),
-            texture: current_texture,
-            sprite: Sprite::default(),
-            visibility: Visibility::default(),
-            inherited_visibility: InheritedVisibility::default(),
-            view_visibility: ViewVisibility::default(),
-        };
-
+        let pistol = Self::new_pistol(
+            pistol_sound.single().0.clone(),
+            Owner(Option::Some(player_entity_id)),
+            BulletCollisionGroups(*player_collision_groups),
+            pistol_texture_handles.clone(),
+            BulletTexture(bullet_texture_query.single().0.clone()),
+            pistol_transform
+        );
         commands.spawn((pistol, ActiveWeapon));
 
     }
@@ -141,38 +113,7 @@ impl WeaponSystems {
             }
         }
     }
-    fn set_translation_relative_to_owner(
-        owner_translation: Vec3,
-        owner_rotation: f32,
-    ) -> Vec3 {
-        let translation: Vec3;
-        if owner_rotation > 0. && owner_rotation < 180. {
-            translation = Vec3::new(
-                owner_translation.x - 14_f32,
-                owner_translation.y - 2_f32,
-                owner_translation.z - 1_f32,
-            )
-        } else if owner_rotation > 180. {
-            translation = Vec3::new(
-                owner_translation.x - 3_f32,
-                owner_translation.y - 5_f32,
-                owner_translation.z + 1_f32,
-            )
-        } else if owner_rotation == 180. {
-            translation = Vec3::new(
-                owner_translation.x - 11_f32,
-                owner_translation.y - 5_f32,
-                owner_translation.z + 1_f32,
-            )
-        } else {
-            translation = Vec3::new(
-                owner_translation.x - 11_f32,
-                owner_translation.y - 2_f32,
-                owner_translation.z - 1_f32,
-            )
-        };
-        translation
-    }
+
 
     pub fn cooldown_weapons(
         mut query: Query<&mut AttackCoolDownTimer, With<WeaponMarker>>,
@@ -240,6 +181,85 @@ impl WeaponSystems {
                 }
             }
         }
+    }
+
+    fn new_pistol(
+        sound: Handle<AudioSource>,
+        owner: Owner,
+        bullet_collision_groups: BulletCollisionGroups,
+        pistol_texture_handles: CharacterTextureHandles,
+        bullet_texture: BulletTexture,
+        transform: Transform,
+    ) -> Weapon {
+        let current_texture = pistol_texture_handles.front[0].clone();
+        Weapon {
+            // Marker components
+            game_screen_marker: GameScreenMarker,
+            weapon_marker: WeaponMarker,
+
+            // Weapon specific components
+            attack_cooldown_timer: AttackCoolDownTimer(Timer::new(
+                Duration::from_secs_f32(1.),
+                TimerMode::Once,
+            )),
+            damage: Damage(2.),
+            weapon_type: WeaponType::Pistol,
+            attacking_sound: sound,
+            owner,
+
+            // Bullet components
+            bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![0_f32]),
+            bullet_collision_groups,
+            bullet_texture,
+            bullet_length: BulletLength(100.),
+
+            // Physics
+            velocity: Velocity::default(),
+            rotation_degrees: RotationDegrees(180.),
+            transform,
+            global_transform: GlobalTransform::default(),
+
+            // Visibility
+            current_animation_frame: CurrentAnimationFrame(1),
+            character_texture_handles: pistol_texture_handles,
+            texture: current_texture,
+            sprite: Sprite::default(),
+            visibility: Visibility::default(),
+            inherited_visibility: InheritedVisibility::default(),
+            view_visibility: ViewVisibility::default(),
+        }
+    }
+    fn set_translation_relative_to_owner(
+        owner_translation: Vec3,
+        owner_rotation: f32,
+    ) -> Vec3 {
+        let translation: Vec3;
+        if owner_rotation > 0. && owner_rotation < 180. {
+            translation = Vec3::new(
+                owner_translation.x - 14_f32,
+                owner_translation.y - 2_f32,
+                owner_translation.z - 1_f32,
+            )
+        } else if owner_rotation > 180. {
+            translation = Vec3::new(
+                owner_translation.x - 3_f32,
+                owner_translation.y - 5_f32,
+                owner_translation.z + 1_f32,
+            )
+        } else if owner_rotation == 180. {
+            translation = Vec3::new(
+                owner_translation.x - 11_f32,
+                owner_translation.y - 5_f32,
+                owner_translation.z + 1_f32,
+            )
+        } else {
+            translation = Vec3::new(
+                owner_translation.x - 11_f32,
+                owner_translation.y - 2_f32,
+                owner_translation.z - 1_f32,
+            )
+        };
+        translation
     }
 
     fn generate_bullet_transform(
