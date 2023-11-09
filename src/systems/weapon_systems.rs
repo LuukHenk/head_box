@@ -262,7 +262,7 @@ impl WeaponSystems {
             bullet_length,
         );
         Transform {
-            translation: Vec3::new(translation_x, translation_y, weapon_transform.translation.z - 1.),
+            translation: Vec3::new(translation_x, translation_y, weapon_transform.translation.z - 0.1),
             rotation: bullet_rotation,
             scale: SCALING,
         }
