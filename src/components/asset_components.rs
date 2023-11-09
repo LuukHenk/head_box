@@ -12,8 +12,6 @@ pub struct CharacterTextureHandles {
 pub struct CurrentAnimationFrame(pub usize);
 
 #[derive(Component)]
-pub struct PistolTextureHandle(pub Handle<Image>);
-#[derive(Component)]
 pub struct ZombieTextureHandle(pub Handle<Image>);
 
 #[derive(Component)]
@@ -42,3 +40,6 @@ pub struct PlayerTextureMarker;
 
 #[derive(Component)]
 pub struct ZombieTextureMarker;
+
+#[derive(Component)]
+pub struct PistolTextureMarker;

@@ -53,7 +53,6 @@ impl Plugin for GamePlugin {
         .add_systems(
             FixedUpdate,
             (
-
                 LevelSystems::handle_game_over,
                 LevelSystems::set_current_level.after(LevelSystems::handle_game_over),
                 LevelSystems::spawn_enemies_for_current_level

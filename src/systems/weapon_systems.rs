@@ -2,9 +2,11 @@
 use std::time::Duration;
 
 use bevy::prelude::*;
-use crate::components::asset_components::{PistolSoundHandle, PistolTextureHandle};
+use bevy_rapier2d::prelude::Velocity;
+use crate::components::asset_components::{CharacterTextureHandles, CurrentAnimationFrame, PistolSoundHandle, PistolTextureMarker};
 
 use crate::components::generic_components::GameScreenMarker;
+use crate::components::physics_components::RotationDegrees;
 use crate::components::player_components::PlayerMarker;
 use crate::components::weapon_components::{ActiveWeapon, BulletsRotationOffsetPerShot, DamagePerHit, WeaponMarker, WeaponType, Owner, AttackCoolDownTimer, WeaponOwnerMarker};
 use crate::events::atttack_events::{BulletSpawnEvent, AttackRequestEvent, WeaponSelectionEvent};
@@ -24,10 +26,14 @@ struct Weapon {
     owner: Owner,
 
     // Physics
+    rotation_degrees: RotationDegrees,
+    velocity: Velocity,
     transform: Transform,
     global_transform: GlobalTransform,
 
     // Visibility
+    current_animation_frame: CurrentAnimationFrame,
+    character_texture_handles: CharacterTextureHandles,
     texture: Handle<Image>,
     sprite: Sprite,
     visibility: Visibility,
@@ -42,14 +48,15 @@ impl WeaponSystems {
     pub fn spawn_default_player_weapons(
         mut commands: Commands,
         pistol_sound: Query<&PistolSoundHandle>,
-        player_query: Query<(Entity, &Transform), With<PlayerMarker>>,
-        pistol_texture_handle_query: Query<&PistolTextureHandle>,
+        player_query: Query<(Entity, &Transform, &RotationDegrees), With<PlayerMarker>>,
+        pistol_texture_handles_query: Query<&CharacterTextureHandles, With<PistolTextureMarker>>,
     ) {
-        let (player_entity_id, player_transform) = player_query.single();
-        let pistol_texture_handle = pistol_texture_handle_query.single();
+        let (player_entity_id, player_transform, player_rotation) = player_query.single();
+        let pistol_texture_handles = pistol_texture_handles_query.single();
+        let current_texture = pistol_texture_handles.front[0].clone();
 
         let mut pistol_transform = player_transform.clone();
-        pistol_transform.translation = Self::set_translation_relative_to_owner(player_transform.translation);
+        pistol_transform.translation = Self::set_translation_relative_to_owner(player_transform.translation, player_rotation.0);
         let pistol = Weapon {
             // Marker components
             game_screen_marker: GameScreenMarker,
@@ -67,11 +74,15 @@ impl WeaponSystems {
             owner: Owner(Option::Some(player_entity_id)),
 
             // Physics
+            velocity: Velocity::default(),
+            rotation_degrees: RotationDegrees(180.),
             transform: pistol_transform,
             global_transform: GlobalTransform::default(),
 
             // Visibility
-            texture: pistol_texture_handle.0.clone(),
+            current_animation_frame: CurrentAnimationFrame(1),
+            character_texture_handles: pistol_texture_handles.clone(),
+            texture: current_texture,
             sprite: Sprite::default(),
             visibility: Visibility::default(),
             inherited_visibility: InheritedVisibility::default(),
@@ -83,26 +94,52 @@ impl WeaponSystems {
     }
 
     pub fn update_transform(
-        weapon_owner_query: Query<(Entity, &Transform), With<WeaponOwnerMarker>>,
-        mut weapon_query: Query<(&Owner, &mut Transform), (With<WeaponMarker>, Without<WeaponOwnerMarker>)>,
+        weapon_owner_query: Query<(Entity, &Transform, &RotationDegrees), With<WeaponOwnerMarker>>,
+        mut weapon_query: Query<(&Owner, &mut Transform, &mut RotationDegrees), (With<WeaponMarker>, Without<WeaponOwnerMarker>)>,
     ) {
-        for (owner, mut weapon_transform) in weapon_query.iter_mut() {
+        for (owner, mut weapon_transform, mut rotation_degrees) in weapon_query.iter_mut() {
             if owner.0.is_none() {continue};
             let weapon_owner_id = owner.0.unwrap();
-            for (found_owner_id, owner_transform) in weapon_owner_query.iter() {
+            for (found_owner_id, owner_transform, owner_rotation) in weapon_owner_query.iter() {
                 if weapon_owner_id == found_owner_id {
-                    weapon_transform.translation = Self::set_translation_relative_to_owner(owner_transform.translation);
+                    weapon_transform.translation = Self::set_translation_relative_to_owner(owner_transform.translation, owner_rotation.0);
+                    rotation_degrees.0 = owner_rotation.0;
                 }
             }
         }
     }
 
-    fn set_translation_relative_to_owner(owner_translation: Vec3) -> Vec3 {
-            Vec3::new(
+    fn set_translation_relative_to_owner(
+        owner_translation: Vec3,
+        owner_rotation: f32,
+    ) -> Vec3 {
+        let translation: Vec3;
+        if owner_rotation > 0. && owner_rotation < 180. {
+            translation = Vec3::new(
                 owner_translation.x - 11_f32,
                 owner_translation.y - 5_f32,
                 owner_translation.z + 1_f32,
             )
+        } else if owner_rotation > 180. {
+            translation = Vec3::new(
+                owner_translation.x - 11_f32,
+                owner_translation.y - 5_f32,
+                owner_translation.z + 1_f32,
+            )
+        } else if owner_rotation == 180. {
+            translation = Vec3::new(
+                owner_translation.x - 11_f32,
+                owner_translation.y - 5_f32,
+                owner_translation.z + 1_f32,
+            )
+        } else {
+            translation = Vec3::new(
+                owner_translation.x - 11_f32,
+                owner_translation.y - 5_f32,
+                owner_translation.z + 1_f32,
+            )
+        };
+        translation
     }
     pub fn attack(
         mut player_attack_event: EventReader<AttackRequestEvent>,

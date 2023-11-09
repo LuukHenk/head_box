@@ -6,9 +6,7 @@ use bevy_rapier2d::prelude::Velocity;
 use crate::components::asset_components::{CurrentAnimationFrame, CharacterTextureHandles};
 use crate::components::physics_components::RotationDegrees;
 
-pub const TOTAL_TEXTURES: usize = 3;
 pub const FRAMES_PER_TEXTURE: usize = 8;
-pub const TOTAL_FRAMES: usize = TOTAL_TEXTURES * FRAMES_PER_TEXTURE;
 
 pub struct SpriteSystems;
 
@@ -54,7 +52,8 @@ impl SpriteSystems {
     }
 
     fn select_texture(texture_set: Vec<Handle<Image>>, mut current_animation_frame: Mut<CurrentAnimationFrame>, velocity: &Velocity) -> Handle<Image> {
-        if velocity.linvel.x == 0. && velocity.linvel.y == 0. || current_animation_frame.0 >= TOTAL_FRAMES {
+        let total_frames = texture_set.len() * FRAMES_PER_TEXTURE;
+        if velocity.linvel.x == 0. && velocity.linvel.y == 0. || current_animation_frame.0 >= total_frames {
             current_animation_frame.0 = 1;
         } else  {
             current_animation_frame.0 += 1;

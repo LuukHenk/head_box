@@ -1,7 +1,7 @@
 
 use bevy::prelude::*;
 
-use crate::components::asset_components::{InGameMusicHandle, BulletTextureHandle, PistolSoundHandle, CharacterTextureHandles, ShotgunSoundHandle, UziSoundHandle, ZombieTenseSoundHandle, MenuMusicHandle, PlayerTextureMarker, ZombieTextureMarker, PistolTextureHandle};
+use crate::components::asset_components::{InGameMusicHandle, BulletTextureHandle, PistolSoundHandle, CharacterTextureHandles, ShotgunSoundHandle, UziSoundHandle, ZombieTenseSoundHandle, MenuMusicHandle, PlayerTextureMarker, ZombieTextureMarker, PistolTextureMarker};
 
 pub struct AssetSystems;
 
@@ -55,9 +55,26 @@ impl AssetSystems {
         };
         commands.spawn((zombie_textures, ZombieTextureMarker));
     }
+
+    pub fn setup_pistol_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
+        let pistol_front_textures: Vec<Handle<Image>> = vec![
+            asset_server.load("textures/weapons/pistol_front.png"),
+        ];
+        let pistol_right_textures: Vec<Handle<Image>> = vec![
+            asset_server.load("textures/weapons/pistol_right.png"),
+        ];
+        let pistol_back_textures: Vec<Handle<Image>> = vec![
+            asset_server.load("textures/weapons/pistol_back.png"),
+        ];
+        let pistol_textures = CharacterTextureHandles {
+            front: pistol_front_textures,
+            right: pistol_right_textures,
+            back: pistol_back_textures,
+        };
+        commands.spawn((pistol_textures, PistolTextureMarker));
+    }
     pub fn setup_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
         commands.spawn(BulletTextureHandle(asset_server.load("textures/bullet.png")));
-        commands.spawn(PistolTextureHandle(asset_server.load("textures/weapons/pistol_front.png")));
 
         commands.spawn(PistolSoundHandle(asset_server.load("sounds/pistol.ogg")));
         commands.spawn(UziSoundHandle(asset_server.load("sounds/uzi.ogg")));
