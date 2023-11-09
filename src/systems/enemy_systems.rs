@@ -140,7 +140,7 @@ impl EnemySystems {
 
             // Physics
             rotation_degrees: RotationDegrees(180.),
-            walking_velocity: WalkingVelocity(100.),
+            walking_velocity: WalkingVelocity(00.),
             rigid_body: RigidBody::Dynamic,
             collider: Collider::cuboid(4., 8.),
             gravity: DEFAULT_GRAVITY,

@@ -36,7 +36,8 @@ impl ArenaSystems {
     pub fn spawn_arena(mut commands: Commands, asset_server: Res<AssetServer>) {
         let arena_bundle = ArenaBundle {
             texture: asset_server.load("textures/arena/arena.png"),
-            transform: Transform { ..default() },
+            transform: Transform {
+                ..default() },
             sprite: Sprite::default(),
             visibility: Default::default(),
             inherited_visibility: InheritedVisibility::default(),

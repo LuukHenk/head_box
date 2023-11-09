@@ -99,8 +99,8 @@ impl WeaponSystems {
 
     fn set_translation_relative_to_owner(owner_translation: Vec3) -> Vec3 {
             Vec3::new(
-                owner_translation.x,
-                owner_translation.y,
+                owner_translation.x - 11_f32,
+                owner_translation.y - 5_f32,
                 owner_translation.z + 1_f32,
             )
     }
