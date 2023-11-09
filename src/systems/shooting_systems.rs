@@ -47,40 +47,8 @@ impl ShootingSystems {
             bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![0_f32]),
             shooting_sound: pistol_sound.single().0.clone(),
         };
-        let uzi = Gun {
-            // Game screen components
-            game_screen_marker: GameScreenMarker,
-
-            // Gun specific components
-            shooting_cooldown_timer: ShootingCoolDownTimer(Timer::new(
-                Duration::from_secs_f32(0.1),
-                TimerMode::Once,
-            )),
-            gun_marker: GunMarker,
-            damage_per_hit: DamagePerHit(0.1),
-            gun_type: GunType::Uzi,
-            bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![0_f32]),
-            shooting_sound: uzi_sound.single().0.clone(),
-        };
-        let shotgun = Gun {
-            // Game screen components
-            game_screen_marker: GameScreenMarker,
-
-            // Gun specific components
-            shooting_cooldown_timer: ShootingCoolDownTimer(Timer::new(
-                Duration::from_secs_f32(2.),
-                TimerMode::Once,
-            )),
-            gun_marker: GunMarker,
-            damage_per_hit: DamagePerHit(1.),
-            gun_type: GunType::Shotgun,
-            bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![-5_f32, 0_f32, 5_f32]),
-            shooting_sound: shotgun_sound.single().0.clone(),
-        };
 
         commands.spawn((pistol, ActiveGun));
-        commands.spawn(uzi);
-        commands.spawn(shotgun);
 
     }
 
