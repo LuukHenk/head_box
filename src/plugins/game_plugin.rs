@@ -32,7 +32,7 @@ impl Plugin for GamePlugin {
                 ArenaSystems::set_enemy_spawn_locations,
                 LevelSystems::spawn_levels,
                 CameraSystems::zoom_camera,
-                ShootingSystems::spawn_guns,
+                ShootingSystems::spawn_default_player_weapons,
                 SoundSystems::spawn_zombie_tense_sounds,
                 SoundSystems::spawn_in_game_background_sounds,
             ),

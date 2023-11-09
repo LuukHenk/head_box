@@ -1,4 +1,4 @@
-use bevy::prelude::{Component, Timer};
+use bevy::prelude::{Component, Entity, Timer};
 
 #[derive(Component)]
 pub struct ShootingCoolDownTimer(pub Timer);
@@ -22,3 +22,6 @@ pub enum GunType {
     Uzi,
     Shotgun,
 }
+
+#[derive(Component)]
+pub struct Owner(pub Option<Entity>);
