@@ -22,6 +22,10 @@ struct Weapon {
     bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot,
     attacking_sound: Handle<AudioSource>,
     owner: Owner,
+
+    // Physics
+    transform: Transform,
+    global_transform: GlobalTransform,
 }
 
 
@@ -31,9 +35,9 @@ impl WeaponSystems {
     pub fn spawn_default_player_weapons(
         mut commands: Commands,
         pistol_sound: Query<&PistolSoundHandle>,
-        player_query: Query<Entity, With<PlayerMarker>>,
+        player_query: Query<(Entity, &Transform), With<PlayerMarker>>,
     ) {
-        let player_entity_id = player_query.single();
+        let (player_entity_id, player_transform) = player_query.single();
         let pistol = Weapon {
             // Game screen components
             game_screen_marker: GameScreenMarker,
@@ -49,6 +53,10 @@ impl WeaponSystems {
             bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![0_f32]),
             attacking_sound: pistol_sound.single().0.clone(),
             owner: Owner(Option::Some(player_entity_id)),
+
+            // Physics
+            transform: *player_transform,
+            global_transform: GlobalTransform::default(),
         };
 
         commands.spawn((pistol, ActiveWeapon));
