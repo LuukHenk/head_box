@@ -83,7 +83,7 @@ impl Plugin for GamePlugin {
                     WeaponSystems::attack.after(PlayerSystems::attack),
                     BulletSystems::spawn_bullet.after(WeaponSystems::attack),
                     SoundSystems::play_attack_sound.after(WeaponSystems::attack),
-                    // BulletSystems::despawn_bullets,
+                    BulletSystems::despawn_bullets,
                 ),
                 ( // Sprites
                     SpriteSystems::change_character_sprite.after(PlayerSystems::set_velocity),

@@ -49,7 +49,7 @@ struct Weapon {
     view_visibility: ViewVisibility,
 }
 
-const BULLET_TO_WEAPON_OFFSET: f32 = 2.;
+const BULLET_TO_WEAPON_OFFSET_Y: f32 = 2.;
 pub struct WeaponSystems;
 
 impl WeaponSystems {
@@ -91,7 +91,7 @@ impl WeaponSystems {
 
         let mut knife_transform = player_transform.clone();
         knife_transform.translation = Self::set_translation_relative_to_owner(player_transform.translation, player_rotation.0);
-
+        
         let knife = Self::new_knife(
             knife_sound_query.single().0.clone(),
             Owner(Option::Some(player_entity_id)),
@@ -102,6 +102,10 @@ impl WeaponSystems {
         );
         commands.spawn((knife, ActiveWeapon));
 
+    }
+
+    fn random_secondary_function(x: Query<&Transform, With<PlayerMarker>>) {
+        println!("hi")
     }
     pub fn update_transform(
         weapon_owner_query: Query<(Entity, &Transform, &RotationDegrees), With<WeaponOwnerMarker>>,
@@ -283,7 +287,7 @@ impl WeaponSystems {
             bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![0_f32]),
             bullet_collision_groups,
             bullet_texture,
-            bullet_collider: BulletCollider(Vec2::new(10., 10.)),
+            bullet_collider: BulletCollider(Vec2::new(8., 8.)),
 
             // Physics
             velocity: Velocity::default(),
@@ -354,7 +358,7 @@ impl WeaponSystems {
             bullet_length,
         );
         Transform {
-            translation: Vec3::new(translation_x, translation_y + BULLET_TO_WEAPON_OFFSET, weapon_transform.translation.z - 0.1),
+            translation: Vec3::new(translation_x, translation_y + BULLET_TO_WEAPON_OFFSET_Y, weapon_transform.translation.z - 0.1),
             rotation: bullet_rotation,
             scale: SCALING,
         }
