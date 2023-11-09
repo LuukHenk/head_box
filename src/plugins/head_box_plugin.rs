@@ -4,6 +4,7 @@ use bevy_rapier2d::prelude::*;
 
 use crate::plugins::main_menu_plugin::MainMenuPlugin;
 use crate::plugins::game_plugin::GamePlugin;
+use crate::plugins::load_screen_plugin::LoadScreenPlugin;
 
 use crate::systems::asset_systems::AssetSystems;
 use crate::systems::camera_systems::CameraSystems;
@@ -25,6 +26,7 @@ impl Plugin for HeadBoxPlugin {
             .add_plugins((
                 GamePlugin,
                 MainMenuPlugin,
+                LoadScreenPlugin,
                 RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(16.0),
                 // RapierDebugRenderPlugin::default(),
             ));

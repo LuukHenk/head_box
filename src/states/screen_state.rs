@@ -4,6 +4,7 @@ use bevy::prelude::States;
 pub enum ScreenState {
     #[default]
     MainMenu,
+    LoadScreen,
     Game,
 
 }
