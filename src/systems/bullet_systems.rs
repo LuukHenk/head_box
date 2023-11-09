@@ -41,7 +41,8 @@ struct BulletBundle {
     texture: Handle<Image>,
     sprite: Sprite,
     visibility: Visibility,
-    computed_visibility: ComputedVisibility,
+    inherited_visibility: InheritedVisibility,
+    view_visibility: ViewVisibility,
 
     // Other
     damage: Damage,
@@ -66,7 +67,7 @@ impl BulletSystems {
         bullet_texture_query: Query<&BulletTextureHandle>,
     ) {
         let damage_per_hit = gun_query.single();
-        for bullet_rotation_offset in bullet_spawn_events.iter() {
+        for bullet_rotation_offset in bullet_spawn_events.read() {
             for (rotation_degrees, collision_groups, transform, collider) in player_query.iter() {
                 let bullet_transform = Self::generate_bullet_transform(rotation_degrees, transform, collider, bullet_rotation_offset.0);
                 let bullet_bundle = Self::new_bullet(
@@ -153,7 +154,8 @@ impl BulletSystems {
             texture,
             transform,
             visibility: Default::default(),
-            computed_visibility: Default::default(),
+            inherited_visibility: InheritedVisibility::default(),
+            view_visibility: ViewVisibility::default(),
             sprite: Sprite::default(),
             global_transform: GlobalTransform::default(),
             sleeping: Sleeping::disabled(),

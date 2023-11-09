@@ -104,7 +104,7 @@ impl SoundSystems {
         let sound = sound_query.single();
         let mut playback_settings = PlaybackSettings::DESPAWN;
         playback_settings = playback_settings.with_volume(Volume::new_relative(0.3));
-        for _shoot_event in bullet_spawn_event.iter() {
+        for _shoot_event in bullet_spawn_event.read() {
             commands.spawn(AudioBundle {
                 source: sound.clone(),
                 settings: playback_settings,

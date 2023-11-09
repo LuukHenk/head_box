@@ -46,7 +46,8 @@ struct PlayerBundle {
     texture: Handle<Image>,
     sprite: Sprite,
     visibility: Visibility,
-    computed_visibility: ComputedVisibility,
+    inherited_visibility: InheritedVisibility,
+    view_visibility: ViewVisibility,
 
     // Other
     health: Health,
@@ -93,7 +94,8 @@ impl PlayerSystems {
             texture: current_texture,
             sprite: Sprite::default(),
             visibility: Default::default(),
-            computed_visibility: Default::default(),
+            inherited_visibility: InheritedVisibility::default(),
+            view_visibility: ViewVisibility::default(),
 
 
             // Others

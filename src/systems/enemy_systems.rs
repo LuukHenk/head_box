@@ -44,8 +44,8 @@ pub struct EnemyBundle {
     texture: Handle<Image>,
     sprite: Sprite,
     visibility: Visibility,
-    computed_visibility: ComputedVisibility,
-
+    inherited_visibility: InheritedVisibility,
+    view_visibility: ViewVisibility,
     // Other
     health: Health,
     damage: Damage,
@@ -67,7 +67,7 @@ impl EnemySystems {
             enemy_spawn_locations.push(enemy_spawn_location.0);
         }
 
-        for _ in spawn_zombie_event.iter() {
+        for _ in spawn_zombie_event.read() {
             let random_position = rand::thread_rng().gen_range(0..enemy_spawn_locations.len());
             let spawn_position = enemy_spawn_locations[random_position];
             let zombie = Self::new_enemy(spawn_position.x, spawn_position.y, zombie_texture_handles);
@@ -164,7 +164,8 @@ impl EnemySystems {
             texture: current_texture,
             sprite: Sprite::default(),
             visibility: Default::default(),
-            computed_visibility: Default::default(),
+            inherited_visibility: InheritedVisibility::default(),
+            view_visibility: ViewVisibility::default(),
 
             // Others
             health: Health(10.),

@@ -14,7 +14,7 @@ use crate::states::screen_state::ScreenState;
 pub struct HeadBoxPlugin;
 impl Plugin for HeadBoxPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(FixedTime::new_from_secs(1.0 / 60.0))
+        app.insert_resource(Time::<Fixed>::from_hz(60.0))
             .add_state::<ScreenState>()
             .add_systems(Startup, (
                 CameraSystems::setup_camera,

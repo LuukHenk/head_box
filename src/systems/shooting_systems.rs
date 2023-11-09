@@ -93,7 +93,7 @@ impl ShootingSystems {
         let (mut cooldown_timer, bullets_rotation_offset) = active_gun_query.single_mut();
         cooldown_timer.0.tick(time.delta());
 
-        for _shoot_event in player_shoot_event.iter() {
+        for _shoot_event in player_shoot_event.read() {
             if cooldown_timer.0.finished() {
                 for bullet in bullets_rotation_offset.0.to_vec() {
                     bullet_spawn_event.send(BulletSpawnEvent(bullet));
@@ -109,7 +109,7 @@ impl ShootingSystems {
         active_gun_query: Query<Entity, With<ActiveGun>>,
         gun_query: Query<(Entity, &GunType), With<GunMarker>>
     ) {
-        for weapon_selection_event in weapon_selection_events.iter() {
+        for weapon_selection_event in weapon_selection_events.read() {
             for (gun_entity, gun_type) in gun_query.iter() {
                 if &weapon_selection_event.0 == gun_type {
                     let active_gun_entity = active_gun_query.single();

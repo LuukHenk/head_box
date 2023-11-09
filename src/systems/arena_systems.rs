@@ -12,7 +12,8 @@ struct ArenaBundle {
     texture: Handle<Image>,
     sprite: Sprite,
     visibility: Visibility,
-    computed_visibility: ComputedVisibility,
+    inherited_visibility: InheritedVisibility,
+    view_visibility: ViewVisibility,
     transform: Transform,
     global_transform: GlobalTransform,
 }
@@ -38,7 +39,8 @@ impl ArenaSystems {
             transform: Transform { ..default() },
             sprite: Sprite::default(),
             visibility: Default::default(),
-            computed_visibility: Default::default(),
+            inherited_visibility: InheritedVisibility::default(),
+            view_visibility: ViewVisibility::default(),
             game_screen_marker: GameScreenMarker,
             global_transform: GlobalTransform::default(),
         };
