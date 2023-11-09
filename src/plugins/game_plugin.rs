@@ -7,7 +7,7 @@ use crate::states::screen_state::ScreenState;
 use crate::components::generic_components::GameScreenMarker;
 
 use crate::events::enemy_spawn_events::SpawnZombieEvent;
-use crate::events::shooting_events::{BulletSpawnEvent, ShootRequestEvent, WeaponSelectionEvent};
+use crate::events::atttack_events::{BulletSpawnEvent, AttackRequestEvent, WeaponSelectionEvent};
 
 use crate::systems::arena_systems::ArenaSystems;
 use crate::systems::bullet_systems::BulletSystems;
@@ -18,7 +18,7 @@ use crate::systems::level_systems::LevelSystems;
 use crate::systems::player_systems::PlayerSystems;
 use crate::systems::generic_systems::despawn_screen;
 use crate::systems::physics_systems::PhysicsSystems;
-use crate::systems::shooting_systems::ShootingSystems;
+use crate::systems::weapon_systems::WeaponSystems;
 use crate::systems::sound_systems::SoundSystems;
 use crate::systems::sprite_systems::SpriteSystems;
 
@@ -32,7 +32,7 @@ impl Plugin for GamePlugin {
                 ArenaSystems::set_enemy_spawn_locations,
                 LevelSystems::spawn_levels,
                 CameraSystems::zoom_camera,
-                ShootingSystems::spawn_default_player_weapons,
+                WeaponSystems::spawn_default_player_weapons,
                 SoundSystems::spawn_zombie_tense_sounds,
                 SoundSystems::spawn_in_game_background_sounds,
             ),
@@ -46,7 +46,7 @@ impl Plugin for GamePlugin {
 
             ),
         )
-        .add_event::<ShootRequestEvent>()
+        .add_event::<AttackRequestEvent>()
         .add_event::<WeaponSelectionEvent>()
         .add_event::<BulletSpawnEvent>()
         .add_event::<SpawnZombieEvent>()
@@ -70,11 +70,11 @@ impl Plugin for GamePlugin {
                 CameraSystems::follow_player.after(PlayerSystems::set_velocity),
 
                 PlayerSystems::weapon_selection,
-                ShootingSystems::set_active_gun.after(PlayerSystems::weapon_selection),
-                PlayerSystems::shoot.after(PlayerSystems::set_velocity),
-                ShootingSystems::shoot.after(PlayerSystems::shoot),
-                BulletSystems::spawn_player_bullet.after(ShootingSystems::shoot),
-                SoundSystems::play_shooting_sound.after(ShootingSystems::shoot),
+                WeaponSystems::set_active_weapon.after(PlayerSystems::weapon_selection),
+                PlayerSystems::attack.after(PlayerSystems::set_velocity),
+                WeaponSystems::attack.after(PlayerSystems::attack),
+                BulletSystems::spawn_player_bullet.after(WeaponSystems::attack),
+                SoundSystems::play_attack_sound.after(WeaponSystems::attack),
                 BulletSystems::despawn_bullets,
 
                 SpriteSystems::change_character_sprite.after(PlayerSystems::set_velocity),

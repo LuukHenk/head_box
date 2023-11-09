@@ -6,65 +6,65 @@ use crate::components::asset_components::PistolSoundHandle;
 
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::player_components::PlayerMarker;
-use crate::components::shooting_components::{ActiveGun, BulletsRotationOffsetPerShot, DamagePerHit, GunMarker, GunType, Owner, ShootingCoolDownTimer};
-use crate::events::shooting_events::{BulletSpawnEvent, ShootRequestEvent, WeaponSelectionEvent};
+use crate::components::weapon_components::{ActiveWeapon, BulletsRotationOffsetPerShot, DamagePerHit, WeaponMarker, WeaponType, Owner, AttackCoolDownTimer};
+use crate::events::atttack_events::{BulletSpawnEvent, AttackRequestEvent, WeaponSelectionEvent};
 
 #[derive(Bundle)]
-struct Gun {
+struct Weapon {
     // Game screen components
     game_screen_marker: GameScreenMarker,
 
-    // Gun specific components
-    shooting_cooldown_timer: ShootingCoolDownTimer,
+    // Weapon specific components
+    attack_cooldown_timer: AttackCoolDownTimer,
     damage_per_hit: DamagePerHit,
-    gun_marker: GunMarker,
-    gun_type: GunType,
+    weapon_marker: WeaponMarker,
+    weapon_type: WeaponType,
     bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot,
-    shooting_sound: Handle<AudioSource>,
+    attacking_sound: Handle<AudioSource>,
     owner: Owner,
 }
 
 
-pub struct ShootingSystems;
+pub struct WeaponSystems;
 
-impl ShootingSystems {
+impl WeaponSystems {
     pub fn spawn_default_player_weapons(
         mut commands: Commands,
         pistol_sound: Query<&PistolSoundHandle>,
         player_query: Query<Entity, With<PlayerMarker>>,
     ) {
         let player_entity_id = player_query.single();
-        let pistol = Gun {
+        let pistol = Weapon {
             // Game screen components
             game_screen_marker: GameScreenMarker,
 
-            // Gun specific components
-            shooting_cooldown_timer: ShootingCoolDownTimer(Timer::new(
+            // Weapon specific components
+            attack_cooldown_timer: AttackCoolDownTimer(Timer::new(
                 Duration::from_secs_f32(1.),
                 TimerMode::Once,
             )),
-            gun_marker: GunMarker,
+            weapon_marker: WeaponMarker,
             damage_per_hit: DamagePerHit(2.),
-            gun_type: GunType::Pistol,
+            weapon_type: WeaponType::Pistol,
             bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![0_f32]),
-            shooting_sound: pistol_sound.single().0.clone(),
+            attacking_sound: pistol_sound.single().0.clone(),
             owner: Owner(Option::Some(player_entity_id)),
         };
 
-        commands.spawn((pistol, ActiveGun));
+        commands.spawn((pistol, ActiveWeapon));
 
     }
 
-    pub fn shoot(
-        mut player_shoot_event: EventReader<ShootRequestEvent>,
+    pub fn attack(
+        mut player_attack_event: EventReader<AttackRequestEvent>,
         mut bullet_spawn_event: EventWriter<BulletSpawnEvent>,
-        mut active_gun_query: Query<(&mut ShootingCoolDownTimer, &BulletsRotationOffsetPerShot), With<ActiveGun>>,
+        mut active_weapon_query: Query<(&mut AttackCoolDownTimer, &BulletsRotationOffsetPerShot), With<ActiveWeapon>>,
         time: Res<Time>,
     ) {
-        let (mut cooldown_timer, bullets_rotation_offset) = active_gun_query.single_mut();
+        let (mut cooldown_timer, bullets_rotation_offset) = active_weapon_query.single_mut();
         cooldown_timer.0.tick(time.delta());
 
-        for _shoot_event in player_shoot_event.read() {
+        for _attack_event in player_attack_event.read() {
             if cooldown_timer.0.finished() {
                 for bullet in bullets_rotation_offset.0.to_vec() {
                     bullet_spawn_event.send(BulletSpawnEvent(bullet));
@@ -74,18 +74,18 @@ impl ShootingSystems {
         }
     }
 
-    pub fn set_active_gun(
+    pub fn set_active_weapon(
         mut commands: Commands,
         mut weapon_selection_events: EventReader<WeaponSelectionEvent>,
-        active_gun_query: Query<Entity, With<ActiveGun>>,
-        gun_query: Query<(Entity, &GunType), With<GunMarker>>
+        active_weapon_query: Query<Entity, With<ActiveWeapon>>,
+        weapon_query: Query<(Entity, &WeaponType), With<WeaponMarker>>
     ) {
         for weapon_selection_event in weapon_selection_events.read() {
-            for (gun_entity, gun_type) in gun_query.iter() {
-                if &weapon_selection_event.0 == gun_type {
-                    let active_gun_entity = active_gun_query.single();
-                    commands.entity(active_gun_entity).remove::<ActiveGun>();
-                    commands.entity(gun_entity).insert(ActiveGun);
+            for (weapon_entity, weapon_type) in weapon_query.iter() {
+                if &weapon_selection_event.0 == weapon_type {
+                    let active_weapon_entity = active_weapon_query.single();
+                    commands.entity(active_weapon_entity).remove::<ActiveWeapon>();
+                    commands.entity(weapon_entity).insert(ActiveWeapon);
                 }
             }
         }

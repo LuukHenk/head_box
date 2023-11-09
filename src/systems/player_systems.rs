@@ -6,14 +6,14 @@ use crate::utils::physics_constants::{
     DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY, PLAYER_COLLISION_GROUPS,
 };
 
-use crate::events::shooting_events::{ShootRequestEvent, WeaponSelectionEvent};
+use crate::events::atttack_events::{AttackRequestEvent, WeaponSelectionEvent};
 
 use crate::components::asset_components::{CurrentAnimationFrame, CharacterTextureHandles, PlayerTextureMarker};
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::generic_components::Health;
 use crate::components::player_components::PlayerMarker;
 use crate::components::physics_components::RotationDegrees;
-use crate::components::shooting_components::GunType;
+use crate::components::weapon_components::WeaponType;
 use crate::components::physics_components::WalkingVelocity;
 
 
@@ -127,12 +127,12 @@ impl PlayerSystems {
         }
     }
 
-    pub fn shoot(
+    pub fn attack(
         keyboard_input: Res<Input<KeyCode>>,
-        mut player_shoot_event: EventWriter<ShootRequestEvent>,
+        mut player_attack_event: EventWriter<AttackRequestEvent>,
     ) {
         if keyboard_input.pressed(KeyCode::Space) {
-            player_shoot_event.send(ShootRequestEvent);
+            player_attack_event.send(AttackRequestEvent);
         };
     }
 
@@ -141,11 +141,11 @@ impl PlayerSystems {
         mut weapon_selection_event: EventWriter<WeaponSelectionEvent>,
     ) {
         if keyboard_input.pressed(KeyCode::Key1) {
-            weapon_selection_event.send(WeaponSelectionEvent(GunType::Pistol));
+            weapon_selection_event.send(WeaponSelectionEvent(WeaponType::Pistol));
         } else if keyboard_input.pressed(KeyCode::Key2){
-            weapon_selection_event.send(WeaponSelectionEvent(GunType::Uzi));
+            weapon_selection_event.send(WeaponSelectionEvent(WeaponType::Uzi));
         } else if keyboard_input.pressed(KeyCode::Key3){
-            weapon_selection_event.send(WeaponSelectionEvent(GunType::Shotgun));
+            weapon_selection_event.send(WeaponSelectionEvent(WeaponType::Shotgun));
         }
     }
 

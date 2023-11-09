@@ -1,23 +1,23 @@
 use bevy::prelude::{Component, Entity, Timer};
 
 #[derive(Component)]
-pub struct ShootingCoolDownTimer(pub Timer);
+pub struct AttackCoolDownTimer(pub Timer);
 
 #[derive(Component)]
-pub struct ActiveGun;
+pub struct ActiveWeapon;
 
 #[derive(Component)]
 pub struct DamagePerHit(pub f32);
 
 #[derive(Component)]
-pub struct GunMarker;
+pub struct WeaponMarker;
 
 
 #[derive(Component)]
 pub struct BulletsRotationOffsetPerShot(pub Vec<f32>);
 
 #[derive(Component, PartialEq)]
-pub enum GunType {
+pub enum WeaponType {
     Pistol,
     Uzi,
     Shotgun,

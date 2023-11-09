@@ -2,9 +2,9 @@ use bevy::audio::Volume;
 use bevy::prelude::*;
 use crate::components::asset_components::{InGameMusicHandle, MenuMusicHandle, ZombieTenseSoundHandle};
 use crate::components::generic_components::GameScreenMarker;
-use crate::components::shooting_components::ActiveGun;
+use crate::components::weapon_components::ActiveWeapon;
 use crate::components::sound_components::{BackgroundMusic, InGameBackgroundSound, MenuBackgroundMusic, ZombieTenseSound};
-use crate::events::shooting_events::BulletSpawnEvent;
+use crate::events::atttack_events::BulletSpawnEvent;
 
 
 // const MAX_ZOMBIE_SOUND_DISTANCE: f32 = 300.;
@@ -96,15 +96,15 @@ impl SoundSystems {
             sink.toggle();
         }
     }
-    pub fn play_shooting_sound(
+    pub fn play_attack_sound(
         mut commands: Commands,
         mut bullet_spawn_event: EventReader<BulletSpawnEvent>,
-        sound_query: Query<&Handle<AudioSource>, With<ActiveGun>>,
+        sound_query: Query<&Handle<AudioSource>, With<ActiveWeapon>>,
     ) {
         let sound = sound_query.single();
         let mut playback_settings = PlaybackSettings::DESPAWN;
         playback_settings = playback_settings.with_volume(Volume::new_relative(0.3));
-        for _shoot_event in bullet_spawn_event.read() {
+        for _attack_event in bullet_spawn_event.read() {
             commands.spawn(AudioBundle {
                 source: sound.clone(),
                 settings: playback_settings,

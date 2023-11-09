@@ -3,13 +3,13 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use std::time::Duration;
 
-use crate::events::shooting_events::BulletSpawnEvent;
+use crate::events::atttack_events::BulletSpawnEvent;
 
 use crate::components::bullet_components::{BulletMarker, Damage, LifeTime};
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::player_components::PlayerMarker;
 use crate::components::asset_components::BulletTextureHandle;
-use crate::components::shooting_components::{ActiveGun, DamagePerHit};
+use crate::components::weapon_components::{ActiveWeapon, DamagePerHit};
 use crate::components::physics_components::RotationDegrees;
 
 use crate::utils::generic_constants::{SCALING, Z_VALUE};
@@ -63,10 +63,10 @@ impl BulletSystems {
             ),
             With<PlayerMarker>,
         >,
-        gun_query: Query<&DamagePerHit, With<ActiveGun>>,
+        weapon_query: Query<&DamagePerHit, With<ActiveWeapon>>,
         bullet_texture_query: Query<&BulletTextureHandle>,
     ) {
-        let damage_per_hit = gun_query.single();
+        let damage_per_hit = weapon_query.single();
         for bullet_rotation_offset in bullet_spawn_events.read() {
             for (rotation_degrees, collision_groups, transform, collider) in player_query.iter() {
                 let bullet_transform = Self::generate_bullet_transform(rotation_degrees, transform, collider, bullet_rotation_offset.0);
