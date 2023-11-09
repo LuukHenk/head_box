@@ -4,7 +4,7 @@ use std::time::Duration;
 use bevy::prelude::*;
 use bevy_rapier2d::geometry::CollisionGroups;
 use bevy_rapier2d::prelude::Velocity;
-use crate::components::asset_components::{BulletTextureHandle, CharacterTextureHandles, CurrentAnimationFrame, KnifeAttackTextureHandle, KnifeSoundHandle, KnifeTextureMarker, PistolSoundHandle, PistolTextureMarker};
+use crate::components::asset_components::{BulletTextureHandle, CharacterTextureHandles, CurrentAnimationFrame, PistolSoundHandle, PistolTextureMarker};
 use crate::components::bullet_components::Damage;
 
 use crate::components::generic_components::GameScreenMarker;
@@ -53,60 +53,32 @@ const BULLET_TO_WEAPON_OFFSET_Y: f32 = 2.;
 pub struct WeaponSystems;
 
 impl WeaponSystems {
-    // pub fn spawn_default_player_weapons(
-    //     mut commands: Commands,
-    //     pistol_sound: Query<&PistolSoundHandle>,
-    //     player_query: Query<(Entity, &Transform, &RotationDegrees, &CollisionGroups), With<PlayerMarker>>,
-    //     pistol_texture_handles_query: Query<&CharacterTextureHandles, With<PistolTextureMarker>>,
-    //     bullet_texture_query: Query<&BulletTextureHandle>,
-    // ) {
-    //     let (player_entity_id, player_transform, player_rotation, player_collision_groups) = player_query.single();
-    //     let pistol_texture_handles = pistol_texture_handles_query.single();
-    //
-    //
-    //     let mut pistol_transform = player_transform.clone();
-    //     pistol_transform.translation = Self::set_translation_relative_to_owner(player_transform.translation, player_rotation.0);
-    //
-    //     let pistol = Self::new_pistol(
-    //         pistol_sound.single().0.clone(),
-    //         Owner(Option::Some(player_entity_id)),
-    //         BulletCollisionGroups(*player_collision_groups),
-    //         pistol_texture_handles.clone(),
-    //         BulletTexture(bullet_texture_query.single().0.clone()),
-    //         pistol_transform
-    //     );
-    //     commands.spawn((pistol, ActiveWeapon));
-    //
-    // }
     pub fn spawn_default_player_weapons(
         mut commands: Commands,
+        pistol_sound: Query<&PistolSoundHandle>,
         player_query: Query<(Entity, &Transform, &RotationDegrees, &CollisionGroups), With<PlayerMarker>>,
-        knife_sound_query: Query<&KnifeSoundHandle>,
-        knife_texture_handles_query: Query<&CharacterTextureHandles, With<KnifeTextureMarker>>,
-        attack_texture_handle_query: Query<&KnifeAttackTextureHandle>,
+        pistol_texture_handles_query: Query<&CharacterTextureHandles, With<PistolTextureMarker>>,
+        bullet_texture_query: Query<&BulletTextureHandle>,
     ) {
         let (player_entity_id, player_transform, player_rotation, player_collision_groups) = player_query.single();
-        let pistol_texture_handles = knife_texture_handles_query.single();
+        let pistol_texture_handles = pistol_texture_handles_query.single();
 
 
-        let mut knife_transform = player_transform.clone();
-        knife_transform.translation = Self::set_translation_relative_to_owner(player_transform.translation, player_rotation.0);
-        
-        let knife = Self::new_knife(
-            knife_sound_query.single().0.clone(),
+        let mut pistol_transform = player_transform.clone();
+        pistol_transform.translation = Self::set_translation_relative_to_owner(player_transform.translation, player_rotation.0);
+
+        let pistol = Self::new_pistol(
+            pistol_sound.single().0.clone(),
             Owner(Option::Some(player_entity_id)),
             BulletCollisionGroups(*player_collision_groups),
             pistol_texture_handles.clone(),
-            BulletTexture(attack_texture_handle_query.single().0.clone()),
-            knife_transform
+            BulletTexture(bullet_texture_query.single().0.clone()),
+            pistol_transform
         );
-        commands.spawn((knife, ActiveWeapon));
+        commands.spawn((pistol, ActiveWeapon));
 
     }
 
-    fn random_secondary_function(x: Query<&Transform, With<PlayerMarker>>) {
-        println!("hi")
-    }
     pub fn update_transform(
         weapon_owner_query: Query<(Entity, &Transform, &RotationDegrees), With<WeaponOwnerMarker>>,
         mut weapon_query: Query<(&Owner, &mut Transform, &mut RotationDegrees), (With<WeaponMarker>, Without<WeaponOwnerMarker>)>,
@@ -259,52 +231,7 @@ impl WeaponSystems {
         }
     }
 
-    fn new_knife(
-        sound: Handle<AudioSource>,
-        owner: Owner,
-        bullet_collision_groups: BulletCollisionGroups,
-        texture_handles: CharacterTextureHandles,
-        bullet_texture: BulletTexture,
-        transform: Transform,
-    ) -> Weapon {
-        let current_texture = texture_handles.front[0].clone();
-        Weapon {
-            // Marker components
-            game_screen_marker: GameScreenMarker,
-            weapon_marker: WeaponMarker,
 
-            // Weapon specific components
-            attack_cooldown_timer: AttackCoolDownTimer(Timer::new(
-                Duration::from_secs_f32(1.),
-                TimerMode::Once,
-            )),
-            damage: Damage(10.),
-            weapon_type: WeaponType::Knife,
-            attacking_sound: sound,
-            owner,
-
-            // Bullet components
-            bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![0_f32]),
-            bullet_collision_groups,
-            bullet_texture,
-            bullet_collider: BulletCollider(Vec2::new(8., 8.)),
-
-            // Physics
-            velocity: Velocity::default(),
-            rotation_degrees: RotationDegrees(180.),
-            transform,
-            global_transform: GlobalTransform::default(),
-
-            // Visibility
-            current_animation_frame: CurrentAnimationFrame(1),
-            character_texture_handles: texture_handles,
-            texture: current_texture,
-            sprite: Sprite::default(),
-            visibility: Visibility::default(),
-            inherited_visibility: InheritedVisibility::default(),
-            view_visibility: ViewVisibility::default(),
-        }
-    }
     fn set_translation_relative_to_owner(
         owner_translation: Vec3,
         owner_rotation: f32,

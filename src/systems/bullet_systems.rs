@@ -10,10 +10,6 @@ use crate::components::generic_components::GameScreenMarker;
 
 use crate::utils::physics_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY};
 
-
-const BULLET_LENGTH: f32 = 100.;
-const BULLET_WIDTH: f32 = 0.5;
-
 #[derive(Bundle)]
 struct BulletBundle {
     // Markers

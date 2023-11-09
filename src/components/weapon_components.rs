@@ -22,7 +22,6 @@ pub enum WeaponType {
     Pistol,
     Uzi,
     Shotgun,
-    Knife
 }
 
 #[derive(Component)]

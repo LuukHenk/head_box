@@ -23,7 +23,6 @@ impl Plugin for HeadBoxPlugin {
                 AssetSystems::setup_player_assets,
                 AssetSystems::setup_zombie_assets,
                 AssetSystems::setup_pistol_assets,
-                AssetSystems::setup_knife_assets
             ))
             .add_plugins((
                 GamePlugin,

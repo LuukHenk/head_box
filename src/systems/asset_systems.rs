@@ -1,7 +1,7 @@
 
 use bevy::prelude::*;
 
-use crate::components::asset_components::{InGameMusicHandle, BulletTextureHandle, PistolSoundHandle, CharacterTextureHandles, ShotgunSoundHandle, UziSoundHandle, ZombieTenseSoundHandle, MenuMusicHandle, PlayerTextureMarker, ZombieTextureMarker, PistolTextureMarker, KnifeTextureMarker, KnifeSoundHandle, KnifeAttackTextureHandle};
+use crate::components::asset_components::{InGameMusicHandle, BulletTextureHandle, PistolSoundHandle, CharacterTextureHandles, ShotgunSoundHandle, UziSoundHandle, ZombieTenseSoundHandle, MenuMusicHandle, PlayerTextureMarker, ZombieTextureMarker, PistolTextureMarker};
 
 pub struct AssetSystems;
 
@@ -72,32 +72,14 @@ impl AssetSystems {
             back: pistol_back_textures,
         };
         commands.spawn((pistol_textures, PistolTextureMarker));
+        commands.spawn(PistolSoundHandle(asset_server.load("sounds/pistol.ogg")));
     }
 
-    pub fn setup_knife_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
-        let knife_front_textures: Vec<Handle<Image>> = vec![
-            asset_server.load("textures/weapons/knife/knife_front.png"),
-        ];
-        let knife_right_textures: Vec<Handle<Image>> = vec![
-            asset_server.load("textures/weapons/knife/knife_right.png"),
-        ];
-        let knife_back_textures: Vec<Handle<Image>> = vec![
-            asset_server.load("textures/weapons/knife/knife_back.png"),
-        ];
-        let knife_textures = CharacterTextureHandles {
-            front: knife_front_textures,
-            right: knife_right_textures,
-            back: knife_back_textures,
-        };
-        commands.spawn((knife_textures, KnifeTextureMarker));
-        commands.spawn(KnifeAttackTextureHandle(asset_server.load("textures/weapons/knife/knife_attack_1.png")));
-        commands.spawn(KnifeSoundHandle(asset_server.load("sounds/knife.ogg")));
 
-    }
     pub fn setup_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
         commands.spawn(BulletTextureHandle(asset_server.load("textures/bullet.png")));
 
-        commands.spawn(PistolSoundHandle(asset_server.load("sounds/pistol.ogg")));
+
         commands.spawn(UziSoundHandle(asset_server.load("sounds/uzi.ogg")));
         commands.spawn(ShotgunSoundHandle(asset_server.load("sounds/shotgun.ogg")));
 
