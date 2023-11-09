@@ -109,6 +109,24 @@ impl WeaponSystems {
         }
     }
 
+    pub fn hide_weapon_when_owner_is_moving(
+        weapon_owner_query: Query<(Entity, &Velocity), With<WeaponOwnerMarker>>,
+        mut weapon_query: Query<(&Owner, &mut Visibility), (With<WeaponMarker>, Without<WeaponOwnerMarker>)>,
+    ) {
+        for (owner, mut visibility) in weapon_query.iter_mut() {
+            if owner.0.is_none() {continue};
+            let weapon_owner_id = owner.0.unwrap();
+            for (found_owner_id, velocity) in weapon_owner_query.iter() {
+                if weapon_owner_id == found_owner_id {
+                    if velocity.linvel.x != 0. || velocity.linvel.y != 0. {
+                        *visibility = Visibility::Hidden
+                    } else {
+                        *visibility = Visibility::Visible
+                    }
+                }
+            }
+        }
+    }
     fn set_translation_relative_to_owner(
         owner_translation: Vec3,
         owner_rotation: f32,
@@ -116,13 +134,13 @@ impl WeaponSystems {
         let translation: Vec3;
         if owner_rotation > 0. && owner_rotation < 180. {
             translation = Vec3::new(
-                owner_translation.x - 11_f32,
-                owner_translation.y - 5_f32,
-                owner_translation.z + 1_f32,
+                owner_translation.x - 14_f32,
+                owner_translation.y - 2_f32,
+                owner_translation.z - 1_f32,
             )
         } else if owner_rotation > 180. {
             translation = Vec3::new(
-                owner_translation.x - 11_f32,
+                owner_translation.x - 3_f32,
                 owner_translation.y - 5_f32,
                 owner_translation.z + 1_f32,
             )
@@ -135,8 +153,8 @@ impl WeaponSystems {
         } else {
             translation = Vec3::new(
                 owner_translation.x - 11_f32,
-                owner_translation.y - 5_f32,
-                owner_translation.z + 1_f32,
+                owner_translation.y - 2_f32,
+                owner_translation.z - 1_f32,
             )
         };
         translation
