@@ -4,7 +4,7 @@ use std::time::Duration;
 use bevy::prelude::*;
 use bevy_rapier2d::geometry::CollisionGroups;
 use bevy_rapier2d::prelude::Velocity;
-use crate::components::asset_components::{BulletTextureHandle, CharacterTextureHandles, CurrentAnimationFrame, PistolSoundHandle, PistolTextureMarker};
+use crate::components::asset_components::{BulletTextureHandle, CharacterTextureHandles, CurrentAnimationFrame, PistolSoundHandle, PistolTextureMarker, ShotgunSoundHandle, ShotgunTextureMarker, UziSoundHandle, UziTextureMarker};
 use crate::components::bullet_components::Damage;
 
 use crate::components::generic_components::GameScreenMarker;
@@ -56,27 +56,50 @@ impl WeaponSystems {
     pub fn spawn_default_player_weapons(
         mut commands: Commands,
         pistol_sound: Query<&PistolSoundHandle>,
+        uzi_sound: Query<&UziSoundHandle>,
+        shotgun_sound: Query<&ShotgunSoundHandle>,
         player_query: Query<(Entity, &Transform, &RotationDegrees, &CollisionGroups), With<PlayerMarker>>,
         pistol_texture_handles_query: Query<&CharacterTextureHandles, With<PistolTextureMarker>>,
+        uzi_texture_handles_query: Query<&CharacterTextureHandles, With<UziTextureMarker>>,
+        shotgun_texture_handles_query: Query<&CharacterTextureHandles, With<ShotgunTextureMarker>>,
         bullet_texture_query: Query<&BulletTextureHandle>,
     ) {
         let (player_entity_id, player_transform, player_rotation, player_collision_groups) = player_query.single();
-        let pistol_texture_handles = pistol_texture_handles_query.single();
 
 
-        let mut pistol_transform = player_transform.clone();
-        pistol_transform.translation = Self::set_translation_relative_to_owner(player_transform.translation, player_rotation.0);
+        let mut weapon_transform = player_transform.clone();
+        weapon_transform.translation = Self::set_translation_relative_to_owner(player_transform.translation, player_rotation.0);
 
         let pistol = Self::new_pistol(
             pistol_sound.single().0.clone(),
+            Visibility::Visible,
             Owner(Option::Some(player_entity_id)),
             BulletCollisionGroups(*player_collision_groups),
-            pistol_texture_handles.clone(),
+            pistol_texture_handles_query.single().clone(),
             BulletTexture(bullet_texture_query.single().0.clone()),
-            pistol_transform
+            weapon_transform
+        );
+        let uzi = Self::new_uzi(
+            uzi_sound.single().0.clone(),
+            Visibility::Hidden,
+            Owner(Option::Some(player_entity_id)),
+            BulletCollisionGroups(*player_collision_groups),
+            uzi_texture_handles_query.single().clone(),
+            BulletTexture(bullet_texture_query.single().0.clone()),
+            weapon_transform
+        );
+        let shotgun = Self::new_shotgun(
+            shotgun_sound.single().0.clone(),
+            Visibility::Hidden,
+            Owner(Option::Some(player_entity_id)),
+            BulletCollisionGroups(*player_collision_groups),
+            shotgun_texture_handles_query.single().clone(),
+            BulletTexture(bullet_texture_query.single().0.clone()),
+            weapon_transform
         );
         commands.spawn((pistol, ActiveWeapon));
-
+        commands.spawn(uzi);
+        commands.spawn(shotgun);
     }
 
     pub fn update_transform(
@@ -119,8 +142,9 @@ impl WeaponSystems {
         mut query: Query<&mut AttackCoolDownTimer, With<WeaponMarker>>,
         time: Res<Time>,
     ) {
-        let mut cooldown_timer = query.single_mut();
-        cooldown_timer.0.tick(time.delta());
+        for mut cooldown_timer in query.iter_mut() {
+            cooldown_timer.0.tick(time.delta());
+        }
     }
     pub fn attack(
         mut attack_request_event_reader: EventReader<AttackRequestEvent>,
@@ -135,7 +159,7 @@ impl WeaponSystems {
             &BulletTexture,
             &RotationDegrees,
             &BulletCollider,
-        ), With<WeaponMarker>>
+        ), With<ActiveWeapon>>
     ) {
         for attack_event in attack_request_event_reader.read() {
             for (owner, mut cooldown_timer, rotation_offset, transform, bullet_collision_groups, damage, bullet_texture, weapon_rotation, bullet_collider) in weapons_query.iter_mut() {
@@ -170,15 +194,18 @@ impl WeaponSystems {
     pub fn set_active_weapon(
         mut commands: Commands,
         mut weapon_selection_events: EventReader<WeaponSelectionEvent>,
-        active_weapon_query: Query<Entity, With<ActiveWeapon>>,
-        weapon_query: Query<(Entity, &WeaponType), With<WeaponMarker>>
+        mut active_weapon_query: Query<(Entity, &mut Visibility), With<ActiveWeapon>>,
+        mut weapon_query: Query<(Entity, &WeaponType, &mut Visibility), (With<WeaponMarker>, Without<ActiveWeapon>)>
     ) {
         for weapon_selection_event in weapon_selection_events.read() {
-            for (weapon_entity, weapon_type) in weapon_query.iter() {
+            for (weapon_entity, weapon_type, mut weapon_visibility) in weapon_query.iter_mut() {
                 if &weapon_selection_event.0 == weapon_type {
-                    let active_weapon_entity = active_weapon_query.single();
+                    let (active_weapon_entity, mut active_weapon_visibility) = active_weapon_query.single_mut();
                     commands.entity(active_weapon_entity).remove::<ActiveWeapon>();
                     commands.entity(weapon_entity).insert(ActiveWeapon);
+                    *active_weapon_visibility = Visibility::Hidden;
+                    *weapon_visibility = Visibility::Visible;
+
                 }
             }
         }
@@ -186,6 +213,7 @@ impl WeaponSystems {
 
     fn new_pistol(
         sound: Handle<AudioSource>,
+        visible: Visibility,
         owner: Owner,
         bullet_collision_groups: BulletCollisionGroups,
         texture_handles: CharacterTextureHandles,
@@ -225,13 +253,106 @@ impl WeaponSystems {
             character_texture_handles: texture_handles,
             texture: current_texture,
             sprite: Sprite::default(),
-            visibility: Visibility::default(),
+            visibility: visible,
             inherited_visibility: InheritedVisibility::default(),
             view_visibility: ViewVisibility::default(),
         }
     }
 
+    fn new_uzi(
+        sound: Handle<AudioSource>,
+        visible: Visibility,
+        owner: Owner,
+        bullet_collision_groups: BulletCollisionGroups,
+        texture_handles: CharacterTextureHandles,
+        bullet_texture: BulletTexture,
+        transform: Transform,
+    ) -> Weapon {
+        let current_texture = texture_handles.front[0].clone();
+        Weapon {
+            // Marker components
+            game_screen_marker: GameScreenMarker,
+            weapon_marker: WeaponMarker,
 
+            // Weapon specific components
+            attack_cooldown_timer: AttackCoolDownTimer(Timer::new(
+                Duration::from_secs_f32(0.1),
+                TimerMode::Once,
+            )),
+            damage: Damage(1.),
+            weapon_type: WeaponType::Uzi,
+            attacking_sound: sound,
+            owner,
+
+            // Bullet components
+            bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![0_f32]),
+            bullet_collision_groups,
+            bullet_texture,
+            bullet_collider: BulletCollider(Vec2::new(0.5, 150.)),
+
+            // Physics
+            velocity: Velocity::default(),
+            rotation_degrees: RotationDegrees(180.),
+            transform,
+            global_transform: GlobalTransform::default(),
+
+            // Visibility
+            current_animation_frame: CurrentAnimationFrame(1),
+            character_texture_handles: texture_handles,
+            texture: current_texture,
+            sprite: Sprite::default(),
+            visibility: visible,
+            inherited_visibility: InheritedVisibility::default(),
+            view_visibility: ViewVisibility::default(),
+        }
+    }
+    fn new_shotgun(
+        sound: Handle<AudioSource>,
+        visible: Visibility,
+        owner: Owner,
+        bullet_collision_groups: BulletCollisionGroups,
+        texture_handles: CharacterTextureHandles,
+        bullet_texture: BulletTexture,
+        transform: Transform,
+    ) -> Weapon {
+        let current_texture = texture_handles.front[0].clone();
+        Weapon {
+            // Marker components
+            game_screen_marker: GameScreenMarker,
+            weapon_marker: WeaponMarker,
+
+            // Weapon specific components
+            attack_cooldown_timer: AttackCoolDownTimer(Timer::new(
+                Duration::from_secs_f32(2.),
+                TimerMode::Once,
+            )),
+            damage: Damage(3.),
+            weapon_type: WeaponType::Shotgun,
+            attacking_sound: sound,
+            owner,
+
+            // Bullet components
+            bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![-15_f32, 0_f32, 15_f32]),
+            bullet_collision_groups,
+            bullet_texture,
+            bullet_collider: BulletCollider(Vec2::new(0.5, 50.)),
+
+            // Physics
+            velocity: Velocity::default(),
+            rotation_degrees: RotationDegrees(180.),
+            transform,
+            global_transform: GlobalTransform::default(),
+
+            // Visibility
+            current_animation_frame: CurrentAnimationFrame(1),
+            character_texture_handles: texture_handles,
+            texture: current_texture,
+            sprite: Sprite::default(),
+            visibility: visible,
+            inherited_visibility: InheritedVisibility::default(),
+            view_visibility: ViewVisibility::default(),
+        }
+    }
     fn set_translation_relative_to_owner(
         owner_translation: Vec3,
         owner_rotation: f32,

@@ -44,3 +44,8 @@ pub struct ZombieTextureMarker;
 
 #[derive(Component)]
 pub struct PistolTextureMarker;
+
+#[derive(Component)]
+pub struct UziTextureMarker;
+#[derive(Component)]
+pub struct ShotgunTextureMarker;
