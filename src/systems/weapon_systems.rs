@@ -2,14 +2,17 @@
 use std::time::Duration;
 
 use bevy::prelude::*;
+use bevy_rapier2d::geometry::CollisionGroups;
 use bevy_rapier2d::prelude::Velocity;
-use crate::components::asset_components::{CharacterTextureHandles, CurrentAnimationFrame, PistolSoundHandle, PistolTextureMarker};
+use crate::components::asset_components::{BulletTextureHandle, CharacterTextureHandles, CurrentAnimationFrame, PistolSoundHandle, PistolTextureMarker};
+use crate::components::bullet_components::Damage;
 
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::physics_components::RotationDegrees;
 use crate::components::player_components::PlayerMarker;
-use crate::components::weapon_components::{ActiveWeapon, BulletsRotationOffsetPerShot, DamagePerHit, WeaponMarker, WeaponType, Owner, AttackCoolDownTimer, WeaponOwnerMarker};
+use crate::components::weapon_components::{ActiveWeapon, BulletsRotationOffsetPerShot, BulletTexture, WeaponMarker, WeaponType, Owner, AttackCoolDownTimer, WeaponOwnerMarker, BulletCollisionGroups, BulletLength};
 use crate::events::atttack_events::{BulletSpawnEvent, AttackRequestEvent, WeaponSelectionEvent};
+use crate::utils::generic_constants::SCALING;
 
 #[derive(Bundle)]
 struct Weapon {
@@ -19,11 +22,16 @@ struct Weapon {
 
     // Weapon specific components
     attack_cooldown_timer: AttackCoolDownTimer,
-    damage_per_hit: DamagePerHit,
+    damage: Damage,
     weapon_type: WeaponType,
-    bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot,
     attacking_sound: Handle<AudioSource>,
     owner: Owner,
+
+    // Bullet specific components
+    bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot,
+    bullet_collision_groups: BulletCollisionGroups,
+    bullet_texture: BulletTexture,
+    bullet_length: BulletLength,
 
     // Physics
     rotation_degrees: RotationDegrees,
@@ -48,10 +56,11 @@ impl WeaponSystems {
     pub fn spawn_default_player_weapons(
         mut commands: Commands,
         pistol_sound: Query<&PistolSoundHandle>,
-        player_query: Query<(Entity, &Transform, &RotationDegrees), With<PlayerMarker>>,
+        player_query: Query<(Entity, &Transform, &RotationDegrees, &CollisionGroups), With<PlayerMarker>>,
         pistol_texture_handles_query: Query<&CharacterTextureHandles, With<PistolTextureMarker>>,
+        bullet_texture_query: Query<&BulletTextureHandle>,
     ) {
-        let (player_entity_id, player_transform, player_rotation) = player_query.single();
+        let (player_entity_id, player_transform, player_rotation, player_collision_groups) = player_query.single();
         let pistol_texture_handles = pistol_texture_handles_query.single();
         let current_texture = pistol_texture_handles.front[0].clone();
 
@@ -67,11 +76,16 @@ impl WeaponSystems {
                 Duration::from_secs_f32(1.),
                 TimerMode::Once,
             )),
-            damage_per_hit: DamagePerHit(2.),
+            damage: Damage(2.),
             weapon_type: WeaponType::Pistol,
-            bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![0_f32]),
             attacking_sound: pistol_sound.single().0.clone(),
             owner: Owner(Option::Some(player_entity_id)),
+
+            // Bullet components
+            bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![0_f32]),
+            bullet_collision_groups: BulletCollisionGroups(*player_collision_groups),
+            bullet_texture: BulletTexture(bullet_texture_query.single().0.clone()),
+            bullet_length: BulletLength(100.),
 
             // Physics
             velocity: Velocity::default(),
@@ -159,22 +173,55 @@ impl WeaponSystems {
         };
         translation
     }
-    pub fn attack(
-        mut player_attack_event: EventReader<AttackRequestEvent>,
-        mut bullet_spawn_event: EventWriter<BulletSpawnEvent>,
-        mut active_weapon_query: Query<(&mut AttackCoolDownTimer, &BulletsRotationOffsetPerShot), With<ActiveWeapon>>,
+
+    pub fn cooldown_weapons(
+        mut query: Query<&mut AttackCoolDownTimer, With<WeaponMarker>>,
         time: Res<Time>,
     ) {
-        let (mut cooldown_timer, bullets_rotation_offset) = active_weapon_query.single_mut();
+        let mut cooldown_timer = query.single_mut();
         cooldown_timer.0.tick(time.delta());
+    }
+    pub fn attack(
+        mut attack_request_event_reader: EventReader<AttackRequestEvent>,
+        mut bullet_spawn_event_writer: EventWriter<BulletSpawnEvent>,
+        mut weapons_query: Query<(
+            &Owner,
+            &mut AttackCoolDownTimer,
+            &BulletsRotationOffsetPerShot,
+            &Transform,
+            &BulletCollisionGroups,
+            &Damage,
+            &BulletTexture,
+            &RotationDegrees,
+            &BulletLength,
+        ), With<WeaponMarker>>
+    ) {
+        for attack_event in attack_request_event_reader.read() {
+            for (owner, mut cooldown_timer, rotation_offset, transform, bullet_collision_groups, damage, bullet_texture, weapon_rotation, bullet_length) in weapons_query.iter_mut() {
+                if owner.0.is_some() && attack_event.0 == owner.0.unwrap() && cooldown_timer.0.finished() {
+                    for bullet_rotation_offset in rotation_offset.0.to_vec() {
+                        let bullet_rotation = weapon_rotation.0 + bullet_rotation_offset;
+                        let bullet_rotation_quat = Quat::from_rotation_z(bullet_rotation.to_radians());
+                        let bullet_direction = (bullet_rotation_quat * Vec3::Y).truncate().normalize();
+                        let bullet_transform = Self::generate_bullet_transform(
+                            bullet_rotation_quat,
+                            transform,
+                            bullet_direction,
+                                bullet_length.0,
 
-        for _attack_event in player_attack_event.read() {
-            if cooldown_timer.0.finished() {
-                for bullet in bullets_rotation_offset.0.to_vec() {
-                    bullet_spawn_event.send(BulletSpawnEvent(bullet));
+                        );
+                        let bullet_spawn_event = BulletSpawnEvent{
+                            transform: bullet_transform,
+                            collision_groups: bullet_collision_groups.0,
+                            damage: Damage(damage.0),
+                            texture: bullet_texture.0.clone(),
+                        };
+                        bullet_spawn_event_writer.send(bullet_spawn_event);
+                    }
+                    cooldown_timer.0.reset();
                 }
-                cooldown_timer.0.reset();
-            };
+            }
+
         }
     }
 
@@ -193,5 +240,40 @@ impl WeaponSystems {
                 }
             }
         }
+    }
+
+    fn generate_bullet_transform(
+        bullet_rotation: Quat,
+        weapon_transform: &Transform,
+        bullet_direction: Vec2,
+        bullet_length: f32,
+    ) -> Transform {
+
+        let translation_x = Self::get_bullet_start_axis(
+            weapon_transform.translation.x,
+            bullet_direction.x,
+            SCALING.x,
+            bullet_length,
+        );
+        let translation_y = Self::get_bullet_start_axis(
+            weapon_transform.translation.y,
+            bullet_direction.y,
+            SCALING.y,
+            bullet_length,
+        );
+        Transform {
+            translation: Vec3::new(translation_x, translation_y, weapon_transform.translation.z - 1.),
+            rotation: bullet_rotation,
+            scale: SCALING,
+        }
+    }
+
+    fn get_bullet_start_axis(
+        shooter_axis: f32,
+        shooter_direction: f32,
+        scaling: f32,
+        bullet_length: f32,
+    ) -> f32 {
+        shooter_axis + (bullet_length * scaling) * shooter_direction
     }
 }

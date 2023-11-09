@@ -51,36 +51,21 @@ struct BulletBundle {
 
 pub struct BulletSystems;
 impl BulletSystems {
-    pub fn spawn_player_bullet(
+
+    pub fn spawn_bullet(
         mut commands: Commands,
-        mut bullet_spawn_events: EventReader<BulletSpawnEvent>,
-        player_query: Query<
-            (
-                &RotationDegrees,
-                &CollisionGroups,
-                &Transform,
-                &Collider,
-            ),
-            With<PlayerMarker>,
-        >,
-        weapon_query: Query<&DamagePerHit, With<ActiveWeapon>>,
-        bullet_texture_query: Query<&BulletTextureHandle>,
+        mut bullet_spawn_event_reader: EventReader<BulletSpawnEvent>,
     ) {
-        let damage_per_hit = weapon_query.single();
-        for bullet_rotation_offset in bullet_spawn_events.read() {
-            for (rotation_degrees, collision_groups, transform, collider) in player_query.iter() {
-                let bullet_transform = Self::generate_bullet_transform(rotation_degrees, transform, collider, bullet_rotation_offset.0);
-                let bullet_bundle = Self::new_bullet(
-                    bullet_transform,
-                    *collision_groups,
-                    bullet_texture_query.single().0.clone(),
-                    damage_per_hit.0,
-                );
-                commands.spawn(bullet_bundle);
-            }
+        for bullet_spawn_event in bullet_spawn_event_reader.read() {
+            let bullet = Self::new_bullet(
+                bullet_spawn_event.transform,
+                bullet_spawn_event.collision_groups,
+                bullet_spawn_event.texture.clone(),
+                bullet_spawn_event.damage.0
+            );
+            commands.spawn(bullet);
         }
     }
-
     pub fn despawn_bullets(
         mut commands: Commands,
         mut bullet_query: Query<(&mut LifeTime, Entity), With<BulletMarker>>,
@@ -94,55 +79,16 @@ impl BulletSystems {
         }
     }
 
-    fn generate_bullet_transform(
-        shooter_rotation_degrees: &RotationDegrees,
-        shooter_transform: &Transform,
-        shooter_collider: &Collider,
-        bullet_rotation_offset: f32,
-    ) -> Transform {
-        let shooter_size = shooter_collider.as_cuboid().unwrap().half_extents();
-        let shooter_rotation_degrees = shooter_rotation_degrees.0 + bullet_rotation_offset;
-        let shooter_rotation = Quat::from_rotation_z(shooter_rotation_degrees.to_radians());
-        let shooter_front = (shooter_rotation * Vec3::Y).truncate().normalize();
-
-        let shooter_transform_x = Self::get_bullet_start_axis(
-            shooter_transform.translation.x,
-            shooter_front[0],
-            shooter_size.x,
-            SCALING.x,
-        );
-        let shooter_transform_y = Self::get_bullet_start_axis(
-            shooter_transform.translation.y,
-            shooter_front[1],
-            shooter_size.y,
-            SCALING.y,
-        );
-        Transform {
-            translation: Vec3::new(shooter_transform_x, shooter_transform_y, Z_VALUE),
-            rotation: shooter_rotation,
-            scale: SCALING,
-        }
-    }
-    fn get_bullet_start_axis(
-        shooter_axis: f32,
-        shooter_direction: f32,
-        shooter_radius: f32,
-        scaling: f32,
-    ) -> f32 {
-        shooter_axis
-            + (shooter_radius + BULLET_LENGTH * scaling + SHOOTER_DISTANCE_BUFFER) * shooter_direction
-    }
-
     fn new_bullet(
         transform: Transform,
         collision_groups: CollisionGroups,
         texture: Handle<Image>,
-        damage_per_hit: f32,
+        damage: f32,
     ) -> BulletBundle {
         let bullet_timer = Timer::new(Duration::from_secs_f32(0.1), TimerMode::Once);
 
         BulletBundle {
-            damage: Damage(damage_per_hit),
+            damage: Damage(damage),
             life_time: LifeTime(bullet_timer),
             bullet_marker: BulletMarker,
             game_screen_marker: GameScreenMarker,

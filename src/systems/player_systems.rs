@@ -131,10 +131,12 @@ impl PlayerSystems {
 
     pub fn attack(
         keyboard_input: Res<Input<KeyCode>>,
-        mut player_attack_event: EventWriter<AttackRequestEvent>,
+        mut attack_request_event_writer: EventWriter<AttackRequestEvent>,
+        player_query: Query<Entity, With<PlayerMarker>>
     ) {
         if keyboard_input.pressed(KeyCode::Space) {
-            player_attack_event.send(AttackRequestEvent);
+            let attack_event = AttackRequestEvent(player_query.single());
+            attack_request_event_writer.send(attack_event);
         };
     }
 
