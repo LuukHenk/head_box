@@ -10,7 +10,7 @@ use crate::components::generic_components::GameScreenMarker;
 
 use crate::utils::physics_constants::{DEFAULT_ACTIVE_EVENTS, DEFAULT_GRAVITY, DEFAULT_VELOCITY};
 
-const SHOOTER_DISTANCE_BUFFER: f32 = 10.;
+
 const BULLET_LENGTH: f32 = 100.;
 const BULLET_WIDTH: f32 = 0.5;
 
@@ -56,7 +56,8 @@ impl BulletSystems {
                 bullet_spawn_event.transform,
                 bullet_spawn_event.collision_groups,
                 bullet_spawn_event.texture.clone(),
-                bullet_spawn_event.damage.0
+                bullet_spawn_event.damage.0,
+                bullet_spawn_event.collider,
             );
             commands.spawn(bullet);
         }
@@ -79,6 +80,7 @@ impl BulletSystems {
         collision_groups: CollisionGroups,
         texture: Handle<Image>,
         damage: f32,
+        collider: Vec2
     ) -> BulletBundle {
         let bullet_timer = Timer::new(Duration::from_secs_f32(0.1), TimerMode::Once);
 
@@ -90,7 +92,7 @@ impl BulletSystems {
             rigid_body: RigidBody::Fixed,
             velocity: DEFAULT_VELOCITY,
             gravity: DEFAULT_GRAVITY,
-            collider: Collider::cuboid(BULLET_WIDTH, BULLET_LENGTH),
+            collider: Collider::cuboid(collider.x, collider.y),
             continuous_collision_detection: Ccd::disabled(),
             texture,
             transform,

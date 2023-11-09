@@ -1,5 +1,5 @@
-use bevy::prelude::{Component, Entity, Handle, Image, Timer};
-use bevy_rapier2d::geometry::CollisionGroups;
+use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
 
 #[derive(Component)]
 pub struct AttackCoolDownTimer(pub Timer);
@@ -22,6 +22,7 @@ pub enum WeaponType {
     Pistol,
     Uzi,
     Shotgun,
+    Knife
 }
 
 #[derive(Component)]
@@ -37,4 +38,4 @@ pub struct BulletTexture(pub Handle<Image>);
 pub struct BulletCollisionGroups(pub CollisionGroups);
 
 #[derive(Component)]
-pub struct BulletLength(pub f32);
+pub struct BulletCollider(pub Vec2);

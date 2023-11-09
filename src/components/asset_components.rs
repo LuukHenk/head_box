@@ -15,6 +15,9 @@ pub struct CurrentAnimationFrame(pub usize);
 pub struct ZombieTextureHandle(pub Handle<Image>);
 
 #[derive(Component)]
+pub struct KnifeAttackTextureHandle(pub Handle<Image>);
+
+#[derive(Component)]
 pub struct BulletTextureHandle(pub Handle<Image>);
 
 #[derive(Component)]
@@ -25,6 +28,9 @@ pub struct UziSoundHandle(pub Handle<AudioSource>);
 
 #[derive(Component)]
 pub struct ShotgunSoundHandle(pub Handle<AudioSource>);
+
+#[derive(Component)]
+pub struct KnifeSoundHandle(pub Handle<AudioSource>);
 
 #[derive(Component)]
 pub struct ZombieTenseSoundHandle(pub Handle<AudioSource>);
@@ -43,3 +49,6 @@ pub struct ZombieTextureMarker;
 
 #[derive(Component)]
 pub struct PistolTextureMarker;
+
+#[derive(Component)]
+pub struct KnifeTextureMarker;

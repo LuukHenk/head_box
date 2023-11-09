@@ -4,13 +4,13 @@ use std::time::Duration;
 use bevy::prelude::*;
 use bevy_rapier2d::geometry::CollisionGroups;
 use bevy_rapier2d::prelude::Velocity;
-use crate::components::asset_components::{BulletTextureHandle, CharacterTextureHandles, CurrentAnimationFrame, PistolSoundHandle, PistolTextureMarker};
+use crate::components::asset_components::{BulletTextureHandle, CharacterTextureHandles, CurrentAnimationFrame, KnifeAttackTextureHandle, KnifeSoundHandle, KnifeTextureMarker, PistolSoundHandle, PistolTextureMarker};
 use crate::components::bullet_components::Damage;
 
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::physics_components::RotationDegrees;
 use crate::components::player_components::PlayerMarker;
-use crate::components::weapon_components::{ActiveWeapon, BulletsRotationOffsetPerShot, BulletTexture, WeaponMarker, WeaponType, Owner, AttackCoolDownTimer, WeaponOwnerMarker, BulletCollisionGroups, BulletLength};
+use crate::components::weapon_components::{ActiveWeapon, BulletsRotationOffsetPerShot, BulletTexture, WeaponMarker, WeaponType, Owner, AttackCoolDownTimer, WeaponOwnerMarker, BulletCollisionGroups, BulletCollider};
 use crate::events::atttack_events::{BulletSpawnEvent, AttackRequestEvent, WeaponSelectionEvent};
 use crate::utils::generic_constants::SCALING;
 
@@ -31,7 +31,7 @@ struct Weapon {
     bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot,
     bullet_collision_groups: BulletCollisionGroups,
     bullet_texture: BulletTexture,
-    bullet_length: BulletLength,
+    bullet_collider: BulletCollider,
 
     // Physics
     rotation_degrees: RotationDegrees,
@@ -53,32 +53,56 @@ const BULLET_TO_WEAPON_OFFSET: f32 = 2.;
 pub struct WeaponSystems;
 
 impl WeaponSystems {
+    // pub fn spawn_default_player_weapons(
+    //     mut commands: Commands,
+    //     pistol_sound: Query<&PistolSoundHandle>,
+    //     player_query: Query<(Entity, &Transform, &RotationDegrees, &CollisionGroups), With<PlayerMarker>>,
+    //     pistol_texture_handles_query: Query<&CharacterTextureHandles, With<PistolTextureMarker>>,
+    //     bullet_texture_query: Query<&BulletTextureHandle>,
+    // ) {
+    //     let (player_entity_id, player_transform, player_rotation, player_collision_groups) = player_query.single();
+    //     let pistol_texture_handles = pistol_texture_handles_query.single();
+    //
+    //
+    //     let mut pistol_transform = player_transform.clone();
+    //     pistol_transform.translation = Self::set_translation_relative_to_owner(player_transform.translation, player_rotation.0);
+    //
+    //     let pistol = Self::new_pistol(
+    //         pistol_sound.single().0.clone(),
+    //         Owner(Option::Some(player_entity_id)),
+    //         BulletCollisionGroups(*player_collision_groups),
+    //         pistol_texture_handles.clone(),
+    //         BulletTexture(bullet_texture_query.single().0.clone()),
+    //         pistol_transform
+    //     );
+    //     commands.spawn((pistol, ActiveWeapon));
+    //
+    // }
     pub fn spawn_default_player_weapons(
         mut commands: Commands,
-        pistol_sound: Query<&PistolSoundHandle>,
         player_query: Query<(Entity, &Transform, &RotationDegrees, &CollisionGroups), With<PlayerMarker>>,
-        pistol_texture_handles_query: Query<&CharacterTextureHandles, With<PistolTextureMarker>>,
-        bullet_texture_query: Query<&BulletTextureHandle>,
+        knife_sound_query: Query<&KnifeSoundHandle>,
+        knife_texture_handles_query: Query<&CharacterTextureHandles, With<KnifeTextureMarker>>,
+        attack_texture_handle_query: Query<&KnifeAttackTextureHandle>,
     ) {
         let (player_entity_id, player_transform, player_rotation, player_collision_groups) = player_query.single();
-        let pistol_texture_handles = pistol_texture_handles_query.single();
+        let pistol_texture_handles = knife_texture_handles_query.single();
 
 
-        let mut pistol_transform = player_transform.clone();
-        pistol_transform.translation = Self::set_translation_relative_to_owner(player_transform.translation, player_rotation.0);
+        let mut knife_transform = player_transform.clone();
+        knife_transform.translation = Self::set_translation_relative_to_owner(player_transform.translation, player_rotation.0);
 
-        let pistol = Self::new_pistol(
-            pistol_sound.single().0.clone(),
+        let knife = Self::new_knife(
+            knife_sound_query.single().0.clone(),
             Owner(Option::Some(player_entity_id)),
             BulletCollisionGroups(*player_collision_groups),
             pistol_texture_handles.clone(),
-            BulletTexture(bullet_texture_query.single().0.clone()),
-            pistol_transform
+            BulletTexture(attack_texture_handle_query.single().0.clone()),
+            knife_transform
         );
-        commands.spawn((pistol, ActiveWeapon));
+        commands.spawn((knife, ActiveWeapon));
 
     }
-
     pub fn update_transform(
         weapon_owner_query: Query<(Entity, &Transform, &RotationDegrees), With<WeaponOwnerMarker>>,
         mut weapon_query: Query<(&Owner, &mut Transform, &mut RotationDegrees), (With<WeaponMarker>, Without<WeaponOwnerMarker>)>,
@@ -134,11 +158,11 @@ impl WeaponSystems {
             &Damage,
             &BulletTexture,
             &RotationDegrees,
-            &BulletLength,
+            &BulletCollider,
         ), With<WeaponMarker>>
     ) {
         for attack_event in attack_request_event_reader.read() {
-            for (owner, mut cooldown_timer, rotation_offset, transform, bullet_collision_groups, damage, bullet_texture, weapon_rotation, bullet_length) in weapons_query.iter_mut() {
+            for (owner, mut cooldown_timer, rotation_offset, transform, bullet_collision_groups, damage, bullet_texture, weapon_rotation, bullet_collider) in weapons_query.iter_mut() {
                 if owner.0.is_some() && attack_event.0 == owner.0.unwrap() && cooldown_timer.0.finished() {
                     for bullet_rotation_offset in rotation_offset.0.to_vec() {
                         let bullet_rotation = weapon_rotation.0 + bullet_rotation_offset;
@@ -148,7 +172,7 @@ impl WeaponSystems {
                             bullet_rotation_quat,
                             transform,
                             bullet_direction,
-                                bullet_length.0,
+                            bullet_collider.0.y,
 
                         );
                         let bullet_spawn_event = BulletSpawnEvent{
@@ -156,6 +180,7 @@ impl WeaponSystems {
                             collision_groups: bullet_collision_groups.0,
                             damage: Damage(damage.0),
                             texture: bullet_texture.0.clone(),
+                            collider: bullet_collider.0,
                         };
                         bullet_spawn_event_writer.send(bullet_spawn_event);
                     }
@@ -187,11 +212,11 @@ impl WeaponSystems {
         sound: Handle<AudioSource>,
         owner: Owner,
         bullet_collision_groups: BulletCollisionGroups,
-        pistol_texture_handles: CharacterTextureHandles,
+        texture_handles: CharacterTextureHandles,
         bullet_texture: BulletTexture,
         transform: Transform,
     ) -> Weapon {
-        let current_texture = pistol_texture_handles.front[0].clone();
+        let current_texture = texture_handles.front[0].clone();
         Weapon {
             // Marker components
             game_screen_marker: GameScreenMarker,
@@ -211,7 +236,7 @@ impl WeaponSystems {
             bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![0_f32]),
             bullet_collision_groups,
             bullet_texture,
-            bullet_length: BulletLength(100.),
+            bullet_collider: BulletCollider(Vec2::new(0.5, 100.)),
 
             // Physics
             velocity: Velocity::default(),
@@ -221,7 +246,54 @@ impl WeaponSystems {
 
             // Visibility
             current_animation_frame: CurrentAnimationFrame(1),
-            character_texture_handles: pistol_texture_handles,
+            character_texture_handles: texture_handles,
+            texture: current_texture,
+            sprite: Sprite::default(),
+            visibility: Visibility::default(),
+            inherited_visibility: InheritedVisibility::default(),
+            view_visibility: ViewVisibility::default(),
+        }
+    }
+
+    fn new_knife(
+        sound: Handle<AudioSource>,
+        owner: Owner,
+        bullet_collision_groups: BulletCollisionGroups,
+        texture_handles: CharacterTextureHandles,
+        bullet_texture: BulletTexture,
+        transform: Transform,
+    ) -> Weapon {
+        let current_texture = texture_handles.front[0].clone();
+        Weapon {
+            // Marker components
+            game_screen_marker: GameScreenMarker,
+            weapon_marker: WeaponMarker,
+
+            // Weapon specific components
+            attack_cooldown_timer: AttackCoolDownTimer(Timer::new(
+                Duration::from_secs_f32(1.),
+                TimerMode::Once,
+            )),
+            damage: Damage(10.),
+            weapon_type: WeaponType::Knife,
+            attacking_sound: sound,
+            owner,
+
+            // Bullet components
+            bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![0_f32]),
+            bullet_collision_groups,
+            bullet_texture,
+            bullet_collider: BulletCollider(Vec2::new(10., 10.)),
+
+            // Physics
+            velocity: Velocity::default(),
+            rotation_degrees: RotationDegrees(180.),
+            transform,
+            global_transform: GlobalTransform::default(),
+
+            // Visibility
+            current_animation_frame: CurrentAnimationFrame(1),
+            character_texture_handles: texture_handles,
             texture: current_texture,
             sprite: Sprite::default(),
             visibility: Visibility::default(),
