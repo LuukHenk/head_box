@@ -2,7 +2,7 @@
 use std::time::Duration;
 
 use bevy::prelude::*;
-use crate::components::asset_components::{PistolSoundHandle, ShotgunSoundHandle, UziSoundHandle};
+use crate::components::asset_components::PistolSoundHandle;
 
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::shooting_components::{ActiveGun, BulletsRotationOffsetPerShot, DamagePerHit, GunMarker, GunType, ShootingCoolDownTimer};
@@ -29,8 +29,6 @@ impl ShootingSystems {
     pub fn spawn_guns(
         mut commands: Commands,
         pistol_sound: Query<&PistolSoundHandle>,
-        uzi_sound: Query<&UziSoundHandle>,
-        shotgun_sound: Query<&ShotgunSoundHandle>,
     ) {
         let pistol = Gun {
             // Game screen components
