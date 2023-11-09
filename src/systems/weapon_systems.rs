@@ -2,7 +2,7 @@
 use std::time::Duration;
 
 use bevy::prelude::*;
-use crate::components::asset_components::PistolSoundHandle;
+use crate::components::asset_components::{PistolSoundHandle, PistolTextureHandle};
 
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::player_components::PlayerMarker;
@@ -26,6 +26,13 @@ struct Weapon {
     // Physics
     transform: Transform,
     global_transform: GlobalTransform,
+
+    // Visibility
+    texture: Handle<Image>,
+    sprite: Sprite,
+    visibility: Visibility,
+    inherited_visibility: InheritedVisibility,
+    view_visibility: ViewVisibility,
 }
 
 
@@ -36,8 +43,10 @@ impl WeaponSystems {
         mut commands: Commands,
         pistol_sound: Query<&PistolSoundHandle>,
         player_query: Query<(Entity, &Transform), With<PlayerMarker>>,
+        pistol_texture_handle_query: Query<&PistolTextureHandle>,
     ) {
         let (player_entity_id, player_transform) = player_query.single();
+        let pistol_texture_handle = pistol_texture_handle_query.single();
         let pistol = Weapon {
             // Game screen components
             game_screen_marker: GameScreenMarker,
@@ -57,6 +66,13 @@ impl WeaponSystems {
             // Physics
             transform: *player_transform,
             global_transform: GlobalTransform::default(),
+
+            // Visibility
+            texture: pistol_texture_handle.0.clone(),
+            sprite: Sprite::default(),
+            visibility: Visibility::default(),
+            inherited_visibility: InheritedVisibility::default(),
+            view_visibility: ViewVisibility::default(),
         };
 
         commands.spawn((pistol, ActiveWeapon));
