@@ -6,18 +6,18 @@ use crate::components::asset_components::{PistolSoundHandle, PistolTextureHandle
 
 use crate::components::generic_components::GameScreenMarker;
 use crate::components::player_components::PlayerMarker;
-use crate::components::weapon_components::{ActiveWeapon, BulletsRotationOffsetPerShot, DamagePerHit, WeaponMarker, WeaponType, Owner, AttackCoolDownTimer};
+use crate::components::weapon_components::{ActiveWeapon, BulletsRotationOffsetPerShot, DamagePerHit, WeaponMarker, WeaponType, Owner, AttackCoolDownTimer, WeaponOwnerMarker};
 use crate::events::atttack_events::{BulletSpawnEvent, AttackRequestEvent, WeaponSelectionEvent};
 
 #[derive(Bundle)]
 struct Weapon {
-    // Game screen components
+    // Marker components
     game_screen_marker: GameScreenMarker,
+    weapon_marker: WeaponMarker,
 
     // Weapon specific components
     attack_cooldown_timer: AttackCoolDownTimer,
     damage_per_hit: DamagePerHit,
-    weapon_marker: WeaponMarker,
     weapon_type: WeaponType,
     bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot,
     attacking_sound: Handle<AudioSource>,
@@ -47,16 +47,19 @@ impl WeaponSystems {
     ) {
         let (player_entity_id, player_transform) = player_query.single();
         let pistol_texture_handle = pistol_texture_handle_query.single();
+
+        let mut pistol_transform = player_transform.clone();
+        pistol_transform.translation = Self::set_translation_relative_to_owner(player_transform.translation);
         let pistol = Weapon {
-            // Game screen components
+            // Marker components
             game_screen_marker: GameScreenMarker,
+            weapon_marker: WeaponMarker,
 
             // Weapon specific components
             attack_cooldown_timer: AttackCoolDownTimer(Timer::new(
                 Duration::from_secs_f32(1.),
                 TimerMode::Once,
             )),
-            weapon_marker: WeaponMarker,
             damage_per_hit: DamagePerHit(2.),
             weapon_type: WeaponType::Pistol,
             bullets_rotation_offset_per_shot: BulletsRotationOffsetPerShot(vec![0_f32]),
@@ -64,7 +67,7 @@ impl WeaponSystems {
             owner: Owner(Option::Some(player_entity_id)),
 
             // Physics
-            transform: *player_transform,
+            transform: pistol_transform,
             global_transform: GlobalTransform::default(),
 
             // Visibility
@@ -79,6 +82,28 @@ impl WeaponSystems {
 
     }
 
+    pub fn update_transform(
+        weapon_owner_query: Query<(Entity, &Transform), With<WeaponOwnerMarker>>,
+        mut weapon_query: Query<(&Owner, &mut Transform), (With<WeaponMarker>, Without<WeaponOwnerMarker>)>,
+    ) {
+        for (owner, mut weapon_transform) in weapon_query.iter_mut() {
+            if owner.0.is_none() {continue};
+            let weapon_owner_id = owner.0.unwrap();
+            for (found_owner_id, owner_transform) in weapon_owner_query.iter() {
+                if weapon_owner_id == found_owner_id {
+                    weapon_transform.translation = Self::set_translation_relative_to_owner(owner_transform.translation);
+                }
+            }
+        }
+    }
+
+    fn set_translation_relative_to_owner(owner_translation: Vec3) -> Vec3 {
+            Vec3::new(
+                owner_translation.x,
+                owner_translation.y,
+                owner_translation.z + 1_f32,
+            )
+    }
     pub fn attack(
         mut player_attack_event: EventReader<AttackRequestEvent>,
         mut bullet_spawn_event: EventWriter<BulletSpawnEvent>,

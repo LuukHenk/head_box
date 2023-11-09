@@ -25,3 +25,6 @@ pub enum WeaponType {
 
 #[derive(Component)]
 pub struct Owner(pub Option<Entity>);
+
+#[derive(Component)]
+pub struct WeaponOwnerMarker;

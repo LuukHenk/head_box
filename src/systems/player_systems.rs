@@ -13,7 +13,7 @@ use crate::components::generic_components::GameScreenMarker;
 use crate::components::generic_components::Health;
 use crate::components::player_components::PlayerMarker;
 use crate::components::physics_components::RotationDegrees;
-use crate::components::weapon_components::WeaponType;
+use crate::components::weapon_components::{WeaponOwnerMarker, WeaponType};
 use crate::components::physics_components::WalkingVelocity;
 
 
@@ -24,6 +24,7 @@ struct PlayerBundle {
     // Markers
     player_marker: PlayerMarker,
     game_screen_marker: GameScreenMarker,
+    weapon_owner_marker: WeaponOwnerMarker,
 
     // Physics
     rotation_degrees: RotationDegrees,
@@ -68,6 +69,7 @@ impl PlayerSystems {
             // Markers
             player_marker: PlayerMarker,
             game_screen_marker: GameScreenMarker,
+            weapon_owner_marker: WeaponOwnerMarker,
 
             // Physics
             rotation_degrees: RotationDegrees(180_f32),
