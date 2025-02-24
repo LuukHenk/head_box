@@ -6,11 +6,11 @@ use crate::systems::generic_systems::despawn_screen;
 use crate::states::screen_state::ScreenState;
 use crate::systems::sound_systems::SoundSystems;
 
-const TEXT_COLOR: Color = Color::rgb(0.9, 0.9, 0.9);
-const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
-const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
-const HOVERED_PRESSED_BUTTON: Color = Color::rgb(0.25, 0.65, 0.25);
-const PRESSED_BUTTON: Color = Color::rgb(0.35, 0.75, 0.35);
+const TEXT_COLOR: Color = Color::srgb(0.9, 0.9, 0.9);
+const NORMAL_BUTTON: Color = Color::srgb(0.15, 0.15, 0.15);
+const HOVERED_BUTTON: Color = Color::srgb(0.25, 0.25, 0.25);
+const HOVERED_PRESSED_BUTTON: Color = Color::srgb(0.25, 0.65, 0.25);
+const PRESSED_BUTTON: Color = Color::srgb(0.35, 0.75, 0.35);
 
 pub struct MainMenuPlugin;
 
@@ -47,17 +47,6 @@ enum MenuButtonAction {
     Quit,
 }
 
-fn get_default_menu_text_style() -> TextStyle {
-    TextStyle {
-        font_size: 40.0,
-        color: TEXT_COLOR,
-        ..default()
-    }
-}
-
-fn get_default_menu_text_bundle(text: &str) -> TextBundle {
-    TextBundle::from_section(text, get_default_menu_text_style())
-}
 fn get_default_menu_button_style() -> Style {
     Style {
         width: Val::Px(250.0),
@@ -80,7 +69,7 @@ fn spawn_main_menu_button(parent: &mut ChildBuilder, text: &str, action: MenuBut
     parent
         .spawn((get_default_menu_button_bundle(), action))
         .with_children(|parent| {
-            parent.spawn(get_default_menu_text_bundle(text));
+            parent.spawn((Text(text.to_string()), TextFont::from_font_size(40.), TextColor(TEXT_COLOR)));
         });
 }
 

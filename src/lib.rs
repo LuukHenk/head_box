@@ -1,4 +1,3 @@
-#![feature(const_option)]
 mod events;
 mod utils;
 mod components;

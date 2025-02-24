@@ -16,7 +16,7 @@ pub struct HeadBoxPlugin;
 impl Plugin for HeadBoxPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(Time::<Fixed>::from_hz(60.0))
-            .add_state::<ScreenState>()
+            .init_state::<ScreenState>()
             .add_systems(Startup, (
                 CameraSystems::setup_camera,
                 AssetSystems::setup_assets,
