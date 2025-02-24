@@ -1,13 +1,13 @@
 [package]
 name = "head_box"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 
 [dependencies]
-bevy = { version = "0.12.0", features = ["dynamic_linking"] }# NOTE! REMOVE THE dynamic_linking BEFORE RELEASING THE GAME
-bevy_rapier2d = {  version = "0.23.0", features = ["debug-render-2d"] }
-rand = "0.8.5"
+bevy = { version = "0.15.2", features = ["dynamic_linking"] } # NOTE! REMOVE THE dynamic_linking BEFORE RELEASING THE GAME
+bevy_rapier2d = {  version = "0.29.0", features = ["debug-render-2d"] }
+rand = "0.9.0"
 
 [lib]
 name = "head_box"

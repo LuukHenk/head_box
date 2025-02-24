@@ -3,6 +3,18 @@
 Remake of the [Boxhead](http://www.boxheadx.com/) games using the [Bevy game engine](https://bevyengine.org/).
 The game will be single player for now.
 
+# Installation
+
+Setup using the bevy installation guide:
+https://bevyengine.org/learn/quick-start/getting-started/setup/
+
+Some additional configuration was added for fast compiling:
+- Dynamic Linking
+- Alternative Linkers
+- Nightly Rust Compiler
+- Cranelift
+
+
 # Credits
 
 - Thanks to [Ittai Manero](https://ittaimanero.itch.io/) for the [free tileset, animated characters, items, and inventory interface](https://ittaimanero.itch.io/zombie-apocalypse-tileset).
