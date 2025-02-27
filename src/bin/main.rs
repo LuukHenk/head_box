@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use head_box::MainMenuPlugin;
+use head_box::{GamePlugin, GameState, MainMenuPlugin};
 
 fn main() {
     App::new()
@@ -10,11 +10,12 @@ fn main() {
             }),
             ..default()
         }))
+        .init_state::<GameState>()
         .add_systems(Startup, setup_camera)
-        .add_plugins(MainMenuPlugin)
+        .add_plugins((MainMenuPlugin, GamePlugin))
         .run();
 }
 
-pub fn setup_camera(mut commands: Commands) {
+fn setup_camera(mut commands: Commands) {
     commands.spawn(Camera2d::default());
 }
