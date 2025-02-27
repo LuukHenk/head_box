@@ -1,13 +1,16 @@
 use bevy::prelude::*;
 
-use crate::{despawn_screen, GameState};
+use crate::{despawn_entities, GameState};
 
 pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Menu), setup);
-        app.add_systems(OnExit(GameState::Menu), despawn_screen::<OnMainMenuScreen>);
+        app.add_systems(
+            OnExit(GameState::Menu),
+            despawn_entities::<OnMainMenuScreen>,
+        );
         app.add_systems(
             Update,
             (button_system, menu_action).run_if(in_state(GameState::Menu)),

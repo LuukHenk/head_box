@@ -1,5 +1,5 @@
 mod shared;
-pub use shared::despawn_systems::despawn_screen;
+pub use shared::despawn_systems::despawn_entities;
 pub use shared::game_state::GameState;
 
 mod main_menu;
