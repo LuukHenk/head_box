@@ -6,7 +6,7 @@ pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::Menu), setup_menu);
+        app.add_systems(OnEnter(GameState::Menu), setup);
         app.add_systems(OnExit(GameState::Menu), despawn_screen::<OnMainMenuScreen>);
         app.add_systems(
             Update,
@@ -46,9 +46,10 @@ fn button_system(
     }
 }
 
-fn setup_menu(mut commands: Commands) {
+fn setup(mut commands: Commands) {
     commands
         .spawn((
+            Camera2d::default(),
             Node {
                 width: Val::Percent(100.0),
                 height: Val::Percent(100.0),

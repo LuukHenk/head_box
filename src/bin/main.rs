@@ -11,11 +11,6 @@ fn main() {
             ..default()
         }))
         .init_state::<GameState>()
-        .add_systems(Startup, setup_camera)
         .add_plugins((MainMenuPlugin, GamePlugin))
         .run();
-}
-
-fn setup_camera(mut commands: Commands) {
-    commands.spawn(Camera2d::default());
 }
