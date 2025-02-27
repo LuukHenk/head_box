@@ -17,8 +17,8 @@ impl Plugin for GamePlugin {
 struct OnGameScreen;
 
 fn setup(mut commands: Commands) {
-    commands.spawn(create_camera());
+    commands.spawn(OnGameScreen).insert(create_camera());
 }
-fn create_camera() -> (OnGameScreen, Camera2d, Camera) {
-    (OnGameScreen, Camera2d, Camera { ..default() })
+fn create_camera() -> (Camera2d, Camera) {
+    (Camera2d, Camera { ..default() })
 }
