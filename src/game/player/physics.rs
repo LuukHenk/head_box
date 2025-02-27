@@ -12,7 +12,7 @@ pub struct PhysicalTranslation(Vec3);
 #[derive(Debug, Component, Clone, Copy, PartialEq, Default, Deref, DerefMut)]
 pub struct PreviousPhysicalTranslation(Vec3);
 
-#[derive(Component)]
+#[derive(Component, Default)]
 pub struct RotationDegrees(pub f32);
 
 const SPEED: f32 = 100.0;
@@ -34,9 +34,8 @@ pub fn handle_movement_input(
         if keyboard_input.pressed(KeyCode::KeyD) {
             input.x += 1.0;
         }
-        println!("Input {}", input.0);
         velocity.0 = input.extend(0.0).normalize_or_zero() * SPEED;
-        rotation.0 = map_input_to_rotation(input.0, rotation.0);
+        rotation.0 = map_input_to_rotation_degrees(input.0, rotation.0);
     }
 }
 
@@ -67,12 +66,17 @@ pub fn interpolate_rendered_transform(
     fixed_time: Res<Time<Fixed>>,
     mut query: Query<(
         &mut Transform,
+        &RotationDegrees,
         &PhysicalTranslation,
         &PreviousPhysicalTranslation,
     )>,
 ) {
-    for (mut transform, current_physical_translation, previous_physical_translation) in
-        query.iter_mut()
+    for (
+        mut transform,
+        rotation_degrees,
+        current_physical_translation,
+        previous_physical_translation,
+    ) in query.iter_mut()
     {
         let previous = previous_physical_translation.0;
         let current = current_physical_translation.0;
@@ -80,11 +84,15 @@ pub fn interpolate_rendered_transform(
 
         let rendered_translation = previous.lerp(current, alpha);
         transform.translation = rendered_translation;
-        // println!("{}", transform.translation);
+
+        // https://quaternions.online/
+        let radians = rotation_degrees.0.to_radians();
+        let quat = Quat::from_euler(EulerRot::XYZ, 0., 0., radians);
+        transform.rotation = quat
     }
 }
 
-fn map_input_to_rotation(input: Vec2, current_rotation: f32) -> f32 {
+fn map_input_to_rotation_degrees(input: Vec2, current_rotation_degrees: f32) -> f32 {
     if input.x < 0. && input.y == 0. {
         90.0_f32
     } else if input.x < 0. && input.y > 0. {
@@ -102,6 +110,6 @@ fn map_input_to_rotation(input: Vec2, current_rotation: f32) -> f32 {
     } else if input.x < 0. && input.y < 0. {
         135.0_f32
     } else {
-        current_rotation
+        current_rotation_degrees
     }
 }

@@ -5,8 +5,7 @@ use bevy::prelude::*;
 use crate::{despawn_entities, GameState};
 
 use super::physics::{
-    advance_physics, handle_movement_input, interpolate_rendered_transform, AccumulatedInput,
-    PhysicalTranslation, PreviousPhysicalTranslation, Velocity,
+    advance_physics, handle_movement_input, interpolate_rendered_transform, AccumulatedInput, PhysicalTranslation, PreviousPhysicalTranslation, RotationDegrees, Velocity
 };
 
 pub struct PlayerPlugin;
@@ -46,6 +45,7 @@ fn setup(
         Mesh2d(meshes.add(CircularSector::new(50.0, 1.0))),
         MeshMaterial2d(materials.add(Color::srgb(1.0, 1.0, 1.0))),
         Transform::from_scale(Vec3::splat(0.3)),
+        RotationDegrees::default(),
         AccumulatedInput::default(),
         Velocity::default(),
         PhysicalTranslation::default(),
