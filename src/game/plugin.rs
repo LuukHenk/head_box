@@ -33,5 +33,6 @@ fn setup_test_world(
         OnGameScreen,
         Mesh2d(meshes.add(Rectangle::new(1000., 700.))),
         MeshMaterial2d(materials.add(Color::srgb(0.2, 0.2, 0.3))),
+        Transform::from_xyz(0.0, 0.0, -0.1),
     ));
 }

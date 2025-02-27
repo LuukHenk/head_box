@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use head_box::{GamePlugin, GameState, MainMenuPlugin};
+use head_box::{DiagnosticsPlugin, GamePlugin, GameState, MainMenuPlugin};
 
 fn main() {
     App::new()
@@ -12,5 +12,6 @@ fn main() {
         }))
         .init_state::<GameState>()
         .add_plugins((MainMenuPlugin, GamePlugin))
+        // .add_plugins(DiagnosticsPlugin)
         .run();
 }

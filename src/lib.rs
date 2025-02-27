@@ -7,3 +7,6 @@ pub use main_menu::plugin::MainMenuPlugin;
 
 mod game;
 pub use game::plugin::GamePlugin;
+
+mod diagnostics;
+pub use diagnostics::plugin::DiagnosticsPlugin;
