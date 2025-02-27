@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use head_box::MainMenuPlugin;
 
 fn main() {
     App::new()
@@ -9,5 +10,11 @@ fn main() {
             }),
             ..default()
         }))
+        .add_systems(Startup, setup_camera)
+        .add_plugins(MainMenuPlugin)
         .run();
+}
+
+pub fn setup_camera(mut commands: Commands) {
+    commands.spawn(Camera2d::default());
 }
